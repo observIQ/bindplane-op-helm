@@ -25,7 +25,7 @@ The secret should have the following keys:
 Example: Create secret with `kubectl`:
 
 ```shell
-kubectl -n default create secret generic bindplane-op \
+kubectl -n default create secret generic bindplane \
   --from-literal=username=myuser \
   --from-literal=password=mypassword \
   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
@@ -34,41 +34,40 @@ kubectl -n default create secret generic bindplane-op \
 
 ### Install Chart
 
-```shell
-helm upgrade --install bindplane-op bindplane-op-helm/bindplane-op
+```bash
+helm upgrade --install bindplane bindplane/bindplane
 ```
 
 ## Configuration
 
-The following table lists the configurable parameters of the BindPlaneOP chart.                                                                                                                                                                                                                                                 
+The following table lists the configurable parameters of the BindPlaneOP chart.                                                                                                                                                   
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| `backend.type` | Backend to use for persistent storage. When set to `file`, bindplane will be deployed as a single pod statefulset using a persistent volume. | `file` |
-| `backend.volumeSize` | Persistent volume size when `backend.type` is `file`. | `10Gi` |
-| `name` | Name to used to derive resource names. | `bindplane-op` |
+| `backend.type` | Backend to use for persistent storage. When set to `bbolt`, bindplane will be deployed as a single pod StatefulSet using a persistent volume. | `bbolt` |
+| `backend.bbolt.volumeSize` | Persistent volume size. | `10Gi` |
 | `image.repository` | Container repository to use. | `observiq/bindplane` |
-| `image.tag` | Image tag to use | derived from chart version. |
+| `image.tag`        | Image tag to use. | Derived from chart version. |
 | `config.server_url` | The URI used by clients to communicate with bindplane-op's REST API. | `http://bindplane-op:3001` |
 | `config.remote_url` | The URI used by clients to communicate with bindplane-op's OpAMP interface. | `ws://bindplane-op:3001` |
-| `config.secret` | See the [create secret](#create-secret) section. | `bindplane-op` |
-| `resources.requests.cpu` | [Requested CPU](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | `250m` |
+| `config.secret`     | See the [create secret](#create-secret) section. | `bindplane` |
+| `resources.requests.cpu`    | [Requested CPU](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | `250m` |
 | `resources.requests.memory` | [Requested Memory](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | `250Mi` |
-| `resources.limits.cpu` | [CPU limit](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | unset (burstable qos) |
-| `resources.memory.cpu` | [Memory limit](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | `500Mi` |
+| `resources.limits.cpu`      | [CPU limit](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | Not set (burstable qos) |
+| `resources.memory.cpu`      | [Memory limit](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | `500Mi` |
 
 Detailed documentation for BindPlane OP's configuration can be found [here](../../docs/configuration.md)
 
 ## Connectivity
 
 BindPlane can be reached using the clusterIP service deployed by the chart. By default the service
-name is `bindplane-op`.
+name is `bindplane` and the port is `3001`.
 
 **Web Interface**
 
 You can connect to BindPlane from your workstation using port forwarding:
 
 ```bash
-kubectl -n default port-forward svc/bindplane-op 3001
+kubectl -n default port-forward svc/bindplane 3001
 ```
 
 You should now be able to access http://localhost:3001
@@ -78,7 +77,7 @@ You should now be able to access http://localhost:3001
 You can connect to BindPlane from your workstation using port forwarding:
 
 ```bash
-kubectl -n default port-forward svc/bindplane-op 3001
+kubectl -n default port-forward svc/bindplane 3001
 ```
 
 Create and use a profile:
@@ -99,7 +98,7 @@ You should be able to issue commands: `bindplanectl get agent`
 Collectors running within the cluster can connect with the following OpAMP URI:
 
 ```
-ws://bindplane-op.default.svc.cluster.local:3001/v1/opamp
+ws://bindplane.default.svc.cluster.local:3001/v1/opamp
 ```
 
 ### Ingress

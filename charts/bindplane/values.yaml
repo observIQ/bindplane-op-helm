@@ -46,7 +46,7 @@ resources:
     # cpu: 500m
 
 ingress:
-  enable: true
+  enable: false
   # ingress.host is required when `ingress.enable` is true. This should
   # be a fully qualified hostname.
   host:

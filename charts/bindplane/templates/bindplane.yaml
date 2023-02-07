@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: {{ include "bindplane.deployment_type" . }}
 metadata:
   name: {{ include "bindplane.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane

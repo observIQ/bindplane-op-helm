@@ -7,7 +7,7 @@ backend:
 
 image:
   repository: observiq/bindplane
-  # Overrides the image tag whose default is v{{ .Chart.AppVersion }}
+  # Overrides the image tag whose default is {{ .Chart.AppVersion }}
   tag: ""
 
 # Bindplane configuration options:
@@ -44,4 +44,10 @@ resources:
     memory: 500Mi
     # Disable cpu limit by default, for burstable qos class
     # cpu: 500m
+
+ingress:
+  enable: true
+  # ingress.host is required when `ingress.enable` is true. This should
+  # be a fully qualified hostname.
+  host:
 

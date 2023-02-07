@@ -1,0 +1,23 @@
+{{- if .Values.ingress.enable }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "bindplane.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "bindplane.fullname" . }}
+                port:
+                  number: 3001
+{{- end }}

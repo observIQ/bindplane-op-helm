@@ -4,8 +4,12 @@
 
 ### Add Repo
 
-```shell
-helm repo add bindplane-op https://github.com/observIQ/bindplane-op/
+```bash
+helm repo add bindplane \
+    https://observiq.github.io/bindplane-op-helm
+
+helm repo update
+helm search repo
 ```
 
 ### Create Secret
@@ -31,7 +35,7 @@ kubectl -n default create secret generic bindplane-op \
 ### Install Chart
 
 ```shell
-helm upgrade --install bindplane-op bindplane-op/bindplane-op
+helm upgrade --install bindplane-op bindplane-op-helm/bindplane-op
 ```
 
 ## Configuration

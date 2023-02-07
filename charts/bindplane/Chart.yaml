@@ -1,5 +1,5 @@
 apiVersion: v2
-name: bindplane-
+name: bindplane
 description: BindPlane OP is an open source observability pipeline.
 type: application
 # The chart's version

@@ -1,8 +1,7 @@
+kind: Namespace
 apiVersion: v1
-kind: ServiceAccount
 metadata:
-  name: {{ include "bindplane.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane

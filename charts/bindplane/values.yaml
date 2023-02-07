@@ -1,0 +1,47 @@
+# Backend to use for persistent storage. When set to `file`, bindplane will be
+# deployed as a single pod statefulset using a persistent volume.
+backend:
+  type: bbolt
+  bbolt:
+    volumeSize: 10Gi
+
+image:
+  repository: observiq/bindplane
+  # Overrides the image tag whose default is v{{ .Chart.AppVersion }}
+  tag: ""
+
+# Bindplane configuration options:
+# https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
+config:
+  # The URI used by clients to communicate with bindplane-op. Defaults to the
+  # clusterIP service. If you wish to communicate with bindplane-op through an ingress
+  # service such as ingress-nginx, replace this value with the protocol (http / https), 
+  # hostname, path, and port defined in your ingress rule.
+  server_url: http://bindplane-op:3001
+
+  # The URI used by OpAMP clients to communicate with bindplane-op. Defaults to the
+  # clusterIP service. If you wish to communicate with bindplane-op through an ingress
+  # service such as ingress-nginx, replace this value with the protocol (ws / wss), 
+  # hostname, path, and port defined in your ingress rule.
+  remote_url: ws://bindplane-op:3001
+
+  # kubectl -n <namesapce> create secret generic <name> \
+  #   --from-literal=username=myuser \
+  #   --from-literal=password=mypassword \
+  #   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
+  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
+  secret: bindplane-op
+
+# Pod resource requests and limits can be defined here.
+# By default, burstable QoS is enabled. Set cpu / memory requests
+# and limit to identical values to enable guaranteed qos.
+# https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/
+resources:
+  requests:
+    memory: 250Mi
+    cpu: 250m
+  limits:
+    memory: 500Mi
+    # Disable cpu limit by default, for burstable qos class
+    #cpu: 500m
+

@@ -32,6 +32,15 @@ config:
   #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
   secret: bindplane
 
+  # The following options override values set in the secret. Useful
+  # for quick testing where you do not want to be bothered with managing
+  # sensative values outside of helm.
+  username: ""
+  password: ""
+  secret_key: ""
+  sessions_secret: ""
+
+
 # Pod resource requests and limits can be defined here.
 # By default, burstable QoS is enabled. Set cpu / memory requests
 # and limit to identical values to enable guaranteed qos.

@@ -46,29 +46,45 @@ spec:
             - name: BINDPLANE_CONFIG_REMOTE_URL
               value: {{ .Values.config.remote_url }}
             - name: BINDPLANE_CONFIG_USERNAME
+              {{- if  .Values.config.username }}
+              value: {{ .Values.config.username }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
                   key: username
                   optional: false
+              {{- end}}
             - name: BINDPLANE_CONFIG_PASSWORD
+              {{- if  .Values.config.password }}
+              value: {{ .Values.config.password }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
                   key: password
                   optional: false
+              {{- end}}
             - name: BINDPLANE_CONFIG_SECRET_KEY
+              {{- if  .Values.config.secret_key }}
+              value: {{ .Values.config.secret_key }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
                   key: secret_key
                   optional: false
+              {{- end }}
             - name: BINDPLANE_CONFIG_SESSIONS_SECRET
+              {{- if  .Values.config.sessions_secret }}
+              value: {{ .Values.config.sessions_secret }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
                   key: sessions_secreet
                   optional: true
+              {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
             # Write everything to the persistent volume

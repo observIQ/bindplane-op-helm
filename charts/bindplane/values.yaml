@@ -59,3 +59,4 @@ ingress:
   # ingress.host is required when `ingress.enable` is true. This should
   # be a fully qualified hostname.
   host:
+  class:

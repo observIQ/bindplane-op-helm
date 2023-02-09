@@ -9,6 +9,10 @@ metadata:
     app.kubernetes.io/stack: bindplane
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    {{- if .Values.ingress.class }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{- end }}
 spec:
   rules:
     - host: {{ .Values.ingress.host }}

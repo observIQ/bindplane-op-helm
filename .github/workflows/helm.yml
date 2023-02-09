@@ -3,8 +3,7 @@ name: Helm Release
 on:
   push:
     branches:
-      #- main
-      - dev
+      - main
     paths:
       - "charts/**"
 

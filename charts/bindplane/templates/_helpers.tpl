@@ -28,7 +28,11 @@ If release name contains chart name it will be used as a full name.
 The image to use
 */}}
 {{- define "bindplane.image" -}}
+{{- if eq .Values.enterprise true -}}
+{{- printf "%s:%s" .Values.image.repository (default (printf "%s-ee" .Chart.AppVersion) .Values.image.tag) }}
+{{- else -}}
 {{- printf "%s:%s" .Values.image.repository (default (printf "%s" .Chart.AppVersion) .Values.image.tag) }}
+{{- end -}}
 {{- end -}}
 
 {{/*

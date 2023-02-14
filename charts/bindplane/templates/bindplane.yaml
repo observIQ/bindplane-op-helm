@@ -112,7 +112,6 @@ spec:
             - name: BINDPLANE_CONFIG_STORAGE_FILE_PATH
               value: /data/storage
             {{- end }}
-
             {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
             - name: BINDPLANE_CONFIG_GCP_PUBSUB_PROJECT_ID
               value: {{ .Values.eventbus.pubsub.projectid }}
@@ -123,7 +122,6 @@ spec:
               value: /credentials.json
             {{- end }}
             {{- end }}
-
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

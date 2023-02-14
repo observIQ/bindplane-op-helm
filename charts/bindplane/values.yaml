@@ -23,6 +23,19 @@ eventbus:
   pubsub:
     projectid: ""
     topic: ""
+    # Credentials are required when running outside of Google Cloud
+    # or when the GKE / GCE instance is not configured with the
+    # Pub/Sub oauth scope.
+    # Example:
+    #   kubectl create secret generic bindplane-pubsub --from-file=credentials.json
+    #   credentials:
+    #     secret: bindplane-pubsub
+    #     subPath: credentials.json
+    credentials:
+      # Secret name
+      secret: ""
+      # Secret subPath which contains the Google Cloud credential JSON
+      subPath: ""
 
 image:
   # TODO(jsirianni): break repository into 'repository' and 'image'

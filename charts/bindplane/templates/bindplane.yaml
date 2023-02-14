@@ -115,11 +115,13 @@ spec:
 
             {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
             - name: BINDPLANE_CONFIG_GCP_PUBSUB_PROJECT_ID
-              value: {{- .Values.eventbus.pubsub.projectid }}
+              value: {{ .Values.eventbus.pubsub.projectid }}
             - name: BINDPLANE_CONFIG_GCP_PUBSUB_TOPIC
-              value: {{- .Values.eventbus.pubsub.topic }}
-            # - name: BINDPLANE_CONFIG_GCP_PUBSUB_CREDENTIALS_FILE
-            #   value: /credentials.json
+              value: {{ .Values.eventbus.pubsub.topic }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - name: BINDPLANE_CONFIG_GCP_PUBSUB_CREDENTIALS_FILE
+              value: /credentials.json
+            {{- end }}
             {{- end }}
 
           {{- with .Values.resources }}
@@ -151,23 +153,27 @@ spec:
             - mountPath: /data
               name: {{ include "bindplane.fullname" . }}-data
             {{- end }}
-            # {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
-            # - mountPath: /credentials.json
-            #   name: iris-pubsub-client-credentials
-            #   subPath: iris-pubsub-client-credentials
-            # {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - mountPath: /credentials.json
+              name: {{ .Values.eventbus.pubsub.credentials.secret }}
+              subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
+            {{- end }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 5",]
       terminationGracePeriodSeconds: 60
       volumes:
-        # {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
-        # - name: iris-pubsub-client-credentials
-        #   secret:
-        #     defaultMode: 420
-        #     secretName: iris-pubsub-client-credentials
-        # {{- end }}
+        {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+        {{- if .Values.eventbus.pubsub.credentials.secret }}
+        - name: {{ .Values.eventbus.pubsub.credentials.secret }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
+        {{- end }}
+        {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   volumeClaimTemplates:
     {{- if eq .Values.backend.type "bbolt" }}

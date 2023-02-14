@@ -87,11 +87,32 @@ spec:
               {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
-            # Write everything to the persistent volume
             - name: BINDPLANE_CONFIG_HOME
-              value: /data
+              value: /data  
+            {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
+            - name: BINDPLANE_CONFIG_STORE_TYPE
+              value: postgres
+            - name: BINDPLANE_CONFIG_POSTGRES_HOST
+              value: {{ .Values.backend.postgres.host }}
+            - name: BINDPLANE_CONFIG_POSTGRES_PORT
+              value: "{{ .Values.backend.postgres.port }}"
+            - name: BINDPLANE_CONFIG_POSTGRES_USERNAME
+              value: {{ .Values.backend.postgres.username }}
+            - name: BINDPLANE_CONFIG_POSTGRES_PASSWORD
+              value: {{ .Values.backend.postgres.password }}
+            - name: BINDPLANE_CONFIG_POSTGRES_DATABASE
+              value: {{ .Values.backend.postgres.database }}
+            - name: BINDPLANE_CONFIG_POSTGRES_SSLMODE
+              value: {{ .Values.backend.postgres.sslmode }}
+            - name: BINDPLANE_CONFIG_POSTGRES_MAX_CONNECTIONS
+              value: "{{ .Values.backend.postgres.maxConnections }}"
+            {{- else }}
+            - name: BINDPLANE_CONFIG_STORE_TYPE
+              value: bbolt
             - name: BINDPLANE_CONFIG_STORAGE_FILE_PATH
               value: /data/storage
+            {{- end }}
+
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

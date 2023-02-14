@@ -1,12 +1,24 @@
+enterprise: false
+
 # Backend to use for persistent storage. When set to `file`, bindplane will be
 # deployed as a single pod statefulset using a persistent volume.
 backend:
   type: bbolt
+
   bbolt:
     volumeSize: 10Gi
 
+  postgres:
+    host: localhost
+    port: 5432
+    database: ""
+    sslmode: "disable"
+    username: ""
+    password: ""
+    maxConnections: 100
+
 image:
-  repository: observiq/bindplane
+  repository: ghcr.io/observiq/bindplane
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}
   tag: ""
 

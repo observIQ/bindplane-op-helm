@@ -17,7 +17,16 @@ backend:
     password: ""
     maxConnections: 100
 
+eventbus:
+  type: ""
+
+  pubsub:
+    projectid: ""
+    topic: ""
+
 image:
+  # TODO(jsirianni): break repository into 'repository' and 'image'
+  # or rename repository to image.
   repository: ghcr.io/observiq/bindplane
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}
   tag: ""

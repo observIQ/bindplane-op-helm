@@ -58,6 +58,6 @@ instead of checking 'if ldap || active-directory'.
 {{- if or (eq .Values.auth.type "ldap") (eq .Values.auth.type "active-directory") -}}
 {{- printf "%s" "ldap" }}
 {{- else }}
-{{- printf "%s" "system" }}
+{{- printf "%s" .Values.auth.type }}
 {{- end -}}
 {{- end -}}

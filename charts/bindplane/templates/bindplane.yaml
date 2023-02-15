@@ -122,7 +122,7 @@ spec:
               value: /credentials.json
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "ldap") }}
+            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
             - name: BINDPLANE_CONFIG_AUTH_TYPE
               value: {{ .Values.auth.type }}
             - name: BINDPLANE_CONFIG_LDAP_PROTOCOL
@@ -138,7 +138,11 @@ spec:
             - name: BINDPLANE_CONFIG_LDAP_BIND_PASSWORD
               value: {{ .Values.auth.ldap.bindPassword }}
             - name: BINDPLANE_CONFIG_LDAP_SEARCH_FILTER
-              value: {{ .Values.auth.ldap.searchFilter }}
+              {{- if eq .Values.auth.type "active-directory"}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))" ) }}
+              {{- else}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(uid=%s)" ) }}
+              {{- end }}
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - name: BINDPLANE_CONFIG_LDAP_TLS_CA
               value: /ldap-ca.crt
@@ -184,7 +188,7 @@ spec:
               subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "ldap") }}
+            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - mountPath: /ldap-ca.crt
               name: {{ .Values.auth.ldap.tls.ca.secret }}
@@ -205,7 +209,7 @@ spec:
             secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
         {{- end }}
         {{- end }}
-        {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "ldap") }}
+        {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
         {{- if .Values.auth.ldap.tls.ca.secret }}
         - name: {{ .Values.auth.ldap.tls.ca.secret }}
           secret:

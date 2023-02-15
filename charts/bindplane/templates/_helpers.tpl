@@ -48,3 +48,16 @@ remote storage option is selected, run as a Deployment.
 {{- printf "%s" "Deployment" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Merge ldap and active-directory into one auth type because they
+have identical configuration as of right now. This makes it easier to check for
+instead of checking 'if ldap || active-directory'.
+*/}}
+{{- define "bindplane.auth.type" -}}
+{{- if or (eq .Values.auth.type "ldap") (eq .Values.auth.type "active-directory") -}}
+{{- printf "%s" "ldap" }}
+{{- else }}
+{{- printf "%s" "system" }}
+{{- end -}}
+{{- end -}}

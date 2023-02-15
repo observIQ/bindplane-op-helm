@@ -40,7 +40,8 @@ eventbus:
 auth:
   # Supported options:
   # - system (basic auth)
-  # - ldap (openldap, active directory, etc)
+  # - ldap
+  # - active-directory
   # 'system' will use the username and password specified
   # in config.secret or config.username / config.password.
   type: system
@@ -56,7 +57,10 @@ auth:
     # Example: cn=admin,dc=stage,dc=net
     bindUser: ""
     bindPassword: ""
-    searchFilter: (uid=%s)
+    # default values
+    # - ldap: (uid=%s)
+    # - active-directory: (|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))
+    searchFilter: ""
     tls:
       # Set to true to skip verification of the ldap server's certificate
       insecure: false

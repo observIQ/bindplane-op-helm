@@ -130,7 +130,11 @@ spec:
             - name: BINDPLANE_CONFIG_LDAP_SERVER
               value: {{ .Values.auth.ldap.server }}
             - name: BINDPLANE_CONFIG_LDAP_PORT
-              value: "{{ .Values.auth.ldap.port }}"
+              {{- if eq .Values.auth.ldap.protocol "ldaps"}}
+              value: {{ .Values.auth.ldap.port | default (printf "%s" "1636" ) }}
+              {{- else }}
+              value: {{ .Values.auth.ldap.port | default (printf "%s" "1389" ) }}
+              {{- end }}
             - name: BINDPLANE_CONFIG_LDAP_BASE_DN
               value: {{ .Values.auth.ldap.baseDN }}
             - name: BINDPLANE_CONFIG_LDAP_BIND_USER

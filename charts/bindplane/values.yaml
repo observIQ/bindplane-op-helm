@@ -37,6 +37,40 @@ eventbus:
       # Secret subPath which contains the Google Cloud credential JSON
       subPath: ""
 
+auth:
+  # Supported options:
+  # - system (basic auth)
+  # - ldap (openldap, active directory, etc)
+  # 'system' will use the username and password specified
+  # in config.secret or config.username / config.password.
+  type: system
+
+  ldap:
+    # ldap or ldaps (tls)
+    protocol: ldap
+    server: ""
+    # Common options are 1389 (plain text) and 1636 (tls)
+    port: 1389
+    # Example: ou=users,dc=stage,dc=net
+    baseDN: ""
+    # Example: cn=admin,dc=stage,dc=net
+    bindUser: ""
+    bindPassword: ""
+    searchFilter: (uid=%s)
+    tls:
+      # Set to true to skip verification of the ldap server's certificate
+      insecure: false
+      # Secret name and key which has the ldap server's certificate authority public certificate.
+      # You can create the secret with:
+      #   kubectl create secret generic ldap-ca --from-file ./ca.crt
+      # And use the following values:
+      #  ca:
+      #    name: ldap-ca
+      #    subPath: ca.crt
+      ca:
+        secret: ""
+        subPath: ""
+
 image:
   # TODO(jsirianni): break repository into 'repository' and 'image'
   # or rename repository to image.

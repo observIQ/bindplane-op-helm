@@ -122,6 +122,40 @@ spec:
               value: /credentials.json
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+            - name: BINDPLANE_CONFIG_AUTH_TYPE
+              value: {{ .Values.auth.type }}
+            - name: BINDPLANE_CONFIG_LDAP_PROTOCOL
+              value: {{ .Values.auth.ldap.protocol }}
+            - name: BINDPLANE_CONFIG_LDAP_SERVER
+              value: {{ .Values.auth.ldap.server }}
+            - name: BINDPLANE_CONFIG_LDAP_PORT
+              {{- if eq .Values.auth.ldap.protocol "ldaps"}}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1636" ) }}"
+              {{- else }}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1389" ) }}"
+              {{- end }}
+            - name: BINDPLANE_CONFIG_LDAP_BASE_DN
+              value: {{ .Values.auth.ldap.baseDN }}
+            - name: BINDPLANE_CONFIG_LDAP_BIND_USER
+              value: {{ .Values.auth.ldap.bindUser }}
+            - name: BINDPLANE_CONFIG_LDAP_BIND_PASSWORD
+              value: {{ .Values.auth.ldap.bindPassword }}
+            - name: BINDPLANE_CONFIG_LDAP_SEARCH_FILTER
+              {{- if eq .Values.auth.type "active-directory"}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))" ) }}
+              {{- else}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(uid=%s)" ) }}
+              {{- end }}
+            {{- if .Values.auth.ldap.tls.ca.secret }}
+            - name: BINDPLANE_CONFIG_LDAP_TLS_CA
+              value: /ldap-ca.crt
+            {{- end }}
+            {{- if .Values.auth.ldap.tls.insecure }}
+            - name: BINDPLANE_CONFIG_LDAP_TLS_INSECURE
+              value: "true"
+            {{- end }}
+            {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -158,6 +192,13 @@ spec:
               subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+            {{- if .Values.auth.ldap.tls.ca.secret }}
+            - mountPath: /ldap-ca.crt
+              name: {{ .Values.auth.ldap.tls.ca.secret }}
+              subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
+            {{- end }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
@@ -170,6 +211,14 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
+        {{- end }}
+        {{- end }}
+        {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+        {{- if .Values.auth.ldap.tls.ca.secret }}
+        - name: {{ .Values.auth.ldap.tls.ca.secret }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.auth.ldap.tls.ca.secret }}
         {{- end }}
         {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}

@@ -1,27 +1,38 @@
+# -- Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription.
 enterprise: false
 
-# Backend to use for persistent storage. When set to `file`, bindplane will be
-# deployed as a single pod statefulset using a persistent volume.
 backend:
+  # -- Backend to use for persistent storage. Available options are `bbolt`, and `postgres` (Enterprise).
   type: bbolt
 
   bbolt:
+    # -- Persistent volume size.
     volumeSize: 10Gi
 
   postgres:
+    # -- Hostname or IP address of the Postgres server.
     host: localhost
+    # -- TCP port used to connect to Postgres.
     port: 5432
+    # -- Database to use.
     database: ""
+    # -- SSL mode to use when connecting to Postgres over TLS. See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for valid options.
     sslmode: "disable"
+    # -- Username to use when connecting to Postgres.
     username: ""
+    # -- Password for the username used to connect to Postgres.
     password: ""
+    # -- Max number of connections to use when communicating with Postgres.
     maxConnections: 100
 
 eventbus:
+  # Enterprise only option. The eventbus type to use using multiple nodes. Available options include `pubsub`.
   type: ""
 
   pubsub:
+    # Project ID that should be used for connecting to the Pub/Sub API.
     projectid: ""
+    # Pub/Sub topic to use.
     topic: ""
     # Credentials are required when running outside of Google Cloud
     # or when the GKE / GCE instance is not configured with the
@@ -32,16 +43,60 @@ eventbus:
     #     secret: bindplane-pubsub
     #     subPath: credentials.json
     credentials:
-      # Secret name
+      # -- Optional Kubernetes secret which contains Google Cloud JSON service account credentials. Not required when running within Google Cloud with the Pub/Sub scope enabled.
       secret: ""
-      # Secret subPath which contains the Google Cloud credential JSON
+      # -- Sub path for the secret which contains the Google Cloud credential JSON
       subPath: ""
+
+auth:
+  # Supported options:
+  # - system (basic auth)
+  # - ldap
+  # - active-directory
+  # 'system' will use the username and password specified
+  # in config.secret or config.username / config.password.
+  # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise).
+  type: system
+
+  # -- Configuration options for 'ldap' and 'active-directory' authentication backends.
+  ldap:
+    # -- Protocol to use. Available options include `ldap` (plain text) and `ldaps` (tls).
+    protocol: ldap
+    # -- Hostname or IP address of the ldap server.
+    server: ""
+    # -- TCP port to use when connecting to the ldap server. Defaults to `1389` (plain text) or `1636` (tls).
+    port:
+    # -- Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`.
+    baseDN: ""
+    # -- User to use when looking up users. Example: `cn=admin,dc=stage,dc=net.`
+    bindUser: ""
+    # -- Password to use for the bind user.
+    bindPassword: ""
+    # -- Search filter to use when looking up users. Defaults to `(uid=%s)` (ldap) and `(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))` (active-directory).
+    searchFilter: ""
+    tls:
+      # -- Whether or not to skip verification of the ldap server's certificate.
+      insecure: false
+      # Secret name and key which has the ldap server's certificate authority public certificate.
+      # You can create the secret with:
+      #   kubectl create secret generic ldap-ca --from-file ./ca.crt
+      # And use the following values:
+      #  ca:
+      #    name: ldap-ca
+      #    subPath: ca.crt
+      ca:
+        # -- Name of the Kubernetes secret which contains the ldap server's certificate authority public certificate.
+        secret: ""
+        # -- The secret's subPath which contains the certificate.
+        subPath: ""
 
 image:
   # TODO(jsirianni): break repository into 'repository' and 'image'
   # or rename repository to image.
+  # -- Repository and image to use.
   repository: ghcr.io/observiq/bindplane
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}
+  # -- Image tag to use. Defaults to the version defined in the Chart's release.
   tag: ""
 
 # Bindplane configuration options:
@@ -51,12 +106,14 @@ config:
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 
   # hostname, path, and port defined in your ingress rule.
+  # -- URI used by clients to communicate with BindPlane.
   server_url: http://bindplane-op:3001
 
   # The URI used by OpAMP clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (ws / wss), 
   # hostname, path, and port defined in your ingress rule.
+  # -- URI used by agents to communicate with BindPlane using OpAMP.
   remote_url: ws://bindplane-op:3001
 
   # kubectl -n <namesapce> create secret generic <name> \
@@ -64,14 +121,19 @@ config:
   #   --from-literal=password=mypassword \
   #   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
   #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
+  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options.
   secret: bindplane
 
   # The following options override values set in the secret. Useful
   # for quick testing where you do not want to be bothered with managing
   # sensative values outside of helm.
+  # -- Username to use. Overrides `config.secret`.
   username: ""
+  # -- Password to use. Overrides `config.secret`.
   password: ""
+  # -- Secret Key to use. Overrides `config.secret`.
   secret_key: ""
+  # -- Sessions Secret to use. Overrides `config.secret`.
   sessions_secret: ""
 
 
@@ -81,16 +143,22 @@ config:
 # https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/
 resources:
   requests:
+    # -- Memory request.
     memory: 250Mi
+    # -- CPU request.
     cpu: 250m
   limits:
+    # -- Memory limit.
     memory: 500Mi
     # Disable cpu limit by default, for burstable qos class
     # cpu: 500m
 
 ingress:
+  # -- Whether or not to enable ingress.
   enable: false
   # ingress.host is required when `ingress.enable` is true. This should
   # be a fully qualified hostname.
+  # -- Hostname to use when ingress is enabled.
   host:
+  # -- Ingress class to use when ingress is enabled.
   class:

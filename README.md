@@ -4,16 +4,98 @@
 
 # BindPlane OP Helm
 
-This repository contains a Helm chart developing [BindPlane OP](https://github.com/observIQ/bindplane-op).
+This repository contains a Helm chart for [BindPlane OP](https://github.com/observIQ/bindplane-op).
 
-## Usage
+## Prerequisites
 
-### Install Helm
+### Helm
 
 [Helm](https://helm.sh) must be installed to use the charts. Please refer to
 Helm's [documentation](https://helm.sh/docs) to get started.
 
-### Deploy BindPlane
+### Secrets
 
-See the [Chart documentation](./charts/bindplane/README.md) for deployment
-instructions.
+The Chart can accept a secret for configuring sensative options. This secret should be managed outside of helm with your preferred secret management solution. Alternatively, you can specify
+these options using a values file. See the [Chart documentation](./charts/bindplane/README.md).
+
+The secret should have the following keys:
+- `username`: Basic auth username to use for the default admin user
+- `password`: Basic auth password to use for the default admin user
+- `secret_key`: Random UUIDv4 to use for authenticating OpAMP clients
+- `sessions_secret`: Random UUIDv4 used to derive web interface session tokens
+
+Example: Create secret with `kubectl`:
+
+```shell
+kubectl -n default create secret generic bindplane \
+  --from-literal=username=myuser \
+  --from-literal=password=mypassword \
+  --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
+  --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
+```
+
+## Configuration
+
+See the [Chart documentation](./charts/bindplane/README.md) for configuration documentation.
+
+## Usage
+
+Add the repository:
+
+```bash
+helm repo add bindplane \
+    https://observiq.github.io/bindplane-op-helm
+
+helm repo update
+helm search repo
+```
+
+Install
+
+```bash
+helm upgrade --install bindplane bindplane/bindplane
+```
+
+## Connectivity
+
+BindPlane can be reached using the clusterIP service deployed by the chart. By default the service
+name is `bindplane` and the port is `3001`.
+
+**Web Interface**
+
+You can connect to BindPlane from your workstation using port forwarding:
+
+```bash
+kubectl -n default port-forward svc/bindplane 3001
+```
+
+You should now be able to access http://localhost:3001
+
+**Command Line**
+
+You can connect to BindPlane from your workstation using port forwarding:
+
+```bash
+kubectl -n default port-forward svc/bindplane 3001
+```
+
+Create and use a profile:
+
+```bash
+bindplanectl profile set myprofile \
+  --username <username> \
+  --password <password> \
+  --server-url http://localhost:3001
+
+bindplanectl profile use myprofile
+```
+
+You should be able to issue commands: `bindplanectl get agent`
+
+**Collectors**
+
+Collectors running within the cluster can connect with the following OpAMP URI:
+
+```
+ws://bindplane.default.svc.cluster.local:3001/v1/opamp
+```

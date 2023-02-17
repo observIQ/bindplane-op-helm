@@ -20,7 +20,6 @@ BindPlane OP is an open source observability pipeline.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| auth.ldap | object | `{"baseDN":"","bindPassword":"","bindUser":"","port":null,"protocol":"ldap","searchFilter":"","server":"","tls":{"ca":{"secret":"","subPath":""},"insecure":false}}` | Configuration options for 'ldap' and 'active-directory' authentication backends. |
 | auth.ldap.baseDN | string | `""` | Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`. |
 | auth.ldap.bindPassword | string | `""` | Password to use for the bind user. |
 | auth.ldap.bindUser | string | `""` | User to use when looking up users. Example: `cn=admin,dc=stage,dc=net.` |

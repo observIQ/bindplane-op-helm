@@ -58,7 +58,6 @@ auth:
   # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise).
   type: system
 
-  # -- Configuration options for 'ldap' and 'active-directory' authentication backends.
   ldap:
     # -- Protocol to use. Available options include `ldap` (plain text) and `ldaps` (tls).
     protocol: ldap

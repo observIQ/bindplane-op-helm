@@ -162,3 +162,13 @@ ingress:
   host:
   # -- Ingress class to use when ingress is enabled.
   class:
+
+trace:
+  # -- Trace type to use. Valid options include `otlp`.
+  type: ""
+
+  otlp:
+    # -- "Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port."
+    endpoint: ""
+    # -- "Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver."
+    insecure: false

@@ -85,6 +85,14 @@ spec:
                   key: sessions_secreet
                   optional: true
               {{- end }}
+            {{- if .Values.trace.type }}
+            - name: BINDPLANE_CONFIG_TRACE_TYPE
+              value: {{ .Values.trace.type }}
+            - name: BINDPLANE_CONFIG_OTLP_TRACING_ENDPOINT
+              value: {{ .Values.trace.otlp.endpoint }}
+            - name: BINDPLANE_CONFIG_OTLP_TRACING_INSECURE_TLS
+              value: "{{ .Values.trace.otlp.insecure }}"
+            {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
             - name: BINDPLANE_CONFIG_HOME

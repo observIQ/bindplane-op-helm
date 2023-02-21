@@ -58,7 +58,6 @@ auth:
   # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise).
   type: system
 
-  # -- Configuration options for 'ldap' and 'active-directory' authentication backends.
   ldap:
     # -- Protocol to use. Available options include `ldap` (plain text) and `ldaps` (tls).
     protocol: ldap
@@ -162,3 +161,13 @@ ingress:
   host:
   # -- Ingress class to use when ingress is enabled.
   class:
+
+trace:
+  # -- Trace type to use. Valid options include `otlp`.
+  type: ""
+
+  otlp:
+    # -- "Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port."
+    endpoint: ""
+    # -- "Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver."
+    insecure: false

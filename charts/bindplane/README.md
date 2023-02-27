@@ -58,6 +58,7 @@ BindPlane OP is an open source observability pipeline.
 | ingress.class | string | `nil` | Ingress class to use when ingress is enabled. |
 | ingress.enable | bool | `false` | Whether or not to enable ingress. |
 | ingress.host | string | `nil` | Hostname to use when ingress is enabled. |
+| multiAccount | bool | `false` | Whether or not multi account support is enabled (Enterprise). |
 | resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"250m"` | CPU request. |
 | resources.requests.memory | string | `"250Mi"` | Memory request. |

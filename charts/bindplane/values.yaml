@@ -93,10 +93,8 @@ auth:
         subPath: ""
 
 image:
-  # TODO(jsirianni): break repository into 'repository' and 'image'
-  # or rename repository to image.
-  # -- Repository and image to use.
-  repository: ghcr.io/observiq/bindplane
+  # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane` and `ghcr.io/observiq/bindplane-ee` for Enterprise deployments.
+  name: ""
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}
   # -- Image tag to use. Defaults to the version defined in the Chart's release.
   tag: ""

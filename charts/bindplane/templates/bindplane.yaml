@@ -35,7 +35,7 @@ spec:
         fsGroup: 65534
       containers:
         - name: server
-          image: {{ include "bindplane.image" . }}
+          image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001

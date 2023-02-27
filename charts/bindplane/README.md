@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.11](https://img.shields.io/badge/Version-0.0.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
+![Version: 0.0.13](https://img.shields.io/badge/Version-0.0.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -53,7 +53,7 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
-| image.repository | string | `"ghcr.io/observiq/bindplane"` | Repository and image to use. |
+| image.name | string | `""` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane` and `ghcr.io/observiq/bindplane-ee` for Enterprise deployments. |
 | image.tag | string | `""` | Image tag to use. Defaults to the version defined in the Chart's release. |
 | ingress.class | string | `nil` | Ingress class to use when ingress is enabled. |
 | ingress.enable | bool | `false` | Whether or not to enable ingress. |

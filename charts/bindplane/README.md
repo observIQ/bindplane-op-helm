@@ -31,11 +31,11 @@ BindPlane OP is an open source observability pipeline.
 | auth.ldap.tls.ca.subPath | string | `""` | The secret's subPath which contains the certificate. |
 | auth.ldap.tls.insecure | bool | `false` | Whether or not to skip verification of the ldap server's certificate. |
 | auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise). |
-| autoscaling.enable | bool | `false` |  |
-| autoscaling.max | int | `10` |  |
-| autoscaling.min | int | `2` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `60` |  |
-| autoscaling.targetMemoryUtilizationPercentage | int | `60` |  |
+| autoscaling.enable | bool | `false` | "Whether or not autoscaling should be enabled. Requires an eventbus to be configured." |
+| autoscaling.max | int | `10` | "Maximum number of pods when autoscaling is enabled." |
+| autoscaling.min | int | `2` | "Minimum number of pods when autoscaling is enabled." |
+| autoscaling.targetCPUUtilizationPercentage | int | `60` | "Autoscaling target CPU usage percentage." |
+| autoscaling.targetMemoryUtilizationPercentage | int | `60` | "Autoscaling target Memory usage percentage." |
 | backend.bbolt.volumeSize | string | `"10Gi"` | Persistent volume size. |
 | backend.postgres.database | string | `""` | Database to use. |
 | backend.postgres.host | string | `"localhost"` | Hostname or IP address of the Postgres server. |

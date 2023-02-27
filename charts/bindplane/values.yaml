@@ -174,8 +174,13 @@ trace:
     insecure: false
 
 autoscaling:
+  # -- "Whether or not autoscaling should be enabled. Requires an eventbus to be configured."
   enable: false
+  # -- "Minimum number of pods when autoscaling is enabled."
   min: 2
+  # -- "Maximum number of pods when autoscaling is enabled."
   max: 10
+  # -- "Autoscaling target CPU usage percentage."
   targetCPUUtilizationPercentage: 60
+  # -- "Autoscaling target Memory usage percentage."
   targetMemoryUtilizationPercentage: 60

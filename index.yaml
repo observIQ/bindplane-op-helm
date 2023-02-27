@@ -3,6 +3,30 @@ entries:
   bindplane:
   - apiVersion: v2
     appVersion: 1.8.0
+    created: "2023-02-27T18:53:43.0155897Z"
+    description: BindPlane OP is an open source observability pipeline.
+    digest: 5c0fae0307922563c5aba67b3caf6d9ec427ebaac7676831bae16b8ae1b80b75
+    home: https://github.com/observIQ/bindplane-op
+    icon: https://raw.githubusercontent.com/observIQ/bindplane-op/main/docs/images/bindplaneop.png
+    keywords:
+    - kubernetes
+    - bindplane
+    - bindplane-op
+    - opentelemetry
+    - telemetry
+    - observability
+    maintainers:
+    - email: joe.sirianni@observiq.com
+      name: jsirianni
+    name: bindplane
+    sources:
+    - https://github.com/observIQ/bindplane-op/
+    type: application
+    urls:
+    - https://github.com/observIQ/bindplane-op-helm/releases/download/bindplane-0.0.13/bindplane-0.0.13.tgz
+    version: 0.0.13
+  - apiVersion: v2
+    appVersion: 1.8.0
     created: "2023-02-27T15:16:38.25363353Z"
     description: BindPlane OP is an open source observability pipeline.
     digest: 4d1e5fc42df880ef78342ade5d1e8009d21a1bc82ad581e02cd6d516e2352be3
@@ -289,4 +313,4 @@ entries:
     urls:
     - https://github.com/observIQ/bindplane-op-helm/releases/download/bindplane-0.0.1/bindplane-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-27T15:16:38.25368373Z"
+generated: "2023-02-27T18:53:43.015747699Z"

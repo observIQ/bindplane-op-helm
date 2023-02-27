@@ -164,6 +164,10 @@ spec:
               value: "true"
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.multiAccount true) }}
+            - name: BINDPLANE_CONFIG_ENABLE_ACCOUNTS
+              value: "true"
+            {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

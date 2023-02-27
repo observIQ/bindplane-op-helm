@@ -1,6 +1,9 @@
 # -- Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription.
 enterprise: false
 
+# -- Whether or not multi account support is enabled (Enterprise).
+multiAccount: false
+
 backend:
   # -- Backend to use for persistent storage. Available options are `bbolt`, and `postgres` (Enterprise).
   type: bbolt

@@ -168,7 +168,7 @@ spec:
             - name: BINDPLANE_CONFIG_ENABLE_ACCOUNTS
               value: "true"
             {{- end }}
-            {{- if and (eq .Values.email.type "sendgrid") (eq .Values.multiAccount true) }}
+            {{- if and (eq .Values.email.type "sendgrid") (eq .Values.multiAccount true) (ne .Values.auth.type "system") }}
             - name: BINDPLANE_CONFIG_SENDGRID_API_TOKEN
               value: {{ .Values.email.sendgrid.token }}
             {{- end }}

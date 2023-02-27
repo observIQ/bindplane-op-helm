@@ -29,10 +29,17 @@ The image to use
 */}}
 {{- define "bindplane.image" -}}
 {{- if eq .Values.enterprise true -}}
-{{- printf "%s:%s" (default (printf "ghcr.io/observiq/bindplane-ee") .Values.image.name) (default (printf "%s" .Chart.AppVersion) .Values.image.tag) }}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-ee") .Values.image.name) }}
 {{- else -}}
-{{- printf "%s:%s" (default (printf "ghcr.io/observiq/bindplane") .Values.image.name) (default (printf "%s" .Chart.AppVersion) .Values.image.tag) }}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane") .Values.image.name) }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+The image tag to use
+*/}}
+{{- define "bindplane.tag" -}}
+{{- printf "%s" (default (printf "%s" .Chart.AppVersion) .Values.image.tag) }}
 {{- end -}}
 
 {{/*

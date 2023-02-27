@@ -172,3 +172,10 @@ trace:
     endpoint: ""
     # -- "Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver."
     insecure: false
+
+autoscaling:
+  enable: false
+  min: 2
+  max: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60

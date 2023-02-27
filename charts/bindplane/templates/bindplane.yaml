@@ -35,7 +35,13 @@ spec:
         fsGroup: 65534
       containers:
         - name: server
-          image: {{ include "bindplane.image" . }}
+          {{- if .Values.image.name }}
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          {{- else if eq .Values.enterprise true }}
+          image: "ghcr.io/observiq/bindplane:{{ .Values.image.tag }}"
+          {{- else }}
+          image: "ghcr.io/observiq/bindplane-ee:{{ .Values.image.tag }}"
+          {{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001

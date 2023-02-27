@@ -184,3 +184,10 @@ autoscaling:
   targetCPUUtilizationPercentage: 60
   # -- "Autoscaling target Memory usage percentage."
   targetMemoryUtilizationPercentage: 60
+
+email:
+  # -- The optional email backend type to use (Enterprise). Valid options include `sendgrid`. Requires an auth type other than `system`.
+  type: ""
+  sendgrid:
+    # -- The sendgrid API token to use when authenticating to Sendgrid.
+    token: ""

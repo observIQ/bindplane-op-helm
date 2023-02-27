@@ -164,6 +164,12 @@ spec:
               value: "true"
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "google") }}
+            - name: BINDPLANE_CONFIG_AUTH_TYPE
+              value: {{ .Values.auth.type }}
+            - name: BINDPLANE_CONFIG_GOOGLE_CLIENT_ID
+              value: {{ .Values.auth.google.clientid }}
+            {{- end }}
             {{- if and (eq .Values.enterprise true) (eq .Values.multiAccount true) }}
             - name: BINDPLANE_CONFIG_ENABLE_ACCOUNTS
               value: "true"

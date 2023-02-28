@@ -58,7 +58,7 @@ auth:
   # - active-directory
   # 'system' will use the username and password specified
   # in config.secret or config.username / config.password.
-  # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise).
+  # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise), `active-directory` (Enterprise), and `google` (Enterprise).
   type: system
 
   ldap:
@@ -91,6 +91,10 @@ auth:
         secret: ""
         # -- The secret's subPath which contains the certificate.
         subPath: ""
+
+  google:
+    # -- Google OAUTH clientid
+    clientid: ""
 
 image:
   # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane` and `ghcr.io/observiq/bindplane-ee` for Enterprise deployments.

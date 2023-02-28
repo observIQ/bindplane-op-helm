@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.15](https://img.shields.io/badge/Version-0.0.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
+![Version: 0.0.16](https://img.shields.io/badge/Version-0.0.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -20,6 +20,7 @@ BindPlane OP is an open source observability pipeline.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| auth.google.clientid | string | `""` | Google OAUTH clientid |
 | auth.ldap.baseDN | string | `""` | Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`. |
 | auth.ldap.bindPassword | string | `""` | Password to use for the bind user. |
 | auth.ldap.bindUser | string | `""` | User to use when looking up users. Example: `cn=admin,dc=stage,dc=net.` |
@@ -30,7 +31,7 @@ BindPlane OP is an open source observability pipeline.
 | auth.ldap.tls.ca.secret | string | `""` | Name of the Kubernetes secret which contains the ldap server's certificate authority public certificate. |
 | auth.ldap.tls.ca.subPath | string | `""` | The secret's subPath which contains the certificate. |
 | auth.ldap.tls.insecure | bool | `false` | Whether or not to skip verification of the ldap server's certificate. |
-| auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap` (Enterprise) and `active-directory` (Enterprise). |
+| auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap` (Enterprise), `active-directory` (Enterprise), and `google` (Enterprise). |
 | autoscaling.enable | bool | `false` | "Whether or not autoscaling should be enabled. Requires an eventbus to be configured." |
 | autoscaling.max | int | `10` | "Maximum number of pods when autoscaling is enabled." |
 | autoscaling.min | int | `2` | "Minimum number of pods when autoscaling is enabled." |

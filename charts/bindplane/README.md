@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.14](https://img.shields.io/badge/Version-0.0.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
+![Version: 0.0.15](https://img.shields.io/badge/Version-0.0.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -52,6 +52,8 @@ BindPlane OP is an open source observability pipeline.
 | config.server_url | string | `"http://bindplane-op:3001"` | URI used by clients to communicate with BindPlane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
+| email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |
+| email.type | string | `""` | The optional email backend type to use (Enterprise). Valid options include `sendgrid`. Requires an auth type other than `system`. |
 | enterprise | bool | `false` | Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription. |
 | eventbus.pubsub.credentials.secret | string | `""` | Optional Kubernetes secret which contains Google Cloud JSON service account credentials. Not required when running within Google Cloud with the Pub/Sub scope enabled. |
 | eventbus.pubsub.credentials.subPath | string | `""` | Sub path for the secret which contains the Google Cloud credential JSON |

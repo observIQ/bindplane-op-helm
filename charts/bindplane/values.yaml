@@ -172,21 +172,21 @@ trace:
   type: ""
 
   otlp:
-    # -- "Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port."
+    # -- Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port.
     endpoint: ""
-    # -- "Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver."
+    # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver.
     insecure: false
 
 autoscaling:
-  # -- "Whether or not autoscaling should be enabled. Requires an eventbus to be configured."
+  # -- Whether or not autoscaling should be enabled. Requires an eventbus to be configured.
   enable: false
-  # -- "Minimum number of pods when autoscaling is enabled."
+  # -- Minimum number of pods when autoscaling is enabled.
   min: 2
-  # -- "Maximum number of pods when autoscaling is enabled."
+  # -- Maximum number of pods when autoscaling is enabled.
   max: 10
-  # -- "Autoscaling target CPU usage percentage."
+  # -- Autoscaling target CPU usage percentage.
   targetCPUUtilizationPercentage: 60
-  # -- "Autoscaling target Memory usage percentage."
+  # -- Autoscaling target Memory usage percentage.
   targetMemoryUtilizationPercentage: 60
 
 email:

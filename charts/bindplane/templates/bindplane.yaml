@@ -13,8 +13,6 @@ spec:
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   replicas: 1
   serviceName: {{ include "bindplane.fullname" . }}
-  {{- else }}
-  replicas: 1
   {{- end }}
   selector:
     matchLabels:

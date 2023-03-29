@@ -25,6 +25,8 @@ jobs:
       matrix:
         case:
           - "default.yaml"
+        k8s_version:
+          - v1.25
 
     steps:
       - name: Checkout
@@ -37,6 +39,9 @@ jobs:
 
       - name: Start Minikube
         uses: medyagh/setup-minikube@master
+        with:
+          cache: true
+          kubernetes-version: ${{ matrix.k8s_version }}
 
       - name: test
         run: |

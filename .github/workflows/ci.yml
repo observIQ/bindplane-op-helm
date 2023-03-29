@@ -26,7 +26,9 @@ jobs:
         case:
           - "default.yaml"
         k8s_version:
-          - v1.25
+          - v1.23.0
+          - v1.24.0
+          - v1.25.0
 
     steps:
       - name: Checkout

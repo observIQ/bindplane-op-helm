@@ -25,4 +25,10 @@ spec:
                 name: {{ include "bindplane.fullname" . }}
                 port:
                   number: 3001
+  {{- if .Values.ingress.tls.enable }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secret }}
+  {{- end }}
 {{- end }}

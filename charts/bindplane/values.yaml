@@ -166,6 +166,13 @@ ingress:
   host:
   # -- Ingress class to use when ingress is enabled.
   class:
+  tls:
+    # -- Whether or not to enable ingress transport layer security (TLS).
+    enable: false
+    # -- Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed
+    # outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls)
+    # for more details.
+    secret: ""
 
 trace:
   # -- Trace type to use. Valid options include `otlp`.

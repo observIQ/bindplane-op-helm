@@ -37,7 +37,9 @@ jobs:
           fetch-depth: 0
       
       - name: Install Kubectl
-        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
 
       - name: Start Minikube
         uses: medyagh/setup-minikube@master

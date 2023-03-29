@@ -18,3 +18,28 @@ jobs:
         env:
           CHART_LOCATION: ./charts/bindplane
           CHART_VALUES: ./charts/bindplane/values.yaml
+
+  integration:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        case:
+          - "default.yaml"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Install Kubectl
+        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+      - name: Start Minikube
+        uses: medyagh/setup-minikube@master
+
+      - name: test
+        run: |
+          helm template \
+            --values test/${{ matrix.case }} charts/bindplane | \
+            ./kubectl apply -f -

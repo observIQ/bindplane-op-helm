@@ -68,4 +68,4 @@ jobs:
             ./kubectl apply -f -
 
       - name: Wait For Pods
-        run: kubectl -n default wait --for=condition=ready pod
+        run: kubectl -n default wait --for=condition=ready pods --all

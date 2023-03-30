@@ -36,16 +36,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
-
-      - name: Install Inspec Plugins
-        run: | 
-          inspec plugin install train-kubernetes
-          inspec plugin install inspec-k8s
-        env:
-          CHEF_LICENSE: accept-no-persist
-
       - name: Install Kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"

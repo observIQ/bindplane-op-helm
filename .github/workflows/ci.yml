@@ -25,6 +25,9 @@ jobs:
       matrix:
         case:
           - "default"
+          - "image"
+          - "ingress"
+          - "resources"
         k8s_version:
           - v1.24.0
           - v1.25.0

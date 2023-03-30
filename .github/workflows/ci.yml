@@ -41,9 +41,11 @@ jobs:
           ruby-version: '2.7.0'
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
-      
-      - name: Add Gem Binaries to PATH
-        run: echo "$(pwd)/test/vendor/bundle/ruby/2.7.0/bin" >> $GITHUB_PATH
+
+      - name: Install Cinc (Inspec)
+        run: |
+          curl -L https://omnitruck.cinc.sh/install.sh | \
+          sudo bash -s -- -P cinc-auditor -v 4
 
       - run: cinc-auditor plugin install train-kubernetes
 

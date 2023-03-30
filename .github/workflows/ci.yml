@@ -36,14 +36,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Cinc (Inspec)
-        run: |
-          curl -L https://omnitruck.cinc.sh/install.sh | \
-          sudo bash -s -- -P cinc-auditor -v 4
-
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6'
+          ruby-version: '2.7'
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
 
@@ -70,7 +65,7 @@ jobs:
       - name: Get All
         run: |
           sleep 10 && kubectl -n default get all
-          kubectl describe pod bindplane-0
+          kubectl describe pod release-name-bindplane-0
 
       - name: Wait For Pods
         run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s

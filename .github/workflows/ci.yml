@@ -48,7 +48,7 @@ jobs:
           cp -r test/vendor/bundle/ruby/2.7.0 /home/runner/.inspec/gems/2.7.0
 
       - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec --chef-license accep
 
       - run: inspec plugin install train-kubernetes
       - run: inspec plugin install inspec-k8s

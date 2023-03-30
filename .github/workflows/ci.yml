@@ -42,7 +42,7 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
 
-      - run: inspec plugin install train-kubernetes
+      - run: cinc-auditor plugin install train-kubernetes
 
       - name: Install Kubectl
         run: |

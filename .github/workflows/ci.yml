@@ -24,11 +24,11 @@ jobs:
     strategy:
       matrix:
         case:
-          - "default.yaml"
+          - "default"
         k8s_version:
-          - v1.23.0
           - v1.24.0
           - v1.25.0
+          - v1.26.0
 
     steps:
       - name: Checkout
@@ -47,8 +47,12 @@ jobs:
           cache: true
           kubernetes-version: ${{ matrix.k8s_version }}
 
-      - name: test
+      - name: Deploy
         run: |
           helm template \
-            --values test/${{ matrix.case }} charts/bindplane | \
+            --values test/cases/${{ matrix.case }}/values.yaml \
+            charts/bindplane | \
             ./kubectl apply -f -
+
+      - name: Wait For Pods
+        run: kubectl -n default wait --for=condition=ready pod

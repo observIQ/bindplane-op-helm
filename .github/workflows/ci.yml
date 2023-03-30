@@ -38,14 +38,14 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.0'
+          ruby-version: '3.1.0'
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
 
       - name: Copy Gems
         run: |
           mkdir -p /home/runner/.inspec/gems
-          cp -r test/vendor/bundle/ruby/2.7.0 /home/runner/.inspec/gems/2.7.0
+          cp -r test/vendor/bundle/ruby/3.1.0 /home/runner/.inspec/gems/3.1.0
 
       - name: Install Inspec
         run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec

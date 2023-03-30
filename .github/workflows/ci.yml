@@ -63,5 +63,8 @@ jobs:
             charts/bindplane | \
             ./kubectl apply -f -
 
+      - name: Get All
+        run: sleep 10 && kubectl -n default get all
+
       - name: Wait For Pods
         run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s

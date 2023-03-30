@@ -42,8 +42,6 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
 
-      - run: ls -la test/vendor/bundle/ruby/2.7.0
-      - run: ls -la /home/runner/.inspec/gems/2.7.0/gems
       - name: Copy Gems
         run: |
           mkdir -p /home/runner/.inspec/gems

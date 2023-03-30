@@ -61,19 +61,12 @@ jobs:
           kubernetes-version: ${{ matrix.k8s_version }}
           addons: default-storageclass,storage-provisioner,ingress
 
-      - run: minikube addons list
-
       - name: Deploy
         run: |
           helm template \
             --values test/cases/${{ matrix.case }}/values.yaml \
             charts/bindplane | \
             ./kubectl apply -f -
-
-      - name: Get All
-        run: |
-          sleep 10 && kubectl -n default get all
-          kubectl describe pod release-name-bindplane-0
 
       - name: Wait For Pods
         run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s

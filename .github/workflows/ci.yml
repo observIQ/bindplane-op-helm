@@ -42,7 +42,8 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
       
-      - run: ls -la test/vendor/bundle/ruby/2.7.0/bin
+      - name: Add Gem Binaries to PATH
+        run: echo "$(pwd)/test/vendor/bundle/ruby/2.7.0/bin" >> $GITHUB_PATH
 
       - run: cinc-auditor plugin install train-kubernetes
 

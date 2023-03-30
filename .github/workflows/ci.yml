@@ -59,6 +59,7 @@ jobs:
         with:
           cache: true
           kubernetes-version: ${{ matrix.k8s_version }}
+          addons: storage-provisioner,ingress
 
       - name: Deploy
         run: |

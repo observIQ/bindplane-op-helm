@@ -41,6 +41,8 @@ jobs:
           ruby-version: '2.7'
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
+      
+      - run: ls ./vendor/bundle
 
       - run: cinc-auditor plugin install train-kubernetes
 

@@ -41,13 +41,9 @@ jobs:
           curl -L https://omnitruck.cinc.sh/install.sh | \
           sudo bash -s -- -P cinc-auditor -v 4
 
-      - name: Install Gem k8s-client
-        run: sudo gem install k8s-client -v 0.10.4
-
-      - name: Install Gem train-kubernetes
-        run: |
-          sudo gem install train-kubernetes
-          inspec plugin install train-kubernetes
+      - run: sudo gem install k8s-client -v 0.10.4
+      - run: sudo gem install train-kubernetes
+      - run: inspec plugin install train-kubernetes
 
       - name: Install Kubectl
         run: |

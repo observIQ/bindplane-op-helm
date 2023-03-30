@@ -61,6 +61,8 @@ jobs:
           kubernetes-version: ${{ matrix.k8s_version }}
           addons: default-storageclass,storage-provisioner,ingress
 
+      - run: minikube addons list
+
       - name: Deploy
         run: |
           helm template \

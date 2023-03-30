@@ -50,8 +50,8 @@ jobs:
       - name: Install Inspec
         run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
 
-      - run: cinc-auditor plugin install train-kubernetes
-      - run: cinc-auditor plugin install inspec-k8s
+      - run: inspec plugin install train-kubernetes
+      - run: inspec plugin install inspec-k8s
 
       - name: Install Kubectl
         run: |
@@ -76,5 +76,5 @@ jobs:
         run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s
 
       - name: Test
-        run: cinc-auditor exec cases/${{ matrix.case }}/inspec.rb
+        run: inspec exec cases/${{ matrix.case }}/inspec.rb
         working-directory: test/

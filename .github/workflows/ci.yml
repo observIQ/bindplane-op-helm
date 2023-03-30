@@ -42,6 +42,8 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
 
+      - run: ls -la test/vendor/bundle
+
       - name: Install Cinc (Inspec)
         run: |
           curl -L https://omnitruck.cinc.sh/install.sh | \

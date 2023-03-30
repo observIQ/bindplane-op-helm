@@ -43,6 +43,7 @@ jobs:
           working-directory: test/
 
       - run: ls -la test/vendor/bundle/ruby/2.7.0
+      - run: ls -la /home/runner/.inspec/gems/2.7.0/gems
       - name: Copy Gems
         run: |
           mkdir -p /home/runner/.inspec/gems
@@ -54,6 +55,7 @@ jobs:
           sudo bash -s -- -P cinc-auditor -v 4
 
       - run: cinc-auditor plugin install train-kubernetes
+      - run: cinc-auditor plugin install inspec-k8s
 
       - name: Install Kubectl
         run: |

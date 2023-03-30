@@ -42,11 +42,11 @@ jobs:
           sudo bash -s -- -P cinc-auditor -v 4
 
       - name: Install Gem k8s-client
-        run: gem install k8s-client -v 0.10.4
+        run: sudo gem install k8s-client -v 0.10.4
 
       - name: Install Gem train-kubernetes
         run: |
-          gem install train-kubernetes
+          sudo gem install train-kubernetes
           inspec plugin install train-kubernetes
 
       - name: Install Kubectl

@@ -43,6 +43,10 @@ jobs:
           working-directory: test/
 
       - run: ls -la test/vendor/bundle/ruby/2.7.0
+      - name: Copy Gems
+        run: |
+          mkdir -p /home/runner/.inspec/gems
+          cp -r test/vendor/bundle/ruby/2.7.0 /home/runner/.inspec/gems/2.7.0
 
       - name: Install Cinc (Inspec)
         run: |

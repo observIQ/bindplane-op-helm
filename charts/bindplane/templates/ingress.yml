@@ -13,6 +13,9 @@ metadata:
     {{- if .Values.ingress.class }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     {{- end }}
+    {{- if .Values.ingress.annotations }}
+    {{ toYaml .Values.ingress.annotations }}
+    {{- end }}
 spec:
   rules:
     - host: {{ .Values.ingress.host }}

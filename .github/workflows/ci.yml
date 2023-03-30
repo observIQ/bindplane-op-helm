@@ -47,13 +47,10 @@ jobs:
           mkdir -p /home/runner/.inspec/gems
           cp -r test/vendor/bundle/ruby/2.7.0 /home/runner/.inspec/gems/2.7.0
 
-      - name: Install Cinc (Inspec)
-        run: |
-          curl -L https://omnitruck.cinc.sh/install.sh | \
-          sudo bash -s -- -P cinc-auditor -v 4
+      - name: Install Inspec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
 
       - run: cinc-auditor plugin install train-kubernetes
-      - run: echo '{}' > /opt/cinc-auditor/embedded/lib/ruby/gems/2.7.0/gems/inspec-core-4.56.20/etc/plugin_filters.json
       - run: cinc-auditor plugin install inspec-k8s
 
       - name: Install Kubectl

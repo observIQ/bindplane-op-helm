@@ -72,4 +72,5 @@ jobs:
         run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s
 
       - name: Test
-        run: cinc-auditor exec test/cases/${{ matrix.case }}/inspec.rb
+        run: cinc-auditor exec cases/${{ matrix.case }}/inspec.rb
+        working-directory: test/

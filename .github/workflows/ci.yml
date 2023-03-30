@@ -38,11 +38,11 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7'
+          ruby-version: '2.7.0'
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: test/
       
-      - run: ls -la test/vendor/bundle/ruby
+      - run: ls -la test/vendor/bundle/ruby/2.7.0
 
       - run: cinc-auditor plugin install train-kubernetes
 

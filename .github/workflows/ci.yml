@@ -41,8 +41,18 @@ jobs:
           curl -L https://omnitruck.cinc.sh/install.sh | \
           sudo bash -s -- -P cinc-auditor -v 4
 
-      - run: sudo gem install k8s-client -v 0.10.4
-      - run: sudo gem install train-kubernetes
+      - name: Cache Gems
+        uses: actions/cache@v2
+        with:
+          path: test/
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Bundle install
+        run: bundle install --retry 3
+        working-directory: test/
+
       - run: inspec plugin install train-kubernetes
 
       - name: Install Kubectl

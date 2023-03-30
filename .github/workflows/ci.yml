@@ -52,8 +52,11 @@ jobs:
           kubernetes-version: ${{ matrix.k8s_version }}
           addons: default-storageclass,storage-provisioner,ingress
 
-      - name: Wait For Pods
-        run: sleep 5 && kubectl -n ingress-nginx wait deployment ingress-nginx-controller --timeout=120s --for condition=Available=True
+      - name: Wait For Ingress Pods
+        run: |
+          sleep 5
+          kubectl -n ingress-nginx wait deployment ingress-nginx-controller --timeout=120s --for condition=Available=True
+          sleep 5
 
       - name: Deploy
         run: |

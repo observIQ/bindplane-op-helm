@@ -22,12 +22,13 @@ jobs:
   integration:
     runs-on: ubuntu-20.04
     strategy:
+      max-parallel: 3
       matrix:
         case:
           - "default"
+          - "all"
           - "image"
           - "ingress"
-          - "resources"
         k8s_version:
           - v1.24.0
           - v1.25.0

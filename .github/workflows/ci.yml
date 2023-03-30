@@ -41,17 +41,11 @@ jobs:
           curl -L https://omnitruck.cinc.sh/install.sh | \
           sudo bash -s -- -P cinc-auditor -v 4
 
-      - name: Cache Gems
-        uses: actions/cache@v2
+      - uses: ruby/setup-ruby@v1
         with:
-          path: test/
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
-      - name: Bundle install
-        run: bundle install --retry 3
-        working-directory: test/
+          ruby-version: '3.0' # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          working-directory: test/
 
       - run: inspec plugin install train-kubernetes
 

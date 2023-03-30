@@ -53,7 +53,7 @@ jobs:
           sudo bash -s -- -P cinc-auditor -v 4
 
       - run: cinc-auditor plugin install train-kubernetes
-      - run: sudo rm -f /opt/cinc-auditor/embedded/lib/ruby/gems/2.7.0/gems/inspec-core-4.56.20/etc/plugin_filters.json
+      - run: echo '{}' > /opt/cinc-auditor/embedded/lib/ruby/gems/2.7.0/gems/inspec-core-4.56.20/etc/plugin_filters.json
       - run: cinc-auditor plugin install inspec-k8s
 
       - name: Install Kubectl

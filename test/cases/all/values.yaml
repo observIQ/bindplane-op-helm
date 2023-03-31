@@ -1,0 +1,51 @@
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  secret_key: 12D8FB6E-1532-4A4C-97AF-95A430BE5E6E
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  server_url: http://bindplane.local:3001
+  remote_url: ws://bindplane.local:3001
+
+# All
+enterprise: false
+mutliAccount: false
+backend:
+  type: bbolt
+  bbolt:
+    volumeSize: 2Gi
+eventbus:
+  type: ""
+auth:
+  type: ldap
+  ldap:
+    protocol: ldap
+    server: ldap.local
+    port: 1389
+    baseDN: ou=users,dc=stage,dc=net
+    bindUser: cn=actions,ou=users,dc=stage,dc=net
+    bindPassword: bindpass
+    searchFilter: (uid=%s)
+    tls:
+      insecure: true
+image:
+  name: observiq/bindplane-amd64
+  tag: 1.11.0
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    memory: 100Mi
+    cpu: 100m
+ingress:
+  enable: true
+  host: bindplane.local
+  class: nginx
+trace:
+  type: otlp
+  otlp:
+    endpoint: collector.local
+    insecure: true
+autoscaling:
+  enable: false

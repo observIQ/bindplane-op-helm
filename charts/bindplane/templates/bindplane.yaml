@@ -40,9 +40,17 @@ spec:
               name: http
           env:
             - name: BINDPLANE_CONFIG_SERVER_URL
+              {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
+              {{- else }}
+              value: http://{{ include "bindplane.fullname" . }}:3001
+              {{- end }}
             - name: BINDPLANE_CONFIG_REMOTE_URL
+              {{- if .Values.config.remote_url }}
               value: {{ .Values.config.remote_url }}
+              {{- else }}
+              value: ws://{{ include "bindplane.fullname" . }}:3001
+              {{- end }}
             - name: BINDPLANE_CONFIG_USERNAME
               {{- if  .Values.config.username }}
               value: {{ .Values.config.username }}

@@ -111,14 +111,14 @@ config:
   # service such as ingress-nginx, replace this value with the protocol (http / https), 
   # hostname, path, and port defined in your ingress rule.
   # -- URI used by clients to communicate with BindPlane.
-  server_url: http://bindplane-op:3001
+  server_url: ""
 
   # The URI used by OpAMP clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (ws / wss), 
   # hostname, path, and port defined in your ingress rule.
   # -- URI used by agents to communicate with BindPlane using OpAMP.
-  remote_url: ws://bindplane-op:3001
+  remote_url: ""
 
   # kubectl -n <namesapce> create secret generic <name> \
   #   --from-literal=username=myuser \

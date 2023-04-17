@@ -10,9 +10,11 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     {{- if .Values.ingress.class }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{- if eq .Values.ingress.class "nginx" }}
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    {{- end }}
     {{- end }}
     {{- if .Values.ingress.annotations }}
     {{ toYaml .Values.ingress.annotations }}

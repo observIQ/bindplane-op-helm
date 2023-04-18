@@ -4,6 +4,8 @@ config:
   password: bppass
   secret_key: 12D8FB6E-1532-4A4C-97AF-95A430BE5E6E
   sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  server_url: http://bindplane.local:80
+  remote_url: ws://bindplane.local:80
 
 # Ingress
 ingress:

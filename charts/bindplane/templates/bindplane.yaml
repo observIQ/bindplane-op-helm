@@ -43,13 +43,13 @@ spec:
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
               {{- else }}
-              value: http://{{ include "bindplane.fullname" . }}:3001
+              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3001
               {{- end }}
             - name: BINDPLANE_CONFIG_REMOTE_URL
               {{- if .Values.config.remote_url }}
               value: {{ .Values.config.remote_url }}
               {{- else }}
-              value: ws://{{ include "bindplane.fullname" . }}:3001
+              value: ws://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3001
               {{- end }}
             - name: BINDPLANE_CONFIG_USERNAME
               {{- if  .Values.config.username }}

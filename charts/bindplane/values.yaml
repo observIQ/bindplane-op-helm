@@ -11,6 +11,8 @@ backend:
   bbolt:
     # -- Persistent volume size.
     volumeSize: 10Gi
+    # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
+    storageClass: ""
 
   postgres:
     # -- Hostname or IP address of the Postgres server.

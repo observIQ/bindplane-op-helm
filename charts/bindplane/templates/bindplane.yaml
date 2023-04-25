@@ -266,5 +266,8 @@ spec:
         resources:
           requests:
             storage: {{ .Values.backend.bbolt.volumeSize }}
+        {{- if .Values.backend.bbolt.storageClass }}
+        storageClassName: {{ .Values.backend.bbolt.storageClass }}
+        {{- end }}
     {{- end }}
   {{- end }}

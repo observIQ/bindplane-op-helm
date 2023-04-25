@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.19](https://img.shields.io/badge/Version-0.0.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.10.0](https://img.shields.io/badge/AppVersion-1.10.0-informational?style=flat-square)
+![Version: 0.0.24](https://img.shields.io/badge/Version-0.0.24-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.13.0](https://img.shields.io/badge/AppVersion-1.13.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -37,6 +37,7 @@ BindPlane OP is an open source observability pipeline.
 | autoscaling.min | int | `2` | Minimum number of pods when autoscaling is enabled. |
 | autoscaling.targetCPUUtilizationPercentage | int | `60` | Autoscaling target CPU usage percentage. |
 | autoscaling.targetMemoryUtilizationPercentage | int | `60` | Autoscaling target Memory usage percentage. |
+| backend.bbolt.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
 | backend.bbolt.volumeSize | string | `"10Gi"` | Persistent volume size. |
 | backend.postgres.database | string | `""` | Database to use. |
 | backend.postgres.host | string | `"localhost"` | Hostname or IP address of the Postgres server. |
@@ -47,10 +48,10 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres` (Enterprise). |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
-| config.remote_url | string | `"ws://bindplane-op:3001"` | URI used by agents to communicate with BindPlane using OpAMP. |
+| config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options. |
 | config.secret_key | string | `""` | Secret Key to use. Overrides `config.secret`. |
-| config.server_url | string | `"http://bindplane-op:3001"` | URI used by clients to communicate with BindPlane. |
+| config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
 | email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |

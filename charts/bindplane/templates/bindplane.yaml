@@ -39,6 +39,150 @@ spec:
             - containerPort: 3001
               name: http
           env:
+            - name: BINDPLANE_REMOTE_URL
+              {{- if .Values.config.server_url }}
+              value: {{ .Values.config.server_url }}
+              {{- else }}
+              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3001
+              {{- end }}
+            - name: BINDPLANE_USERNAME
+              {{- if  .Values.config.username }}
+              value: {{ .Values.config.username }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: username
+                  optional: false
+              {{- end}}
+            - name: BINDPLANE_PASSWORD
+              {{- if  .Values.config.password }}
+              value: {{ .Values.config.password }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: password
+                  optional: false
+              {{- end}}
+            - name: BINDPLANE_SECRET_KEY
+              {{- if  .Values.config.secret_key }}
+              value: {{ .Values.config.secret_key }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: secret_key
+                  optional: false
+              {{- end }}
+            - name: BINDPLANE_SESSION_SECRET
+              {{- if  .Values.config.sessions_secret }}
+              value: {{ .Values.config.sessions_secret }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: sessions_secret
+                  optional: true
+              {{- end }}
+            {{- if .Values.trace.type }}
+            - name: BINDPLANE_TRACING_TYPE
+              value: {{ .Values.trace.type }}
+            - name: BINDPLANE_TRACING_OTLP_ENDPOINT
+              value: {{ .Values.trace.otlp.endpoint }}
+            - name: BINDPLANE_TRACING_OTLP_INSECURE
+              value: "{{ .Values.trace.otlp.insecure }}"
+            {{- end }}
+            - name: BINDPLANE_LOGGING_OUTPUT
+              value: stdout
+            - name: BINDPLANE_CONFIG_HOME
+              value: /data  
+            {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
+            - name: BINDPLANE_STORE_TYPE
+              value: postgres
+            - name: BINDPLANE_POSTGRES_HOST
+              value: {{ .Values.backend.postgres.host }}
+            - name: BINDPLANE_POSTGRES_PORT
+              value: "{{ .Values.backend.postgres.port }}"
+            - name: BINDPLANE_POSTGRES_USERNAME
+              value: {{ .Values.backend.postgres.username }}
+            - name: BINDPLANE_POSTGRES_PASSWORD
+              value: {{ .Values.backend.postgres.password }}
+            - name: BINDPLANE_POSTGRES_DATABASE
+              value: {{ .Values.backend.postgres.database }}
+            - name: BINDPLANE_POSTGRES_SSL_MODE
+              value: {{ .Values.backend.postgres.sslmode }}
+            - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
+              value: "{{ .Values.backend.postgres.maxConnections }}"
+            {{- else }}
+            - name: BINDPLANE_STORE_TYPE
+              value: bbolt
+            - name: BINDPLANE_STORE_BBOLT_PATH
+              value: /data/storage
+            {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: googlePubSub
+            - name: BINDPLANE_GOOGLE_PUB_SUB_PROJECT_ID
+              value: {{ .Values.eventbus.pubsub.projectid }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_TOPIC
+              value: {{ .Values.eventbus.pubsub.topic }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_CREDENTIALS_FILE
+              value: /credentials.json
+            {{- end }}
+            {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: {{ .Values.auth.type }}
+            - name: BINDPLANE_LDAP_SERVER
+              value: {{ .Values.auth.ldap.server }}
+            - name: BINDPLANE_LDAP_PORT
+              {{- if eq .Values.auth.ldap.protocol "ldaps"}}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1636" ) }}"
+              {{- else }}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1389" ) }}"
+              {{- end }}
+            - name: BINDPLANE_LDAP_BASE_DN
+              value: {{ .Values.auth.ldap.baseDN }}
+            - name: BINDPLANE_LDAP_BIND_USER
+              value: {{ .Values.auth.ldap.bindUser }}
+            - name: BINDPLANE_LDAP_BIND_PASSWORD
+              value: {{ .Values.auth.ldap.bindPassword }}
+            - name: BINDPLANE_LDAP_SEARCH_FILTER
+              {{- if eq .Values.auth.type "active-directory"}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))" ) }}
+              {{- else}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(uid=%s)" ) }}
+              {{- end }}
+            {{- if .Values.auth.ldap.tls.ca.secret }}
+            - name: BINDPLANE_LDAP_TLS_CA
+              value: /ldap-ca.crt
+            {{- end }}
+            {{- if .Values.auth.ldap.tls.insecure }}
+            - name: BINDPLANE_LDAP_TLS_SKIP_VERIFY
+              value: "true"
+            {{- end }}
+            {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "google") }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: google
+            - name: BINDPLANE_GOOGLE_AUTH_CLIENT_ID
+              value: {{ .Values.auth.google.clientid }}
+            {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.multiAccount true) }}
+            - name: BINDPLANE_ACCOUNTS_ENABLE
+              value: "true"
+            {{- end }}
+            {{- if and (eq .Values.email.type "sendgrid") (eq .Values.multiAccount true) (ne .Values.auth.type "system") }}
+            - name: BINDPLANE_EMAIL_TYPE
+              value: sendgrid
+            - name: BINDPLANE_SEND_GRID_API_TOKEN
+              value: {{ .Values.email.sendgrid.token }}
+            {{- end }}
+
+            {{- /* These are legacy environment variables to ensure this chart can support older versions of BindPlaneOP. This will eventually be removed in a future version of the chart.  */ -}}
+            {{- if .Values.config }}
             - name: BINDPLANE_CONFIG_SERVER_URL
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
@@ -88,7 +232,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
-                  key: sessions_secreet
+                  key: sessions_secret
                   optional: true
               {{- end }}
             {{- if .Values.trace.type }}
@@ -101,8 +245,6 @@ spec:
             {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
-            - name: BINDPLANE_CONFIG_HOME
-              value: /data  
             {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
             - name: BINDPLANE_CONFIG_STORE_TYPE
               value: postgres

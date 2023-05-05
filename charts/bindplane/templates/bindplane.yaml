@@ -181,8 +181,7 @@ spec:
               value: {{ .Values.email.sendgrid.token }}
             {{- end }}
 
-            {{- /* These are legacy environment variables to ensure this chart can support older versions of BindPlaneOP. This will eventually be removed in a future version of the chart.  */ -}}
-            {{- if .Values.config }}
+            # These are legacy environment variables to ensure this chart can support older versions of BindPlaneOP. This will eventually be removed in a future version of the chart.
             - name: BINDPLANE_CONFIG_SERVER_URL
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
@@ -232,7 +231,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}
-                  key: sessions_secret
+                  key: sessions_secreet
                   optional: true
               {{- end }}
             {{- if .Values.trace.type }}
@@ -245,6 +244,8 @@ spec:
             {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
+            - name: BINDPLANE_CONFIG_HOME
+              value: /data  
             {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
             - name: BINDPLANE_CONFIG_STORE_TYPE
               value: postgres
@@ -326,6 +327,7 @@ spec:
             - name: BINDPLANE_CONFIG_SENDGRID_API_TOKEN
               value: {{ .Values.email.sendgrid.token }}
             {{- end }}
+
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

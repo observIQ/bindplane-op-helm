@@ -120,7 +120,8 @@ config:
   # service such as ingress-nginx, replace this value with the protocol (ws / wss), 
   # hostname, path, and port defined in your ingress rule.
   # -- URI used by agents to communicate with BindPlane using OpAMP.
-  # NOTE: This value will eventually be removed when support for older versions of BindPlane is removed.
+  # NOTE: This value is not used in BindPlane OP v1.15.0 and newer. 
+  # It will eventually be removed when support for older versions of BindPlane is removed from this chart.
   remote_url: ""
 
   # kubectl -n <namesapce> create secret generic <name> \

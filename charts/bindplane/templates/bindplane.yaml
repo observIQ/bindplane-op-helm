@@ -180,6 +180,8 @@ spec:
             - name: BINDPLANE_SEND_GRID_API_TOKEN
               value: {{ .Values.email.sendgrid.token }}
             {{- end }}
+            - name: BINDPLANE_PORT
+              value: "3001"
 
             # These are legacy environment variables to ensure this chart can support older versions of BindPlaneOP. This will eventually be removed in a future version of the chart.
             - name: BINDPLANE_CONFIG_SERVER_URL

@@ -244,8 +244,6 @@ spec:
             {{- end }}
             - name: BINDPLANE_CONFIG_LOG_OUTPUT
               value: stdout
-            - name: BINDPLANE_CONFIG_HOME
-              value: /data  
             {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
             - name: BINDPLANE_CONFIG_STORE_TYPE
               value: postgres

@@ -135,6 +135,8 @@ spec:
             {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}
+            - name: BINDPLANE_LDAP_PROTOCOL
+              value: {{ .Values.auth.ldap.protocol }}
             - name: BINDPLANE_LDAP_SERVER
               value: {{ .Values.auth.ldap.server }}
             - name: BINDPLANE_LDAP_PORT

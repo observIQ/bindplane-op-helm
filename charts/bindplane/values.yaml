@@ -108,6 +108,8 @@ image:
 # Bindplane configuration options:
 # https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
 config:
+  # -- The license key to use for BindPlane OP, required when enterprise is set to true. 
+  license: ""
   # The URI used by clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 

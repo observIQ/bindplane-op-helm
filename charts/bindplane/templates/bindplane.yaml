@@ -39,6 +39,10 @@ spec:
             - containerPort: 3001
               name: http
           env:
+            {{- if .Values.enterprise }}
+            - name: BINDPLANE_LICENSE
+              value: {{ .Values.config.license }}
+            {{- end }}
             - name: BINDPLANE_REMOTE_URL
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}

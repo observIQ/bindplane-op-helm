@@ -29,8 +29,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ include "bindplane.fullname" . }}
+      {{- with .Values.podSecurityContext }}
       securityContext:
-        fsGroup: 65534
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
@@ -350,14 +352,10 @@ spec:
             httpGet:
               path: /health
               port: http
+          {{- with .Values.containerSecurityContext }}
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 65534
-            # Persistent data is written to a volume, the bindplane process should
-            # never need to write to the container filesystem.
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop: ["ALL"]
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- if eq .Values.backend.type "bbolt" }}
             - mountPath: /data

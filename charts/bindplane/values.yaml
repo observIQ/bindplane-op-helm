@@ -211,3 +211,21 @@ email:
   sendgrid:
     # -- The sendgrid API token to use when authenticating to Sendgrid.
     token: ""
+
+# -- The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod.
+podSecurityContext:
+  # This field supports all pod securityContext options.
+  # BindPlane uses the following container securityContext by default:
+  fsGroup: 65534
+
+# -- The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container.
+containerSecurityContext:
+  # This field supports all container securityContext options.
+  # BindPlane uses the following container securityContext by default:
+  runAsNonRoot: true
+  runAsUser: 65534
+  # Persistent data is written to a volume, the bindplane process should
+  # never need to write to the container filesystem.
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]

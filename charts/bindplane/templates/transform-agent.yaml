@@ -1,8 +1,8 @@
 {{- if (eq .Values.enterprise true) }}
 apiVersion: apps/v1
-kind: deployment
+kind: Deployment
 metadata:
-  name: bindplane-transform-agent
+  name: {{ include "bindplane.name" . }}-transform-agent
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
@@ -30,8 +30,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: default
+      {{- with .Values.podSecurityContext }}
       securityContext:
-        fsGroup: 65534
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: transform-agent
           image: {{ include "bindplane.transform_agent_image" . }}:{{ include "bindplane.transform_agent_tag" . }}
@@ -55,13 +57,9 @@ spec:
             httpGet:
               path: /collector-version
               port: http
+          {{- with .Values.containerSecurityContext }}
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 65534
-            # Persistent data is written to a volume, the bindplane process should
-            # never need to write to the container filesystem.
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop: ["ALL"]
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       terminationGracePeriodSeconds: 60
 {{- end }}

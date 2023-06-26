@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bindplane.name" . }}-transform-agent
+  name: {{ include "bindplane.fullname" . }}-transform-agent
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent

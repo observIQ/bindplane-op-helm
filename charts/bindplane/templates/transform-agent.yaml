@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: {{ include "bindplane.deployment_type" . }}
+metadata:
+  name: bindplane-transform-agent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: bindplane-transform-agent
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: transform-agent
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+  replicas: 1
+  serviceName: bindplane-transform-agent
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bindplane-transform-agent
+      app.kubernetes.io/stack: bindplane
+      app.kubernetes.io/component: transform-agent
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bindplane-transform-agent
+        app.kubernetes.io/stack: bindplane
+        app.kubernetes.io/component: transform-agent
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 65534
+      containers:
+        - name: transform-agent
+          image: ghcr.io/observiq/bindplane-transform-agent:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4568
+              name: http
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          startupProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            # Persistent data is written to a volume, the bindplane process should
+            # never need to write to the container filesystem.
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      terminationGracePeriodSeconds: 60

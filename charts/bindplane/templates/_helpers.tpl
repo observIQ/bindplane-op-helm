@@ -43,6 +43,20 @@ The image tag to use
 {{- end -}}
 
 {{/*
+The Transform Agent image to use
+*/}}
+{{- define "bindplane.transform_agent_image" -}}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-transform-agent") .Values.transform_agent_image.name) }}
+{{- end -}}
+
+{{/*
+The Transform Agent image tag to use
+*/}}
+{{- define "bindplane.transform_agent_tag" -}}
+{{- printf "%s" (default (printf "latest") .Values.transform_agent_image.tag) }}
+{{- end -}}
+
+{{/*
 Determine if bindplane should be managed by a StatefulSet or Deployment.
 
 When bbolt is selected, always run as a StatefulSet. When Postgres or any other

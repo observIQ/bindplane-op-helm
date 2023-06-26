@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: bindplane-transform-agent
+  name: {{ include "bindplane.fullname" . }}-transform-agent
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: bindplane-transform-agent
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
     app.kubernetes.io/stack: bindplane
     app.kubernetes.io/component: transform-agent
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -16,7 +16,7 @@ spec:
       targetPort: http
       name: http
   selector:
-    app.kubernetes.io/name: bindplane-transform-agent
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
     app.kubernetes.io/stack: bindplane
     app.kubernetes.io/component: transform-agent
     app.kubernetes.io/instance: {{ .Release.Name }}

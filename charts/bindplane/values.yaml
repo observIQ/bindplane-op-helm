@@ -105,6 +105,13 @@ image:
   # -- Image tag to use. Defaults to the version defined in the Chart's release.
   tag: ""
 
+transform_agent_image:
+  # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane-transform-agent`.
+  name: ""
+  # Overrides the image tag whose default is {{ .Chart.AppVersion }}
+  # -- Image tag to use. Defaults to latest.
+  tag: ""
+
 # Bindplane configuration options:
 # https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
 config:

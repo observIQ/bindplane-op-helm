@@ -105,7 +105,7 @@ image:
   # -- Image tag to use. Defaults to the version defined in the Chart's release.
   tag: ""
 
-transform_agent_image:
+transform_agent:
   # -- Transform Agent Image name to be used. Defaults to `ghcr.io/observiq/bindplane-transform-agent`.
   name: ""
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}

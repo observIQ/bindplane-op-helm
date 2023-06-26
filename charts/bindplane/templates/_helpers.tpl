@@ -45,15 +45,15 @@ The image tag to use
 {{/*
 The Transform Agent image to use
 */}}
-{{- define "bindplane.transform_agent_image" -}}
-{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-transform-agent") .Values.transform_agent_image.name) }}
+{{- define "bindplane.transform_agent" -}}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-transform-agent") .Values.transform_agent.name) }}
 {{- end -}}
 
 {{/*
 The Transform Agent image tag to use
 */}}
 {{- define "bindplane.transform_agent_tag" -}}
-{{- printf "%s" (default (printf "latest") .Values.transform_agent_image.tag) }}
+{{- printf "%s" (default (printf "latest") .Values.transform_agent.tag) }}
 {{- end -}}
 
 {{/*

@@ -33,7 +33,7 @@ spec:
       {{- end }}
       containers:
         - name: transform-agent
-          image: {{ include "bindplane.transform_agent_image" . }}:{{ include "bindplane.transform_agent_tag" . }}
+          image: {{ include "bindplane.transform_agent" . }}:{{ include "bindplane.transform_agent_tag" . }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4568

@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.33](https://img.shields.io/badge/Version-0.0.33-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.17.1](https://img.shields.io/badge/AppVersion-1.17.1-informational?style=flat-square)
+![Version: 0.0.34](https://img.shields.io/badge/Version-0.0.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.17.1](https://img.shields.io/badge/AppVersion-1.17.1-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -55,6 +55,7 @@ BindPlane OP is an open source observability pipeline.
 | config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
+| containerSecurityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container. |
 | email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |
 | email.type | string | `""` | The optional email backend type to use (Enterprise). Valid options include `sendgrid`. Requires an auth type other than `system`. |
 | enterprise | bool | `false` | Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription. |
@@ -72,6 +73,7 @@ BindPlane OP is an open source observability pipeline.
 | ingress.tls.enable | bool | `false` | Whether or not to enable ingress transport layer security (TLS). |
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
 | multiAccount | bool | `false` | Whether or not multi account support is enabled (Enterprise). |
+| podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"250m"` | CPU request. |
 | resources.requests.memory | string | `"250Mi"` | Memory request. |

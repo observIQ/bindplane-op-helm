@@ -41,6 +41,12 @@ spec:
             - containerPort: 3001
               name: http
           env:
+            {{- if (eq .Values.enterprise true) }}
+            - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
+              value: "true"
+            - name: BINDPLANE_TRANSFORM_AGENT_REMOTE_AGENTS
+              value: "{{ include "bindplane.fullname" . }}-transform-agent:4568"
+            {{- end }}
             {{- if .Values.enterprise }}
             - name: BINDPLANE_LICENSE
               value: {{ .Values.config.license }}

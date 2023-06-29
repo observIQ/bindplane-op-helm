@@ -1,0 +1,26 @@
+{{- if (eq .Values.enterprise true) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bindplane.fullname" . }}-transform-agent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: transform-agent
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  ports:
+    - port: 4568
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: transform-agent
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}

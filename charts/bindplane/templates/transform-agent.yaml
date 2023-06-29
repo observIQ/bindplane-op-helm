@@ -1,0 +1,62 @@
+{{- if (eq .Values.enterprise true) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bindplane.fullname" . }}-transform-agent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: transform-agent
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
+      app.kubernetes.io/stack: bindplane
+      app.kubernetes.io/component: transform-agent
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
+        app.kubernetes.io/stack: bindplane
+        app.kubernetes.io/component: transform-agent
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: transform-agent
+          image: {{ include "bindplane.transform_agent" . }}:{{ include "bindplane.transform_agent_tag" . }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4568
+              name: http
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          startupProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /collector-version
+              port: http
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      terminationGracePeriodSeconds: 60
+{{- end }}

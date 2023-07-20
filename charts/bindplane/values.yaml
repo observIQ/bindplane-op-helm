@@ -117,6 +117,8 @@ transform_agent:
 config:
   # -- The license key to use for BindPlane OP, required when enterprise is set to true. 
   license: ""
+  # -- Whether or not to accept the EULA when using enterprise. Enterprise requires EULA acceptance. See https://observiq.com/legal/eula.
+  accept_eula: false
   # The URI used by clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 

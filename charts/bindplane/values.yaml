@@ -238,3 +238,19 @@ containerSecurityContext:
   readOnlyRootFilesystem: true
   capabilities:
     drop: ["ALL"]
+
+# Dev options, avoid using them in production.
+dev:
+  # Avoid enabling this option in production, instead
+  # use the Helm flags '--namespace' and '--create-namespace'
+  # This namespace is strictly for development using
+  # ArgoCD pull request generator. ArgoCD does not support
+  # cleaning up namespaces, which can lead to a large
+  # number of empty namespaces in a development cluster.
+  namespace:
+    # Whether or not the namespace should be created.
+    create: false
+    # The name of the namespace to create. NOTE: This will not deploy
+    # resources to the namespace. Helm or ArgoCD will need to be configured
+    # to use this namespace.
+    name: ""

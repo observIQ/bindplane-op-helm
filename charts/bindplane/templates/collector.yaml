@@ -1,0 +1,97 @@
+{{- if .Values.dev.collector.create }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bindplane-test-agent
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: test-collector
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bindplane.name" . }}
+      app.kubernetes.io/stack: bindplane
+      app.kubernetes.io/component: test-collector
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "bindplane.name" . }}
+        app.kubernetes.io/stack: bindplane
+        app.kubernetes.io/component: test-collector
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: setup-volumes
+          image: {{ .Values.dev.collector.image.name }}:{{ .Values.dev.collector.image.tag }}
+          securityContext:
+            # Required for changing permissions from
+            # root to otel user in emptyDir volume.
+            runAsUser: 0
+          command:
+            - "chown"
+            - "otel:"
+            - "/etc/otel/config"
+          volumeMounts:
+            - mountPath: /etc/otel/config
+              name: config
+        - name: copy-configs
+          image: {{ .Values.dev.collector.image.name }}:{{ .Values.dev.collector.image.tag }}
+          command:
+            - 'sh'
+            - '-c'
+            - 'cp config.yaml config/ && cp logging.yaml config/ && chown -R otel:otel config/'
+          volumeMounts:
+            - mountPath: /etc/otel/config
+              name: config
+      containers:
+        - name: opentelemetry-container
+          image: {{ .Values.dev.collector.image.name }}:{{ .Values.dev.collector.image.tag }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              memory: 100Mi
+          env:
+            - name: OPAMP_ENDPOINT
+              value: ws://{{ include "bindplane.fullname" . }}:3001/v1/opamp
+            - name: OPAMP_SECRET_KEY
+              value: {{ .Values.config.secret_key }}
+            - name: OPAMP_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPAMP_LABELS
+              value: {{ .Values.dev.collector.labels }}
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            # The collector process updates config.yaml
+            # and manager.yaml when receiving changes
+            # from the OpAMP server.
+            - name: CONFIG_YAML_PATH
+              value: /etc/otel/config/config.yaml
+            - name: MANAGER_YAML_PATH
+              value: /etc/otel/config/manager.yaml
+            - name: LOGGING_YAML_PATH
+              value: /etc/otel/config/logging.yaml
+          volumeMounts:
+          - mountPath: /etc/otel/config
+            name: config
+          - mountPath: /etc/otel/storage
+            name: storage
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: storage
+          emptyDir: {}
+{{- end }}

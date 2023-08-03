@@ -254,3 +254,12 @@ dev:
     # resources to the namespace. Helm or ArgoCD will need to be configured
     # to use this namespace.
     name: ""
+
+  # Manages a collector deployment for development purposes.
+  collector:
+    # Whether or not the collector should be deployed.
+    create: false
+    image:
+      name: ghcr.io/observiq/observiq-otel-collector
+      tag: latest
+    labels: "configuration=test"

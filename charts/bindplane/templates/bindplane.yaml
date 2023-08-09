@@ -146,6 +146,48 @@ spec:
               value: /credentials.json
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+            - name:  BINDPLANE_KAFKA_BROKERS
+              value: {{ .Values.eventbus.kafka.brokers }}
+            - name:  BINDPLANE_KAFKA_VERSION
+              value: "{{ .Values.eventbus.kafka.version }}"
+            - name:  BINDPLANE_KAFKA_TOPIC_NAME
+              value: {{ .Values.eventbus.kafka.topic }}
+            - name:  BINDPLANE_KAFKA_TOPIC_REPLICATION_FACTOR
+              value: "{{ .Values.eventbus.kafka.replicationFactor }}"
+            - name:  BINDPLANE_KAFKA_AUTH_TYPE
+              value: {{ .Values.eventbus.kafka.auth.type }}
+            {{- if eq .Values.eventbus.kafka.auth.type "plainText" }}
+            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_USERNAME
+              value: {{ .Values.eventbus.kafka.auth.plain.username }}
+            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_PASSWORD
+              value: {{ .Values.eventbus.kafka.auth.plain.password }}
+            {{- end }}
+            {{- if eq .Values.eventbus.kafka.auth.type "sasl" }}
+            - name:  BINDPLANE_KAFKA_SASL_USERNAME
+              value: {{ .Values.eventbus.kafka.auth.sasl.username }}
+            - name:  BINDPLANE_KAFKA_SASL_PASSWORD
+              value: {{ .Values.eventbus.kafka.auth.sasl.password }}
+            - name:  BINDPLANE_KAFKA_SASL_MECHANISM
+              value: {{ .Values.eventbus.kafka.auth.sasl.mechanism }}
+            - name:  BINDPLANE_KAFKA_SASL_VERSION
+              value: "{{ .Values.eventbus.kafka.auth.sasl.version }}"
+            {{- end }}
+            {{- if eq .Values.eventbus.kafka.tls.enable true }}
+            - name:  BINDPLANE_KAFKA_ENABLE_TLS
+              value: "true"
+            - name:  BINDPLANE_KAFKA_TLS_CERT
+              value: /kafka.crt
+            - name:  BINDPLANE_KAFKA_TLS_KEY
+              value: /kafka.key
+            - name:  BINDPLANE_KAFKA_TLS_CA
+              value: /kafka-ca.crt
+            {{- if eq .Values.eventbus.kafka.tls.insecure true}}
+            - name:  BINDPLANE_KAFKA_TLS_SKIP_VERIFY
+              value: "true"
+            {{- end }}
+            {{- end }}
+            {{- end }}
             {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}
@@ -237,6 +279,23 @@ spec:
               subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
             {{- end }}
             {{- end }}
+            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+            {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
+            - mountPath: /kafka-ca.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.caSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.certSubPath }}
+            - mountPath: /kafka-ca.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.certSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.keySubPath }}
+            - mountPath: /kafka-ca.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
+            {{- end }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
@@ -257,6 +316,14 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.auth.ldap.tls.ca.secret }}
+        {{- end }}
+        {{- end }}
+        {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+        {{- if .Values.eventbus.kafka.tls.secret.name }}
+        - name: {{ .Values.eventbus.kafka.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}

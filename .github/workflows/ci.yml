@@ -67,4 +67,7 @@ jobs:
             ./kubectl apply -f -
 
       - name: Wait For Pods
-        run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s
+        run: |
+          sleep 15
+          kubectl -n default get all
+          kubectl -n default wait --for=condition=ready pods --all --timeout=120s

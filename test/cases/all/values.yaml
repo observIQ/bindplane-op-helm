@@ -29,8 +29,8 @@ auth:
     tls:
       insecure: true
 image:
-  name: observiq/bindplane-amd64
-  tag: 1.11.0
+  name: ghcr.io/observiq/bindplane
+  tag: 1.24.0
 resources:
   requests:
     memory: 100Mi

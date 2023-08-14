@@ -7,5 +7,5 @@ config:
 
 # Image
 image:
-  name: observiq/bindplane-amd64
-  tag: 1.10.0
+  name: ghcr.io/observiq/bindplane
+  tag: 1.24.0

@@ -56,12 +56,10 @@ eventbus:
   kafka:
     # -- Comma separated list of brokers to use, in the form of `host:port`.
     brokers: ""
-    # -- Version of the Kafka brokers in 'MAJOR.MINOR.PATCH' format
-    version: ""
+    # -- Protocol version of the Kafka brokers in 'MAJOR.MINOR.PATCH' format
+    protocolVersion: ""
     # -- Topic to use.
     topic: ""
-    # -- Replication factor.
-    replicationFactor: ""
     auth:
       # -- How to authenticate to Kafka. One of: none|plainText|sasl.
       type: ""

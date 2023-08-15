@@ -149,12 +149,10 @@ spec:
             {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
             - name:  BINDPLANE_KAFKA_BROKERS
               value: {{ .Values.eventbus.kafka.brokers }}
-            - name:  BINDPLANE_KAFKA_VERSION
+            - name:  BINDPLANE_KAFKA_PROTOCOL_VERSION
               value: "{{ .Values.eventbus.kafka.version }}"
-            - name:  BINDPLANE_KAFKA_TOPIC_NAME
+            - name:  BINDPLANE_KAFKA_TOPIC
               value: {{ .Values.eventbus.kafka.topic }}
-            - name:  BINDPLANE_KAFKA_TOPIC_REPLICATION_FACTOR
-              value: "{{ .Values.eventbus.kafka.replicationFactor }}"
             - name:  BINDPLANE_KAFKA_AUTH_TYPE
               value: {{ .Values.eventbus.kafka.auth.type }}
             {{- if eq .Values.eventbus.kafka.auth.type "plainText" }}

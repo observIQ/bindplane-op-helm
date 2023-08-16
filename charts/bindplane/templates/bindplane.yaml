@@ -147,6 +147,8 @@ spec:
             {{- end }}
             {{- end }}
             {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: kafka
             - name:  BINDPLANE_KAFKA_BROKERS
               value: {{ .Values.eventbus.kafka.brokers }}
             - name:  BINDPLANE_KAFKA_PROTOCOL_VERSION

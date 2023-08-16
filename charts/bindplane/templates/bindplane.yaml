@@ -150,7 +150,7 @@ spec:
             - name:  BINDPLANE_KAFKA_BROKERS
               value: {{ .Values.eventbus.kafka.brokers }}
             - name:  BINDPLANE_KAFKA_PROTOCOL_VERSION
-              value: "{{ .Values.eventbus.kafka.protoclVersion }}"
+              value: "{{ .Values.eventbus.kafka.protocolVersion }}"
             - name:  BINDPLANE_KAFKA_TOPIC
               value: {{ .Values.eventbus.kafka.topic }}
             - name:  BINDPLANE_KAFKA_AUTH_TYPE

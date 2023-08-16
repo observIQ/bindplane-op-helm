@@ -176,12 +176,14 @@ spec:
             {{- if eq .Values.eventbus.kafka.tls.enable true }}
             - name:  BINDPLANE_KAFKA_ENABLE_TLS
               value: "true"
+            {{- if .Values.eventbus.kafka.tls.secret.name }}
             - name:  BINDPLANE_KAFKA_TLS_CERT
               value: /kafka.crt
             - name:  BINDPLANE_KAFKA_TLS_KEY
               value: /kafka.key
             - name:  BINDPLANE_KAFKA_TLS_CA
               value: /kafka-ca.crt
+            {{- end }}
             {{- if eq .Values.eventbus.kafka.tls.insecure true}}
             - name:  BINDPLANE_KAFKA_TLS_SKIP_VERIFY
               value: "true"

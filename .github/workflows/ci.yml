@@ -29,14 +29,16 @@ jobs:
 
       - name: Install Helm Docs
         run: |
-          curl -L -o helm-docs.deb https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_arm64.deb
+          curl -L -o helm-docs.deb https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_amd64.deb
           sudo apt-get install -f ./helm-docs.deb
 
       - name: Update Docs
         run: helm-docs
       
+      - run: git status
+
       - name: Assert No Diff
-        run: bash .github/workflows/scripts/assert-no-diff.sh 
+        run: bash .github/workflows/scripts/assert-no-diff.sh
 
   integration:
     runs-on: ubuntu-20.04

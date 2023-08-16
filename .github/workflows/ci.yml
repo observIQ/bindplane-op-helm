@@ -19,6 +19,25 @@ jobs:
           CHART_LOCATION: ./charts/bindplane
           CHART_VALUES: ./charts/bindplane/values.yaml
 
+  docs:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm Docs
+        run: |
+          curl -L -o helm-docs.deb https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_arm64.deb
+          sudo apt-get install -f ./helm-docs.deb
+
+      - name: Update Docs
+        run: helm-docs
+      
+      - name: Assert No Diff
+        run: bash .github/workflows/scripts/assert-no-diff.sh 
+
   integration:
     runs-on: ubuntu-20.04
     strategy:

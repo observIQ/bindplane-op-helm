@@ -99,3 +99,15 @@ Collectors running within the cluster can connect with the following OpAMP URI:
 ```
 ws://bindplane.default.svc.cluster.local:3001/v1/opamp
 ```
+
+# Community
+
+BindPlane OP Helm is an open source project. If you'd like to contribute, take a look at our [contribution guidelines](/docs/CONTRIBUTING.md). We look forward to building with you.
+
+## Code of Conduct
+
+BindPlane OP Helm follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md). Please report violations of the Code of Conduct to any or all [maintainers](/docs/MAINTAINERS.md).
+
+# Other questions?
+
+Send us an [email](mailto:support@observiq.com), or open an issue with your question. We'd love to hear from you!

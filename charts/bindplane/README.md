@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.47](https://img.shields.io/badge/Version-0.0.47-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.24.0](https://img.shields.io/badge/AppVersion-1.24.0-informational?style=flat-square)
+![Version: 0.0.51](https://img.shields.io/badge/Version-0.0.51-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.29.0](https://img.shields.io/badge/AppVersion-1.29.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -104,5 +104,6 @@ BindPlane OP is an open source observability pipeline.
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.type | string | `""` | Trace type to use. Valid options include `otlp`. |
 | transform_agent.name | string | `""` | Transform Agent Image name to be used. Defaults to `ghcr.io/observiq/bindplane-transform-agent`. |
+| transform_agent.replicas | int | `1` | Number of replicas to use for the transform agent. |
 | transform_agent.tag | string | `""` | Transform Agent Image tag to use. Defaults to latest. |
 

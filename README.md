@@ -40,7 +40,7 @@ See the [Chart documentation](./charts/bindplane/README.md) for configuration do
 
 ## Usage
 
-Add the repository:
+**Add the repository:**
 
 ```bash
 helm repo add bindplane \
@@ -50,11 +50,40 @@ helm repo update
 helm search repo
 ```
 
-Install
+**Create values.yaml:**
+
+Use randomly generated UUID values for `secret_key` and `sessions_secret`.
+
+```yaml
+config:
+  username: medora
+  password: medora5234
+  secret_key: <new uuid>
+  sessions_secret: <new uuid>
+```
+
+Alternatively, create the namespace and secret using kubectl in order
+to keep sensitive values out of the values configuration:
 
 ```bash
-helm upgrade --install bindplane bindplane/bindplane
+kubectl -n bindplane create secret generic bindplane \
+   --from-literal=username=myuser \
+   --from-literal=password=mypassword \
+   --from-literal=secret_key=mysecretkey \
+   --from-literal=sessions_secret=mysessionssecret
 ```
+
+**Install:**
+
+```bash
+helm upgrade \
+  --install bindplane \
+  --namespace bindplane --create-namespace \
+  --values ./values.yaml \
+  bindplane/bindplane
+```
+
+If you do not have a values file, remove the `--values` flag.
 
 ## Connectivity
 

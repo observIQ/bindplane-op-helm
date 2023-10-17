@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 0.0.51](https://img.shields.io/badge/Version-0.0.51-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.29.0](https://img.shields.io/badge/AppVersion-1.29.0-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.31.0](https://img.shields.io/badge/AppVersion-1.31.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -31,7 +31,7 @@ BindPlane OP is an open source observability pipeline.
 | auth.ldap.tls.ca.secret | string | `""` | Name of the Kubernetes secret which contains the ldap server's certificate authority public certificate. |
 | auth.ldap.tls.ca.subPath | string | `""` | The secret's subPath which contains the certificate. |
 | auth.ldap.tls.insecure | bool | `false` | Whether or not to skip verification of the ldap server's certificate. |
-| auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap` (Enterprise), `active-directory` (Enterprise), and `google` (Enterprise). |
+| auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap`, `active-directory`, and `google`. |
 | autoscaling.enable | bool | `false` | Whether or not autoscaling should be enabled. Requires an eventbus to be configured. |
 | autoscaling.max | int | `10` | Maximum number of pods when autoscaling is enabled. |
 | autoscaling.min | int | `2` | Minimum number of pods when autoscaling is enabled. |
@@ -46,9 +46,9 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.port | int | `5432` | TCP port used to connect to Postgres. |
 | backend.postgres.sslmode | string | `"disable"` | SSL mode to use when connecting to Postgres over TLS. See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for valid options. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
-| backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres` (Enterprise). |
-| config.accept_eula | bool | `false` | Whether or not to accept the EULA when using enterprise. Enterprise requires EULA acceptance. See https://observiq.com/legal/eula. |
-| config.license | string | `""` | The license key to use for BindPlane OP, required when enterprise is set to true.  |
+| backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
+| config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
+| config.license | string | `""` | The license key to use for BindPlane OP. Keep unset to use the free edition. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
 | config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options. |
@@ -64,8 +64,7 @@ BindPlane OP is an open source observability pipeline.
 | dev.namespace.create | bool | `false` |  |
 | dev.namespace.name | string | `""` |  |
 | email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |
-| email.type | string | `""` | The optional email backend type to use (Enterprise). Valid options include `sendgrid`. Requires an auth type other than `system`. |
-| enterprise | bool | `false` | Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription. |
+| email.type | string | `""` | The optional email backend type to use. Valid options include `sendgrid`. Requires an auth type other than `system`. |
 | eventbus.kafka.auth.plain.password | string | `""` | Password to use for plain authentication. |
 | eventbus.kafka.auth.plain.username | string | `""` | Username to use for plain authentication. |
 | eventbus.kafka.auth.sasl.mechanism | string | `""` | Mechanism for SASL authentication. One of plain|scramSHA256|scramSHA512. |
@@ -87,7 +86,7 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
-| image.name | string | `""` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane` and `ghcr.io/observiq/bindplane-ee` for Enterprise deployments. |
+| image.name | string | `""` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-ee`. |
 | image.tag | string | `""` | Image tag to use. Defaults to the version defined in the Chart's release. |
 | ingress.annotations | object | `{}` | Custom annotations which will be added to the ingress object. Useful for specifying things such as `cert-manager.io/cluster-issuer`. |
 | ingress.class | string | `nil` | Ingress class to use when ingress is enabled. |
@@ -95,7 +94,7 @@ BindPlane OP is an open source observability pipeline.
 | ingress.host | string | `nil` | Hostname to use when ingress is enabled. |
 | ingress.tls.enable | bool | `false` | Whether or not to enable ingress transport layer security (TLS). |
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
-| multiAccount | bool | `false` | Whether or not multi account support is enabled (Enterprise). |
+| multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"250m"` | CPU request. |

@@ -1,11 +1,8 @@
-# -- Whether or not enterprise edition is enabled. Enterprise users require a valid Enterprise subscription.
-enterprise: false
-
-# -- Whether or not multi account support is enabled (Enterprise).
+# -- Whether or not to enable multi account (tenant).
 multiAccount: false
 
 backend:
-  # -- Backend to use for persistent storage. Available options are `bbolt`, and `postgres` (Enterprise).
+  # -- Backend to use for persistent storage. Available options are `bbolt`, and `postgres`.
   type: bbolt
 
   bbolt:
@@ -31,7 +28,7 @@ backend:
     maxConnections: 100
 
 eventbus:
-  # Enterprise only option. The eventbus type to use using multiple nodes. Available options include `pubsub`.
+  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
   type: ""
 
   pubsub:
@@ -99,7 +96,7 @@ auth:
   # - active-directory
   # 'system' will use the username and password specified
   # in config.secret or config.username / config.password.
-  # -- Backend to use for authentication. Available options include `system`, `ldap` (Enterprise), `active-directory` (Enterprise), and `google` (Enterprise).
+  # -- Backend to use for authentication. Available options include `system`, `ldap`, `active-directory`, and `google`.
   type: system
 
   ldap:
@@ -138,7 +135,7 @@ auth:
     clientid: ""
 
 image:
-  # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane` and `ghcr.io/observiq/bindplane-ee` for Enterprise deployments.
+  # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane-ee`.
   name: ""
   # Overrides the image tag whose default is {{ .Chart.AppVersion }}
   # -- Image tag to use. Defaults to the version defined in the Chart's release.
@@ -156,10 +153,10 @@ transform_agent:
 # Bindplane configuration options:
 # https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
 config:
-  # -- The license key to use for BindPlane OP, required when enterprise is set to true. 
+  # -- The license key to use for BindPlane OP. Keep unset to use the free edition.
   license: ""
-  # -- Whether or not to accept the EULA when using enterprise. Enterprise requires EULA acceptance. See https://observiq.com/legal/eula.
-  accept_eula: false
+  # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
+  accept_eula: true
   # The URI used by clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 
@@ -256,7 +253,7 @@ autoscaling:
   targetMemoryUtilizationPercentage: 60
 
 email:
-  # -- The optional email backend type to use (Enterprise). Valid options include `sendgrid`. Requires an auth type other than `system`.
+  # -- The optional email backend type to use. Valid options include `sendgrid`. Requires an auth type other than `system`.
   type: ""
   sendgrid:
     # -- The sendgrid API token to use when authenticating to Sendgrid.

@@ -28,11 +28,7 @@ If release name contains chart name it will be used as a full name.
 The image to use
 */}}
 {{- define "bindplane.image" -}}
-{{- if eq .Values.enterprise true -}}
 {{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-ee") .Values.image.name) }}
-{{- else -}}
-{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane") .Values.image.name) }}
-{{- end -}}
 {{- end -}}
 
 {{/*

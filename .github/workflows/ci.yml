@@ -40,11 +40,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-
       - name: Start Minikube
         uses: medyagh/setup-minikube@master
         with:
@@ -64,7 +59,7 @@ jobs:
           helm template \
             --values test/cases/${{ matrix.case }}/values.yaml \
             charts/bindplane | \
-            ./kubectl apply -f -
+            kubectl apply -f -
 
       - name: Wait For Pods
         run: |

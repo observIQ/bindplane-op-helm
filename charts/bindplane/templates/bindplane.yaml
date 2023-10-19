@@ -41,18 +41,16 @@ spec:
             - containerPort: 3001
               name: http
           env:
-            {{- if (eq .Values.enterprise true) }}
             - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_TRANSFORM_AGENT_REMOTE_AGENTS
               value: "{{ include "bindplane.fullname" . }}-transform-agent:4568"
-            {{- end }}
-            {{- if .Values.enterprise }}
+            {{- if .Values.config.license }}
             - name: BINDPLANE_LICENSE
               value: {{ .Values.config.license }}
+            {{- end}}
             - name: BINDPLANE_ACCEPT_EULA
               value: "{{ .Values.config.accept_eula }}"
-            {{- end }}
             - name: BINDPLANE_REMOTE_URL
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
@@ -111,7 +109,7 @@ spec:
               value: stdout
             - name: BINDPLANE_CONFIG_HOME
               value: /data  
-            {{- if and (eq .Values.enterprise true) (eq .Values.backend.type "postgres") }}
+            {{- if eq .Values.backend.type "postgres" }}
             - name: BINDPLANE_STORE_TYPE
               value: postgres
             - name: BINDPLANE_POSTGRES_HOST
@@ -134,7 +132,7 @@ spec:
             - name: BINDPLANE_STORE_BBOLT_PATH
               value: /data/storage
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+            {{- if eq .Values.eventbus.type "pubsub" }}
             - name: BINDPLANE_EVENT_BUS_TYPE
               value: googlePubSub
             - name: BINDPLANE_GOOGLE_PUB_SUB_PROJECT_ID
@@ -146,7 +144,7 @@ spec:
               value: /credentials.json
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+            {{- if eq .Values.eventbus.type "kafka" }}
             - name: BINDPLANE_EVENT_BUS_TYPE
               value: kafka
             - name:  BINDPLANE_KAFKA_BROKERS
@@ -190,7 +188,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+            {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}
             - name: BINDPLANE_LDAP_PROTOCOL
@@ -224,13 +222,13 @@ spec:
               value: "true"
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.auth.type "google") }}
+            {{- if eq .Values.auth.type "google" }}
             - name: BINDPLANE_AUTH_TYPE
               value: google
             - name: BINDPLANE_GOOGLE_AUTH_CLIENT_ID
               value: {{ .Values.auth.google.clientid }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.multiAccount true) }}
+            {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE
               value: "true"
             {{- end }}
@@ -267,21 +265,21 @@ spec:
             - mountPath: /data
               name: {{ include "bindplane.fullname" . }}-data
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+            {{- if eq .Values.eventbus.type "pubsub" }}
             {{- if .Values.eventbus.pubsub.credentials.secret }}
             - mountPath: /credentials.json
               name: {{ .Values.eventbus.pubsub.credentials.secret }}
               subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+            {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - mountPath: /ldap-ca.crt
               name: {{ .Values.auth.ldap.tls.ca.secret }}
               subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
             {{- end }}
             {{- end }}
-            {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+            {{- if eq .Values.eventbus.type "kafka" }}
             {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
             - mountPath: /kafka-ca.crt
               name: {{ .Values.eventbus.kafka.tls.secret.name }}
@@ -304,7 +302,7 @@ spec:
                 command: ["sh", "-c", "sleep 5",]
       terminationGracePeriodSeconds: 60
       volumes:
-        {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "pubsub") }}
+        {{- if eq .Values.eventbus.type "pubsub" }}
         {{- if .Values.eventbus.pubsub.credentials.secret }}
         - name: {{ .Values.eventbus.pubsub.credentials.secret }}
           secret:
@@ -312,7 +310,7 @@ spec:
             secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
         {{- end }}
         {{- end }}
-        {{- if and (eq .Values.enterprise true) (eq (include "bindplane.auth.type" .) "ldap") }}
+        {{- if eq (include "bindplane.auth.type" .) "ldap" }}
         {{- if .Values.auth.ldap.tls.ca.secret }}
         - name: {{ .Values.auth.ldap.tls.ca.secret }}
           secret:
@@ -320,7 +318,7 @@ spec:
             secretName: {{ .Values.auth.ldap.tls.ca.secret }}
         {{- end }}
         {{- end }}
-        {{- if and (eq .Values.enterprise true) (eq .Values.eventbus.type "kafka") }}
+        {{- if eq .Values.eventbus.type "kafka" }}
         {{- if .Values.eventbus.kafka.tls.secret.name }}
         - name: {{ .Values.eventbus.kafka.tls.secret.name }}
           secret:

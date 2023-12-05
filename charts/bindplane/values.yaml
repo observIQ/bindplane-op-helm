@@ -27,12 +27,12 @@ backend:
     # -- Max number of connections to use when communicating with Postgres.
     maxConnections: 100
 
-  # TODO(jsirianni): Support authentication and TLS.
-  # This is undocumented for now, as Prometheus support has not been released.
-  prometheus:
-    enable: false
-    host: ""
-    port: 9090
+# TODO(jsirianni): Support authentication and TLS.
+# This is undocumented for now, as Prometheus support has not been released.
+prometheus:
+  enable: false
+  host: ""
+  port: 9090
 
 eventbus:
   # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.

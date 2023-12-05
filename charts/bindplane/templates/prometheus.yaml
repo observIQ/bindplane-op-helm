@@ -2,40 +2,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: bindplane-test-prometheus
+  name: {{ include "bindplane.fullname" . }}-prometheus
 data:
   # Both of these should be empty, but might contain
   # configuration in the future.
-  prometheus.yaml: |
-    []
-  web.yaml: |
+  prometheus.yml: |
+    # This is an empty config.
+  web.yml: |
+    # This is an empty config.
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: bindplane-test-prometheus
+  name: {{ include "bindplane.fullname" . }}-prometheus
   labels:
-    app.kubernetes.io/name: {{ include "bindplane.name" . }}
-    app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: test-prometheus
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: test-prometheus
 spec:
   replicas: 1
   serviceName: bindplane-test-prometheus
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "bindplane.name" . }}
-      app.kubernetes.io/stack: bindplane
-      app.kubernetes.io/component: test-prometheus
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: test-prometheus
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "bindplane.name" . }}
-        app.kubernetes.io/stack: bindplane
-        app.kubernetes.io/component: test-prometheus
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: test-prometheus
     spec:
       containers:
         - name: opentelemetry-container
@@ -53,6 +44,10 @@ spec:
             - --storage.tsdb.retention.time=2d
           securityContext:
             readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
           resources:
             requests:
               memory: 300Mi
@@ -74,7 +69,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: bindplane-test-prometheus
+            name: {{ include "bindplane.fullname" . }}-prometheus
   # Delete persistent volumes when the statefulset is deleted.
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Delete
@@ -83,11 +78,7 @@ spec:
     - metadata:
         name: tsdb
         labels:
-          app.kubernetes.io/name: {{ include "bindplane.name" . }}
-          app.kubernetes.io/stack: bindplane
-          app.kubernetes.io/component: test-prometheus
-          app.kubernetes.io/instance: {{ .Release.Name }}
-          app.kubernetes.io/managed-by: {{ .Release.Service }}
+          app.kubernetes.io/name: test-prometheus
       spec:
         accessModes:
           - ReadWriteOnce
@@ -98,12 +89,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bindplane-test-prometheus
+  name: {{ include "bindplane.fullname" . }}-prometheus
   labels:
-    app.kubernetes.io/name: {{ include "bindplane.name" . }}
-    app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: test-prometheus
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: test-prometheus
 spec:
   ports:
     - port: 9090
@@ -111,10 +99,7 @@ spec:
       targetPort: http
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "bindplane.name" . }}
-    app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: test-prometheus
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: test-prometheus
   sessionAffinity: None
   type: ClusterIP
 {{- end }}

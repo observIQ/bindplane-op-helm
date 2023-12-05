@@ -240,6 +240,16 @@ spec:
             {{- end }}
             - name: BINDPLANE_PORT
               value: "3001"
+            {{- if .Values.prometheus.create }}
+            - name: BINDPLANE_PROMETHEUS_ENABLE
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_HOST
+              value: {{ .Values.prometheus.host }}}
+            - name: BINDPLANE_PROMETHEUS_PORT
+              value: {{ .Values.prometheus.port }}
+            {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

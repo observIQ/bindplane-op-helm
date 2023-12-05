@@ -1,0 +1,120 @@
+{{- if .Values.dev.prometheus.create }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bindplane-test-prometheus
+data:
+  # Both of these should be empty, but might contain
+  # configuration in the future.
+  prometheus.yaml: |
+    []
+  web.yaml: |
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bindplane-test-prometheus
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: test-prometheus
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  serviceName: bindplane-test-prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bindplane.name" . }}
+      app.kubernetes.io/stack: bindplane
+      app.kubernetes.io/component: test-prometheus
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "bindplane.name" . }}
+        app.kubernetes.io/stack: bindplane
+        app.kubernetes.io/component: test-prometheus
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: opentelemetry-container
+          image: {{ .Values.dev.prometheus.image.name }}:{{ .Values.dev.prometheus.image.tag }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/prometheus
+            - --web.listen-address=:9090
+            - --config.file=/etc/prometheus/prometheus.yml 
+            - --web.config.file=/etc/prometheus/web.yml
+            - --web.console.libraries=/usr/share/prometheus/console_libraries 
+            - --web.console.templates=/usr/share/prometheus/consoles
+            - --web.enable-remote-write-receiver
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=2d
+          securityContext:
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 100m
+            limits:
+              memory: 300Mi
+          volumeMounts:
+            # prometheus and web configuration
+            # from configmap.
+            - mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+              name: config
+            - mountPath: /etc/prometheus/web.yml
+              subPath: web.yml
+              name: config
+            # time series database persistent volume.
+            - mountPath: /prometheus
+              name: tsdb
+      volumes:
+        - name: config
+          configMap:
+            name: bindplane-test-prometheus
+  # Delete persistent volumes when the statefulset is deleted.
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  volumeClaimTemplates:
+    - metadata:
+        name: tsdb
+        labels:
+          app.kubernetes.io/name: {{ include "bindplane.name" . }}
+          app.kubernetes.io/stack: bindplane
+          app.kubernetes.io/component: test-prometheus
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/managed-by: {{ .Release.Service }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 60Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bindplane-test-prometheus
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: test-prometheus
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: test-prometheus
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}

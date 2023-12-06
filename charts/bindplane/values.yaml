@@ -317,4 +317,6 @@ dev:
     create: false
     image:
       name: prom/prometheus
-      tag: v2.48.0
+      # Generally this should match the version found
+      # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
+      tag: v2.47.2

@@ -28,6 +28,19 @@ spec:
       labels:
         app.kubernetes.io/name: test-prometheus
     spec:
+      initContainers:
+        # Set permissions on /prometheus volume.
+        - name: setup-volumes
+          image: {{ .Values.dev.prometheus.image.name }}:{{ .Values.dev.prometheus.image.tag }}
+          securityContext:
+            runAsUser: 0
+          command:
+            - "chown"
+            - "65534:"
+            - "/prometheus"
+          volumeMounts:
+            - mountPath: /prometheus
+              name: tsdb
       containers:
         - name: opentelemetry-container
           image: {{ .Values.dev.prometheus.image.name }}:{{ .Values.dev.prometheus.image.tag }}

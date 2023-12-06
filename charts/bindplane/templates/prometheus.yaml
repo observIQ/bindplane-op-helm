@@ -1,0 +1,105 @@
+{{- if .Values.dev.prometheus.create }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bindplane.fullname" . }}-prometheus
+data:
+  # Both of these should be empty, but might contain
+  # configuration in the future.
+  prometheus.yml: |
+    # This is an empty config.
+  web.yml: |
+    # This is an empty config.
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "bindplane.fullname" . }}-prometheus
+  labels:
+    app.kubernetes.io/name: test-prometheus
+spec:
+  replicas: 1
+  serviceName: bindplane-test-prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: test-prometheus
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: test-prometheus
+    spec:
+      containers:
+        - name: opentelemetry-container
+          image: {{ .Values.dev.prometheus.image.name }}:{{ .Values.dev.prometheus.image.tag }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/prometheus
+            - --web.listen-address=:9090
+            - --config.file=/etc/prometheus/prometheus.yml 
+            - --web.config.file=/etc/prometheus/web.yml
+            - --web.console.libraries=/usr/share/prometheus/console_libraries 
+            - --web.console.templates=/usr/share/prometheus/consoles
+            - --web.enable-remote-write-receiver
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=2d
+          securityContext:
+            readOnlyRootFilesystem: true
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 100m
+            limits:
+              memory: 300Mi
+          volumeMounts:
+            # prometheus and web configuration
+            # from configmap.
+            - mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+              name: config
+            - mountPath: /etc/prometheus/web.yml
+              subPath: web.yml
+              name: config
+            # time series database persistent volume.
+            - mountPath: /prometheus
+              name: tsdb
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "bindplane.fullname" . }}-prometheus
+  # Delete persistent volumes when the statefulset is deleted.
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  volumeClaimTemplates:
+    - metadata:
+        name: tsdb
+        labels:
+          app.kubernetes.io/name: test-prometheus
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 60Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bindplane.fullname" . }}-prometheus
+  labels:
+    app.kubernetes.io/name: test-prometheus
+spec:
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app.kubernetes.io/name: test-prometheus
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}

@@ -310,6 +310,40 @@ spec:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 5",]
+        {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+        {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
+        - name: prometheus
+          image: prom/prometheus:v2.47.2
+          ports:
+            - containerPort: 9090
+              name: http
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --web.config.file=/etc/prometheus/web.yml
+            - --storage.tsdb.retention.time=2d
+            - --web.enable-remote-write-receiver
+            - --web.listen-address={{ .Values.prometheus.host }}:{{ .Values.prometheus.port }}
+            - --storage.tsdb.path=/var/lib/prometheus/tsdb
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.console.libraries=/etc/prometheus/console_libraries
+          {{- with .Values.prometheus.sidecar.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ include "bindplane.fullname" . }}-prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: {{ include "bindplane.fullname" . }}-prometheus-config
+              mountPath: /etc/prometheus/rules.yml
+              subPath: rules.yml
+            - name: {{ include "bindplane.fullname" . }}-prometheus-config
+              mountPath: /etc/prometheus/web.yml
+              subPath: web.yml
+            - name: {{ include "bindplane.fullname" . }}-prometheus-data
+              mountPath: /var/lib/prometheus/tsdb
+        {{- end }}
+        {{- end }}
       terminationGracePeriodSeconds: 60
       volumes:
         {{- if eq .Values.eventbus.type "pubsub" }}
@@ -336,6 +370,13 @@ spec:
             secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
+        {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+        {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
+        - name: {{ include "bindplane.fullname" . }}-prometheus-config
+          configMap:
+            name: {{ include "bindplane.fullname" . }}-prometheus-config
+        {{- end }}
+        {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   volumeClaimTemplates:
     {{- if eq .Values.backend.type "bbolt" }}
@@ -357,4 +398,25 @@ spec:
         storageClassName: {{ .Values.backend.bbolt.storageClass }}
         {{- end }}
     {{- end }}
+    {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+    {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
+    - metadata:
+        name: {{ include "bindplane.fullname" . }}-prometheus-data
+        labels:
+          app.kubernetes.io/name: {{ include "bindplane.name" . }}
+          app.kubernetes.io/stack: bindplane
+          app.kubernetes.io/component: server
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/managed-by: {{ .Release.Service }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.prometheus.sidecar.volumeSize }}
+        {{- if .Values.prometheus.sidecar.storageClass }}
+        storageClassName: {{ .Values.prometheus.sidecar.storageClass }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
   {{- end }}

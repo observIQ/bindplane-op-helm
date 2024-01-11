@@ -30,9 +30,31 @@ backend:
 # TODO(jsirianni): Support authentication and TLS.
 # This is undocumented for now, as Prometheus support has not been released.
 prometheus:
+  # -- when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments.
   enable: false
-  host: ""
+  # -- The Prometheus hostname or IP address.
+  host: "127.0.0.1"
+  # -- The Prometheus TCP port.
   port: 9090
+  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.
+  enableSideCar: false
+  sidecar:
+    resources:
+      requests:
+        # -- Memory request.
+        memory: 250Mi
+        # -- CPU request.
+        cpu: 250m
+      limits:
+        # -- Memory limit.
+        memory: 500Mi
+        # Disable cpu limit by default, for burstable qos class
+        # cpu: 500m
+    # -- Persistent volume size.
+    volumeSize: 10Gi
+    # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
+    storageClass: ""
+
 
 eventbus:
   # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.

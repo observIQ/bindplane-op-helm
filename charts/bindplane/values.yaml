@@ -31,8 +31,27 @@ backend:
 # This is undocumented for now, as Prometheus support has not been released.
 prometheus:
   enable: false
-  host: ""
+  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.
+  enableSideCar: false
+  host: "127.0.0.1"
   port: 9090
+  sidecar:
+    resources:
+      requests:
+        # -- Memory request.
+        memory: 250Mi
+        # -- CPU request.
+        cpu: 250m
+      limits:
+        # -- Memory limit.
+        memory: 500Mi
+        # Disable cpu limit by default, for burstable qos class
+        # cpu: 500m
+    # -- Persistent volume size.
+    volumeSize: 10Gi
+    # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
+    storageClass: ""
+
 
 eventbus:
   # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.

@@ -83,6 +83,7 @@ spec:
               name: config
             - mountPath: /etc/prometheus/web.yml
               subPath: web.yml
+              name: config
             - mountPath: /etc/prometheus/rules.yml
               subPath: rules.yml
               name: config

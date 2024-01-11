@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.31.0](https://img.shields.io/badge/AppVersion-1.31.0-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.39.0](https://img.shields.io/badge/AppVersion-1.39.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -63,6 +63,9 @@ BindPlane OP is an open source observability pipeline.
 | dev.collector.labels | string | `"configuration=test"` |  |
 | dev.namespace.create | bool | `false` |  |
 | dev.namespace.name | string | `""` |  |
+| dev.prometheus.create | bool | `false` |  |
+| dev.prometheus.image.name | string | `"prom/prometheus"` |  |
+| dev.prometheus.image.tag | string | `"v2.47.2"` |  |
 | email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |
 | email.type | string | `""` | The optional email backend type to use. Valid options include `sendgrid`. Requires an auth type other than `system`. |
 | eventbus.kafka.auth.plain.password | string | `""` | Password to use for plain authentication. |
@@ -96,6 +99,15 @@ BindPlane OP is an open source observability pipeline.
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
+| prometheus.enable | bool | `false` | when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments. |
+| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
+| prometheus.host | string | `"127.0.0.1"` | The Prometheus hostname or IP address. |
+| prometheus.port | int | `9090` | The Prometheus TCP port. |
+| prometheus.sidecar.resources.limits.memory | string | `"500Mi"` | Memory limit. |
+| prometheus.sidecar.resources.requests.cpu | string | `"250m"` | CPU request. |
+| prometheus.sidecar.resources.requests.memory | string | `"250Mi"` | Memory request. |
+| prometheus.sidecar.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
+| prometheus.sidecar.volumeSize | string | `"10Gi"` | Persistent volume size. |
 | resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"250m"` | CPU request. |
 | resources.requests.memory | string | `"250Mi"` | Memory request. |

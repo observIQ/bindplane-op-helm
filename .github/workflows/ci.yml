@@ -30,9 +30,9 @@ jobs:
           - "image"
           - "ingress"
         k8s_version:
-          - v1.24.0
           - v1.25.0
-          - v1.26.0
+          - v1.27.0
+          - v1.29.0
 
     steps:
       - name: Checkout

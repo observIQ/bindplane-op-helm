@@ -249,6 +249,44 @@ spec:
               value: {{ .Values.prometheus.host }}
             - name: BINDPLANE_PROMETHEUS_PORT
               value: "{{ .Values.prometheus.port }}"
+            {{- if .Values.prometheus.queryPathPrefix }}
+            - name: BINDPLANE_PROMETHEUS_QUERY_PATH_PREFIX
+              value: {{ .Values.prometheus.queryPathPrefix }}
+            {{- end }}
+            {{- if and (.Values.prometheus.remoteWrite.host) (.Values.prometheus.remoteWrite.port) }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_HOST
+              value: {{ .Values.prometheus.remoteWrite.host }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_PORT
+              value: "{{ .Values.prometheus.remoteWrite.port }}"
+            {{- end }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_ENDPOINT
+              value: {{ .Values.prometheus.remoteWrite.path }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_TYPE
+              value: {{ .Values.prometheus.auth.type }}
+            {{- if eq .Values.prometheus.auth.type "basic" }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_USERNAME
+              value: {{ .Values.prometheus.auth.username }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_PASSWORD
+              value: {{ .Values.prometheus.auth.password }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.enable }}
+            - name: BINDPLANE_PROMETHEUS_ENABLE_TLS
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_TLS_SKIP_VERIFY
+              value: "{{ .Values.prometheus.tls.insecure }}"
+            {{- if .Values.prometheus.tls.secret.caSubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_CA
+              value: /prometheus-ca.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.crtSubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_CERT
+              value: /prometheus-client.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.keySubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_KEY
+              value: /prometheus-client.key
+            {{- end }}
+            {{- end }}
             {{- end }}
           {{- with .Values.resources }}
           resources:
@@ -306,6 +344,23 @@ spec:
               subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
+            {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+            {{- if .Values.prometheus.tls.secret.caSubPath }}
+            - mountPath: /prometheus-ca.crt
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.caSubPath }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.crtSubPath }}
+            - mountPath: /prometheus-client.crt
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.crtSubPath }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.keySubPath }}
+            - mountPath: /prometheus-client.key
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.keySubPath }}
+            {{- end }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
@@ -330,6 +385,12 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
+            capabilities:
+              drop: ["ALL"]
           volumeMounts:
             - name: {{ include "bindplane.fullname" . }}-prometheus-config
               mountPath: /etc/prometheus/prometheus.yml
@@ -368,6 +429,14 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
+        {{- end }}
+        {{- end }}
+        {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+        {{- if .Values.prometheus.tls.secret.name }}
+        - name: {{ .Values.prometheus.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
         {{- end }}
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}

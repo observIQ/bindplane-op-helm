@@ -430,6 +430,14 @@ spec:
             secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
+        {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+        {{- if .Values.prometheus.tls.secret.name }}
+        - name: {{ .Values.prometheus.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.prometheus.tls.secret.name }}
+        {{- end }}
+        {{- end }}
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
         {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
         - name: {{ include "bindplane.fullname" . }}-prometheus-config

@@ -57,6 +57,18 @@ prometheus:
     enable: false
     # -- Whether or not to skip verification of the Prometheus server's certificate.
     insecure: false
+    # The TLS secret should be created like this:
+    #
+    # kubectl create secret generic prometheus-tls \
+    #   --from-file prometheus-client.crt \
+    #   --from-file prometheus-client.key \
+    #   --from-file ca.crt
+    #
+    # In this example, the following parameters would be used:
+    # prometheus.tls.secret.name: prometheus-tls
+    # prometheus.tls.secret.caSubPath: ca.crt
+    # prometheus.tls.secret.crtSubPath: prometheus-client.crt (if mutual tls is required)
+    # prometheus.tls.secret.keySubPath: prometheus-client.key (if mutual tls is required)
     secret:
       # -- Kubernetes TLS secret name that contains the Prometheus TLS certificate(s).
       name: ""

@@ -32,11 +32,41 @@ backend:
 prometheus:
   # -- when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments.
   enable: false
-  # -- The Prometheus hostname or IP address.
+  # -- The Prometheus hostname or IP address used for querying and writing metrics.
   host: "127.0.0.1"
-  # -- The Prometheus TCP port.
+  # -- The Prometheus TCP port used for querying and writing metrics.
   port: 9090
-  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.
+  # -- Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir.
+  queryPathPrefix: ""
+  remoteWrite:
+    # -- Optional hostname or IP address of the remote write endpoint. This value overrides the `prometheus.host` for remote write.
+    host: ""
+    # -- Optional TCP port of the remote write endpoint. This value overrides the `prometheus.port` for remote write.
+    port: 9090
+    # -- Path of the remote write endpoint. This value should default to `/api/v1/write`.
+    path: /api/v1/write
+  auth:
+    # -- Prometheus authentication. Supported options include `none` and `basic`.
+    type: none
+    # -- Prometheus basic authentication username.
+    username: ""
+    # -- Prometheus basic authentication password.
+    password: ""
+  tls:
+    # -- Whether or not to use TLS when connecting to Prometheus.
+    enable: false
+    # -- Whether or not to skip verification of the Prometheus server's certificate.
+    insecure: false
+    secret:
+      # -- Kubernetes TLS secret name that contains the Prometheus TLS certificate(s).
+      name: ""
+      # -- The secret's subPath which contains the certificate authority.
+      caSubPath: ""
+      # -- The secret's subPath which contains the client certificate, required for mutual TLS.
+      crtSubPath: ""
+      # -- The secret's subPath which contains the client private key, required for mutual TLS.
+      keySubPath: ""
+  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. When using this option, leave all other Prometheus options unset and at their default values.
   enableSideCar: false
   sidecar:
     resources:

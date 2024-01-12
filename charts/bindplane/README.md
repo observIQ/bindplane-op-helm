@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.39.0](https://img.shields.io/badge/AppVersion-1.39.0-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.39.0](https://img.shields.io/badge/AppVersion-1.39.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -99,15 +99,28 @@ BindPlane OP is an open source observability pipeline.
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
+| prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
+| prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
+| prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
 | prometheus.enable | bool | `false` | when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments. |
-| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
-| prometheus.host | string | `"127.0.0.1"` | The Prometheus hostname or IP address. |
-| prometheus.port | int | `9090` | The Prometheus TCP port. |
+| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. When using this option, leave all other Prometheus options unset and at their default values. |
+| prometheus.host | string | `"127.0.0.1"` | The Prometheus hostname or IP address used for querying and writing metrics. |
+| prometheus.port | int | `9090` | The Prometheus TCP port used for querying and writing metrics. |
+| prometheus.queryPathPrefix | string | `""` | Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir. |
+| prometheus.remoteWrite.host | string | `""` | Optional hostname or IP address of the remote write endpoint. This value overrides the `prometheus.host` for remote write. |
+| prometheus.remoteWrite.path | string | `"/api/v1/write"` | Path of the remote write endpoint. This value should default to `/api/v1/write`. |
+| prometheus.remoteWrite.port | int | `9090` | Optional TCP port of the remote write endpoint. This value overrides the `prometheus.port` for remote write. |
 | prometheus.sidecar.resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | prometheus.sidecar.resources.requests.cpu | string | `"250m"` | CPU request. |
 | prometheus.sidecar.resources.requests.memory | string | `"250Mi"` | Memory request. |
 | prometheus.sidecar.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
 | prometheus.sidecar.volumeSize | string | `"10Gi"` | Persistent volume size. |
+| prometheus.tls.enable | bool | `false` | Whether or not to use TLS when connecting to Prometheus. |
+| prometheus.tls.insecure | bool | `false` | Whether or not to skip verification of the Prometheus server's certificate. |
+| prometheus.tls.secret.caSubPath | string | `""` | The secret's subPath which contains the certificate authority. |
+| prometheus.tls.secret.crtSubPath | string | `""` | The secret's subPath which contains the client certificate, required for mutual TLS. |
+| prometheus.tls.secret.keySubPath | string | `""` | The secret's subPath which contains the client private key, required for mutual TLS. |
+| prometheus.tls.secret.name | string | `""` | Kubernetes TLS secret name that contains the Prometheus TLS certificate(s). |
 | resources.limits.memory | string | `"500Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"250m"` | CPU request. |
 | resources.requests.memory | string | `"250Mi"` | Memory request. |

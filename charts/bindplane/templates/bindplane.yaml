@@ -296,12 +296,12 @@ spec:
               subPath: {{ .Values.eventbus.kafka.tls.secret.caSubPath }}
             {{- end }}
             {{- if .Values.eventbus.kafka.tls.secret.certSubPath }}
-            - mountPath: /kafka-ca.crt
+            - mountPath: /kafka.crt
               name: {{ .Values.eventbus.kafka.tls.secret.name }}
               subPath: {{ .Values.eventbus.kafka.tls.secret.certSubPath }}
             {{- end }}
             {{- if .Values.eventbus.kafka.tls.secret.keySubPath }}
-            - mountPath: /kafka-ca.crt
+            - mountPath: /kafka.key
               name: {{ .Values.eventbus.kafka.tls.secret.name }}
               subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
             {{- end }}

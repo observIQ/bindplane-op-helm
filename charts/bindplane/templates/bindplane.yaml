@@ -249,12 +249,16 @@ spec:
               value: {{ .Values.prometheus.host }}
             - name: BINDPLANE_PROMETHEUS_PORT
               value: "{{ .Values.prometheus.port }}"
+            {{- if .Values.prometheus.queryPathPrefix }}
             - name: BINDPLANE_PROMETHEUS_QUERY_PATH_PREFIX
               value: {{ .Values.prometheus.queryPathPrefix }}
+            {{- end }}
+            {{- if and (.Values.prometheus.remoteWrite.host) (.Values.prometheus.remoteWrite.port) }}
             - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_HOST
               value: {{ .Values.prometheus.remoteWrite.host }}
             - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_PORT
               value: "{{ .Values.prometheus.remoteWrite.port }}"
+            {{- end }}
             - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_ENDPOINT
               value: {{ .Values.prometheus.remoteWrite.path }}
             - name: BINDPLANE_PROMETHEUS_AUTH_TYPE

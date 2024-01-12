@@ -274,12 +274,18 @@ spec:
               value: "true"
             - name: BINDPLANE_PROMETHEUS_TLS_SKIP_VERIFY
               value: "{{ .Values.prometheus.tls.insecure }}"
+            {{- if .Values.prometheus.tls.secret.caSubPath }}
             - name: BINDPLANE_PROMETHEUS_TLS_CA
               value: /prometheus-ca.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.crtSubPath }}
             - name: BINDPLANE_PROMETHEUS_TLS_CERT
               value: /prometheus-client.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.keySubPath }}
             - name: BINDPLANE_PROMETHEUS_TLS_KEY
               value: /prometheus-client.key
+            {{- end }}
             {{- end }}
             {{- end }}
           {{- with .Values.resources }}

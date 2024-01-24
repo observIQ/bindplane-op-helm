@@ -19,7 +19,7 @@ data:
       interval: 1m
       rules:
       - record: bindplane_agent_measurements:rollup:rate:1m
-        expr: sum without (agent) (rate(bindplane_agent_measurements{}[1m] offset 10s))
+        expr: sum without (agent) (rate(bindplane_agent_measurements{}[1m9s999ms] offset 10s))
   web.yml: |
     # web.yml is empty but must be present for Prometheus to start
 {{- end }}

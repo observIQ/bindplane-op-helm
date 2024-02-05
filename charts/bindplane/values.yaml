@@ -272,14 +272,14 @@ config:
 resources:
   requests:
     # -- Memory request.
-    memory: 250Mi
+    memory: 1000Mi
     # -- CPU request.
-    cpu: 250m
+    cpu: 1000m
   limits:
     # -- Memory limit.
-    memory: 500Mi
+    memory: 1000Mi
     # Disable cpu limit by default, for burstable qos class
-    # cpu: 500m
+    # cpu: 1000m
 
 ingress:
   # -- Whether or not to enable ingress.

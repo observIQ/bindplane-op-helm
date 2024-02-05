@@ -89,6 +89,9 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
+| health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
+| health.readinessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
+| health.startupProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | image.name | string | `""` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-ee`. |
 | image.tag | string | `""` | Image tag to use. Defaults to the version defined in the Chart's release. |
 | ingress.annotations | object | `{}` | Custom annotations which will be added to the ingress object. Useful for specifying things such as `cert-manager.io/cluster-issuer`. |
@@ -121,9 +124,9 @@ BindPlane OP is an open source observability pipeline.
 | prometheus.tls.secret.crtSubPath | string | `""` | The secret's subPath which contains the client certificate, required for mutual TLS. |
 | prometheus.tls.secret.keySubPath | string | `""` | The secret's subPath which contains the client private key, required for mutual TLS. |
 | prometheus.tls.secret.name | string | `""` | Kubernetes TLS secret name that contains the Prometheus TLS certificate(s). |
-| resources.limits.memory | string | `"500Mi"` | Memory limit. |
-| resources.requests.cpu | string | `"250m"` | CPU request. |
-| resources.requests.memory | string | `"250Mi"` | Memory request. |
+| resources.limits.memory | string | `"1000Mi"` | Memory limit. |
+| resources.requests.cpu | string | `"1000m"` | CPU request. |
+| resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | trace.otlp.endpoint | string | `""` | Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port. |
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.type | string | `""` | Trace type to use. Valid options include `otlp`. |

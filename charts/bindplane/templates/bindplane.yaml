@@ -292,15 +292,15 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.startupProbe }}
+          {{- with .Values.health.startupProbe }}
           startupProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.readinessProbe }}
+          {{- with .Values.health.readinessProbe }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.livenessProbe }}
+          {{- with .Values.health.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}

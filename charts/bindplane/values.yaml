@@ -272,14 +272,31 @@ config:
 resources:
   requests:
     # -- Memory request.
-    memory: 250Mi
+    memory: 1000Mi
     # -- CPU request.
-    cpu: 250m
+    cpu: 1000m
   limits:
     # -- Memory limit.
-    memory: 500Mi
+    memory: 1000Mi
     # Disable cpu limit by default, for burstable qos class
-    # cpu: 500m
+    # cpu: 1000m
+
+health:
+  # -- Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/.
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+  # -- Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/.
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+  # -- Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/.
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
 
 ingress:
   # -- Whether or not to enable ingress.

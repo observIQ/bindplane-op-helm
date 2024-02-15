@@ -96,8 +96,8 @@ spec:
             name: {{ include "bindplane.fullname" . }}-prometheus
   # Delete persistent volumes when the statefulset is deleted.
   persistentVolumeClaimRetentionPolicy:
-    whenDeleted: Delete
-    whenScaled: Delete
+    whenDeleted: Retain
+    whenScaled: Retain
   volumeClaimTemplates:
     - metadata:
         name: tsdb

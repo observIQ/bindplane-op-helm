@@ -372,15 +372,6 @@ spec:
           ports:
             - containerPort: 9090
               name: http
-          args:
-            - --config.file=/etc/prometheus/prometheus.yml
-            - --web.config.file=/etc/prometheus/web.yml
-            - --storage.tsdb.retention.time=2d
-            - --web.enable-remote-write-receiver
-            - --web.listen-address={{ .Values.prometheus.host }}:{{ .Values.prometheus.port }}
-            - --storage.tsdb.path=/var/lib/prometheus/tsdb
-            - --web.console.templates=/etc/prometheus/consoles
-            - --web.console.libraries=/etc/prometheus/console_libraries
           {{- with .Values.prometheus.sidecar.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -393,7 +384,7 @@ spec:
               drop: ["ALL"]
           volumeMounts:
             - name: {{ include "bindplane.fullname" . }}-prometheus-data
-              mountPath: /var/lib/prometheus/tsdb
+              mountPath: /prometheus
         {{- end }}
         {{- end }}
       terminationGracePeriodSeconds: 60

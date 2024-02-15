@@ -364,7 +364,6 @@ spec:
               exec:
                 command: ["sh", "-c", "sleep 5",]
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-        {{- if eq .Values.prometheus.remote false }}
         - name: prometheus
           image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
           ports:
@@ -383,7 +382,6 @@ spec:
           volumeMounts:
             - name: {{ include "bindplane.fullname" . }}-prometheus-data
               mountPath: /prometheus
-        {{- end }}
         {{- end }}
       terminationGracePeriodSeconds: 60
       volumes:
@@ -441,7 +439,6 @@ spec:
         {{- end }}
     {{- end }}
     {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-    {{- if eq .Values.prometheus.remote false }}
     - metadata:
         name: {{ include "bindplane.fullname" . }}-prometheus-data
         labels:
@@ -459,6 +456,5 @@ spec:
         {{- if .Values.prometheus.sidecar.storageClass }}
         storageClassName: {{ .Values.prometheus.sidecar.storageClass }}
         {{- end }}
-      {{- end }}
       {{- end }}
   {{- end }}

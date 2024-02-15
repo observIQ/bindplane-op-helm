@@ -27,11 +27,9 @@ backend:
     # -- Max number of connections to use when communicating with Postgres.
     maxConnections: 100
 
-# TODO(jsirianni): Support authentication and TLS.
-# This is undocumented for now, as Prometheus support has not been released.
 prometheus:
-  # -- when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments.
-  enable: false
+  # -- When enabled, the chart will not deploy a Prometheus instance. This option is useful when using an existing Prometheus instance.
+  remote: false
   # -- The Prometheus hostname or IP address used for querying and writing metrics.
   host: "127.0.0.1"
   # -- The Prometheus TCP port used for querying and writing metrics.
@@ -78,8 +76,7 @@ prometheus:
       crtSubPath: ""
       # -- The secret's subPath which contains the client private key, required for mutual TLS.
       keySubPath: ""
-  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. When using this option, leave all other Prometheus options unset and at their default values.
-  enableSideCar: false
+  # -- When BindPlane is running in single instance mode and `prometheus.remote` is set to `false`, the measurements backend will be deployed as a sidecar container.
   sidecar:
     resources:
       requests:

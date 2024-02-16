@@ -368,19 +368,10 @@ spec:
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
         {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
         - name: prometheus
-          image: prom/prometheus:v2.47.2
+          image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
           ports:
             - containerPort: 9090
               name: http
-          args:
-            - --config.file=/etc/prometheus/prometheus.yml
-            - --web.config.file=/etc/prometheus/web.yml
-            - --storage.tsdb.retention.time=2d
-            - --web.enable-remote-write-receiver
-            - --web.listen-address={{ .Values.prometheus.host }}:{{ .Values.prometheus.port }}
-            - --storage.tsdb.path=/var/lib/prometheus/tsdb
-            - --web.console.templates=/etc/prometheus/consoles
-            - --web.console.libraries=/etc/prometheus/console_libraries
           {{- with .Values.prometheus.sidecar.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -392,17 +383,8 @@ spec:
             capabilities:
               drop: ["ALL"]
           volumeMounts:
-            - name: {{ include "bindplane.fullname" . }}-prometheus-config
-              mountPath: /etc/prometheus/prometheus.yml
-              subPath: prometheus.yml
-            - name: {{ include "bindplane.fullname" . }}-prometheus-config
-              mountPath: /etc/prometheus/rules.yml
-              subPath: rules.yml
-            - name: {{ include "bindplane.fullname" . }}-prometheus-config
-              mountPath: /etc/prometheus/web.yml
-              subPath: web.yml
             - name: {{ include "bindplane.fullname" . }}-prometheus-data
-              mountPath: /var/lib/prometheus/tsdb
+              mountPath: /prometheus
         {{- end }}
         {{- end }}
       terminationGracePeriodSeconds: 60
@@ -437,13 +419,6 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.prometheus.tls.secret.name }}
-        {{- end }}
-        {{- end }}
-        {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-        {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
-        - name: {{ include "bindplane.fullname" . }}-prometheus-config
-          configMap:
-            name: {{ include "bindplane.fullname" . }}-prometheus-config
         {{- end }}
         {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}

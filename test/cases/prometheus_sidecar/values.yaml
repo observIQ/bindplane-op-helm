@@ -7,3 +7,7 @@ config:
 prometheus:
   enable: true
   enableSideCar: true
+
+# TODO(jsirianni): Can be removed after 1.45 release.
+image:
+  tag: 1.43.0

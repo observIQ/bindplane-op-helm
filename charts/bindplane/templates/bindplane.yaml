@@ -367,6 +367,30 @@ spec:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 5",]
+        {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+        {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
+        - name: prometheus
+          image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          {{- with .Values.prometheus.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /prometheus
+              name: {{ include "bindplane.fullname" . }}-prometheus-data
+        {{- end }}
+        {{- end }}
       terminationGracePeriodSeconds: 60
       volumes:
         {{- if eq .Values.eventbus.type "pubsub" }}
@@ -420,6 +444,25 @@ spec:
             storage: {{ .Values.backend.bbolt.volumeSize }}
         {{- if .Values.backend.bbolt.storageClass }}
         storageClassName: {{ .Values.backend.bbolt.storageClass }}
+        {{- end }}
+    {{- end }}
+    {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
+    - metadata:
+        name: {{ include "bindplane.fullname" . }}-prometheus-data
+        labels:
+          app.kubernetes.io/name: {{ include "bindplane.name" . }}
+          app.kubernetes.io/stack: bindplane
+          app.kubernetes.io/component: server
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/managed-by: {{ .Release.Service }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.prometheus.storage.volumeSize }}
+        {{- if .Values.prometheus.storage.storageClass }}
+        storageClassName: {{ .Values.prometheus.storage.storageClass }}
         {{- end }}
     {{- end }}
   {{- end }}

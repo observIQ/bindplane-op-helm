@@ -32,6 +32,8 @@ backend:
 prometheus:
   # -- When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use.
   remote: false
+  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.
+  enableSideCar: false
   # -- The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart.
   host: ""
   # -- The Prometheus TCP port used for querying and writing metrics.

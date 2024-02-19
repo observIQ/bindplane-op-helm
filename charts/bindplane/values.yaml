@@ -30,10 +30,8 @@ backend:
 # TODO(jsirianni): Support authentication and TLS.
 # This is undocumented for now, as Prometheus support has not been released.
 prometheus:
-  # -- when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments.
-  enable: false
-  # -- The Prometheus hostname or IP address used for querying and writing metrics.
-  host: "127.0.0.1"
+  # -- The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart.
+  host: "bindplane-prometheus"
   # -- The Prometheus TCP port used for querying and writing metrics.
   port: 9090
   # -- Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir.
@@ -78,20 +76,17 @@ prometheus:
       crtSubPath: ""
       # -- The secret's subPath which contains the client private key, required for mutual TLS.
       keySubPath: ""
-  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. When using this option, leave all other Prometheus options unset and at their default values.
-  enableSideCar: false
-  sidecar:
-    resources:
-      requests:
-        # -- Memory request.
-        memory: 250Mi
-        # -- CPU request.
-        cpu: 250m
-      limits:
-        # -- Memory limit.
-        memory: 500Mi
-        # Disable cpu limit by default, for burstable qos class
-        # cpu: 500m
+  resources:
+    requests:
+      # -- Memory request.
+      memory: 500Mi
+      # -- CPU request.
+      cpu: 250m
+    limits:
+      # -- Memory limit.
+      memory: 500Mi
+      # Disable cpu limit by default, for burstable qos class
+      # cpu: 500m
     # -- Persistent volume size.
     volumeSize: 10Gi
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
@@ -390,6 +385,7 @@ dev:
       tag: latest
     labels: "configuration=test"
   
+  # DEPRECATED: Use the `prometheus` top level section instead.
   # Manages a prometheus deployment for development purposes. Production
   # deployments should use a proper prometheus backend deployed outside
   # of this chart.

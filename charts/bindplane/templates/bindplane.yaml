@@ -248,7 +248,7 @@ spec:
               {{- if .Values.prometheus.host }}
               value: {{ .Values.prometheus.host }}
               {{- else }}
-              value: {{ include "bindplane.fullname" . }}-bindplane-prometheus
+              value: {{ include "bindplane.fullname" . }}-prometheus
               {{- end }}
             - name: BINDPLANE_PROMETHEUS_PORT
               value: "{{ .Values.prometheus.port }}"

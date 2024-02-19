@@ -245,7 +245,9 @@ spec:
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_HOST
-              {{- if .Values.prometheus.host }}
+              {{- if .Values.prometheus.enableSideCar }}
+              value: localhost
+              {{- else if .Values.prometheus.remote }}
               value: {{ .Values.prometheus.host }}
               {{- else }}
               value: {{ include "bindplane.fullname" . }}-prometheus

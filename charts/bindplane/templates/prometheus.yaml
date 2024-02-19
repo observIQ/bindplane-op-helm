@@ -1,4 +1,3 @@
-
 {{- if not .Values.prometheus.remote }}
 {{- if not .Values.prometheus.enableSideCar }}
 apiVersion: apps/v1

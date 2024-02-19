@@ -33,7 +33,7 @@ prometheus:
   # -- When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use.
   remote: false
   # -- The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart.
-  host: "bindplane-prometheus"
+  host: ""
   # -- The Prometheus TCP port used for querying and writing metrics.
   port: 9090
   # -- Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir.

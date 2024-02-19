@@ -240,7 +240,6 @@ spec:
             {{- end }}
             - name: BINDPLANE_PORT
               value: "3001"
-            {{- if .Values.prometheus.enable }}
             - name: BINDPLANE_PROMETHEUS_ENABLE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
@@ -285,7 +284,6 @@ spec:
             {{- if .Values.prometheus.tls.secret.keySubPath }}
             - name: BINDPLANE_PROMETHEUS_TLS_KEY
               value: /prometheus-client.key
-            {{- end }}
             {{- end }}
             {{- end }}
           {{- with .Values.resources }}
@@ -344,7 +342,7 @@ spec:
               subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
-            {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+            {{- if .Values.prometheus.tls.enable }}
             {{- if .Values.prometheus.tls.secret.caSubPath }}
             - mountPath: /prometheus-ca.crt
               name: {{ .Values.prometheus.tls.secret.name }}
@@ -391,7 +389,7 @@ spec:
             secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
-        {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+        {{- if .Values.prometheus.tls.enable }}
         {{- if .Values.prometheus.tls.secret.name }}
         - name: {{ .Values.prometheus.tls.secret.name }}
           secret:

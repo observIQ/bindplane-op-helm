@@ -93,7 +93,7 @@ prometheus:
       # cpu: 500m
   storage:
     # -- Persistent volume size.
-    volumeSize: 60Gi
+    volumeSize: 10Gi
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
     storageClass: ""
 

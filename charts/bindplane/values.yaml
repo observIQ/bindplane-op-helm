@@ -87,8 +87,9 @@ prometheus:
       memory: 500Mi
       # Disable cpu limit by default, for burstable qos class
       # cpu: 500m
+  storage:
     # -- Persistent volume size.
-    volumeSize: 10Gi
+    volumeSize: 60Gi
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
     storageClass: ""
 

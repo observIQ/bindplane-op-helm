@@ -30,7 +30,11 @@ spec:
           image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent
           securityContext:
+            runAsNonRoot: true
             readOnlyRootFilesystem: true
+            runAsUser: 65534
+            capabilities:
+              drop: ["ALL"]
           ports:
             - name: http
               containerPort: 9090

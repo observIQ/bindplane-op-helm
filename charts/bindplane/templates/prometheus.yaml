@@ -1,5 +1,6 @@
 {{- if not .Values.prometheus.remote }}
 {{- if not .Values.prometheus.enableSideCar }}
+{{- if not .Values.dev.prometheus.create }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

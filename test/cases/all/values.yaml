@@ -30,7 +30,7 @@ auth:
       insecure: true
 image:
   name: ghcr.io/observiq/bindplane
-  tag: 1.24.0
+  tag: 1.44.0
 resources:
   requests:
     memory: 100Mi

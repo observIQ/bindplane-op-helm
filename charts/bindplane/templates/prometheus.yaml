@@ -28,6 +28,8 @@ spec:
         app.kubernetes.io/component: prometheus
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        fsGroup: 65534
       containers:
         - name: prometheus
           image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}

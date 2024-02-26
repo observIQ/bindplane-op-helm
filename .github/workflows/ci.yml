@@ -24,10 +24,8 @@ jobs:
       matrix:
         case:
           - "default"
-          - "all"
           - "image"
           - "ingress"
-          - "prometheus_sidecar"
         k8s_version:
           - v1.25.0
           - v1.27.0

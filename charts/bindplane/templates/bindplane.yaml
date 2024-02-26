@@ -240,13 +240,18 @@ spec:
             {{- end }}
             - name: BINDPLANE_PORT
               value: "3001"
-            {{- if .Values.prometheus.enable }}
             - name: BINDPLANE_PROMETHEUS_ENABLE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_HOST
+              {{- if .Values.prometheus.enableSideCar }}
+              value: localhost
+              {{- else if .Values.prometheus.remote }}
               value: {{ .Values.prometheus.host }}
+              {{- else }}
+              value: {{ include "bindplane.fullname" . }}-prometheus
+              {{- end }}
             - name: BINDPLANE_PROMETHEUS_PORT
               value: "{{ .Values.prometheus.port }}"
             {{- if .Values.prometheus.queryPathPrefix }}
@@ -285,7 +290,6 @@ spec:
             {{- if .Values.prometheus.tls.secret.keySubPath }}
             - name: BINDPLANE_PROMETHEUS_TLS_KEY
               value: /prometheus-client.key
-            {{- end }}
             {{- end }}
             {{- end }}
           {{- with .Values.resources }}
@@ -344,7 +348,7 @@ spec:
               subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
-            {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+            {{- if .Values.prometheus.tls.enable }}
             {{- if .Values.prometheus.tls.secret.caSubPath }}
             - mountPath: /prometheus-ca.crt
               name: {{ .Values.prometheus.tls.secret.name }}
@@ -366,25 +370,27 @@ spec:
               exec:
                 command: ["sh", "-c", "sleep 5",]
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-        {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
+        {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
         - name: prometheus
           image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
-          ports:
-            - containerPort: 9090
-              name: http
-          {{- with .Values.prometheus.sidecar.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+          imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
             readOnlyRootFilesystem: true
             runAsUser: 65534
             capabilities:
               drop: ["ALL"]
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          {{- with .Values.prometheus.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
-            - name: {{ include "bindplane.fullname" . }}-prometheus-data
-              mountPath: /prometheus
+            - mountPath: /prometheus
+              name: {{ include "bindplane.fullname" . }}-prometheus-data
         {{- end }}
         {{- end }}
       terminationGracePeriodSeconds: 60
@@ -413,7 +419,7 @@ spec:
             secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
-        {{- if and (.Values.prometheus.enable) (.Values.prometheus.tls.enable) }}
+        {{- if .Values.prometheus.tls.enable }}
         {{- if .Values.prometheus.tls.secret.name }}
         - name: {{ .Values.prometheus.tls.secret.name }}
           secret:
@@ -442,8 +448,7 @@ spec:
         storageClassName: {{ .Values.backend.bbolt.storageClass }}
         {{- end }}
     {{- end }}
-    {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-    {{- if and (.Values.prometheus.enable) (.Values.prometheus.enableSideCar) }}
+    {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
     - metadata:
         name: {{ include "bindplane.fullname" . }}-prometheus-data
         labels:
@@ -457,10 +462,9 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: {{ .Values.prometheus.sidecar.volumeSize }}
-        {{- if .Values.prometheus.sidecar.storageClass }}
-        storageClassName: {{ .Values.prometheus.sidecar.storageClass }}
+            storage: {{ .Values.prometheus.storage.volumeSize }}
+        {{- if .Values.prometheus.storage.storageClass }}
+        storageClassName: {{ .Values.prometheus.storage.storageClass }}
         {{- end }}
-      {{- end }}
-      {{- end }}
+    {{- end }}
   {{- end }}

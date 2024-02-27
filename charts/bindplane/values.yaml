@@ -318,6 +318,10 @@ ingress:
   # `cert-manager.io/cluster-issuer`.
   annotations: {}
 
+service:
+  # -- Custom annotations which will be added to the service object. Useful for specifying things such as `cloud.google.com/backend-config`.
+  annotations: {}
+
 trace:
   # -- Trace type to use. Valid options include `otlp`.
   type: ""

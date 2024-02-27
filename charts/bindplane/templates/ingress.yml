@@ -17,7 +17,7 @@ metadata:
     {{- end }}
     {{- end }}
     {{- if .Values.ingress.annotations }}
-    {{ toYaml .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
     {{- end }}
 spec:
   rules:

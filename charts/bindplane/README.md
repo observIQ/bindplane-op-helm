@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.46.0](https://img.shields.io/badge/AppVersion-1.46.0-informational?style=flat-square)
+![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.46.0](https://img.shields.io/badge/AppVersion-1.46.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -48,6 +48,7 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
+| config.analytics.disable | bool | `false` | Valid for enterprise only. Whether or not to disable analytics. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Keep unset to use the free edition. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
 | config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |

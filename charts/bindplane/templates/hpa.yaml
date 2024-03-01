@@ -1,4 +1,5 @@
 {{- if and (eq .Values.autoscaling.enable true) (include "bindplane.deployment_type" .) "Deployment" }}
+{{- if not eq .Values.eventbus.type "nats" }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -26,5 +27,6 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ . }}
+{{- end }}
 {{- end }}
 {{- end }}

@@ -97,9 +97,8 @@ prometheus:
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
     storageClass: ""
 
-
 eventbus:
-  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
+  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`, `kafka`, `nats`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
   type: ""
 
   pubsub:
@@ -327,6 +326,9 @@ trace:
     endpoint: ""
     # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver.
     insecure: false
+
+# -- The number of replicas to use when BindPlane is deployed as a Deployment. This options is ignored if autoscaling is enabled. When `eventbus.type` is set to `nats`, replica count should be an odd number such as 3 and 5. 
+replicaCount: 1
 
 autoscaling:
   # -- Whether or not autoscaling should be enabled. Requires an eventbus to be configured.

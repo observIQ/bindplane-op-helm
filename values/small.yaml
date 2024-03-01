@@ -1,0 +1,52 @@
+# Resources allocated to BindPlane OP Server. For more information
+# see https://observiq.com/docs/advanced-setup/installation/prerequisites.
+resources:
+  requests:
+    memory: 4Gi
+    cpu: 2
+  limits:
+    memory: 4Gi
+    cpu: 2
+
+# Single instance BindPlane operates as a StatefulSet with a
+# persistent volume.
+backend:
+  type: bbolt
+
+  bbolt:
+    volumeSize: 120Gi
+    # Set the storage class to use for the volume. If not set,
+    # the default storage class will be used. If possible, this
+    # should be set to an SSD backed storage class.
+    # storageClass:
+
+# Prometheus is deployed as a StatefulSet with a persistent volume.
+prometheus:
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 1
+    limits:
+      memory: 2Gi
+      cpu: 1
+  storage:
+    volumeSize: 120Gi
+    # Set the storage class to use for the volume. If not set,
+    # the default storage class will be used. If possible, this
+    # should be set to an SSD backed storage class.
+    # storageClass:
+
+auth:
+  type: system
+
+config:
+  # If you have a BindPlane license, set it here.
+  # license:
+  accept_eula: true
+  # kubectl -n <namesapce> create secret generic <name> \
+  #   --from-literal=username=myuser \
+  #   --from-literal=password=mypassword \
+  #   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
+  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
+  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options.
+  secret: bindplane

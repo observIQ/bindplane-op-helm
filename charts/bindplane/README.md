@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.1.10](https://img.shields.io/badge/Version-1.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.45.0](https://img.shields.io/badge/AppVersion-1.45.0-informational?style=flat-square)
+![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.47.0](https://img.shields.io/badge/AppVersion-1.47.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -105,19 +105,19 @@ BindPlane OP is an open source observability pipeline.
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
-| prometheus.enable | bool | `false` | when enabled, Prometheus will be used as the measurements backend. Prometheus is the recommended backend for production deployments. |
-| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. When using this option, leave all other Prometheus options unset and at their default values. |
-| prometheus.host | string | `"127.0.0.1"` | The Prometheus hostname or IP address used for querying and writing metrics. |
+| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
+| prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
 | prometheus.port | int | `9090` | The Prometheus TCP port used for querying and writing metrics. |
 | prometheus.queryPathPrefix | string | `""` | Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir. |
+| prometheus.remote | bool | `false` | When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use. |
 | prometheus.remoteWrite.host | string | `""` | Optional hostname or IP address of the remote write endpoint. This value overrides the `prometheus.host` for remote write. |
 | prometheus.remoteWrite.path | string | `"/api/v1/write"` | Path of the remote write endpoint. This value should default to `/api/v1/write`. |
 | prometheus.remoteWrite.port | int | `9090` | Optional TCP port of the remote write endpoint. This value overrides the `prometheus.port` for remote write. |
-| prometheus.sidecar.resources.limits.memory | string | `"500Mi"` | Memory limit. |
-| prometheus.sidecar.resources.requests.cpu | string | `"250m"` | CPU request. |
-| prometheus.sidecar.resources.requests.memory | string | `"250Mi"` | Memory request. |
-| prometheus.sidecar.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
-| prometheus.sidecar.volumeSize | string | `"10Gi"` | Persistent volume size. |
+| prometheus.resources.limits.memory | string | `"500Mi"` | Memory limit. |
+| prometheus.resources.requests.cpu | string | `"250m"` | CPU request. |
+| prometheus.resources.requests.memory | string | `"500Mi"` | Memory request. |
+| prometheus.storage.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
+| prometheus.storage.volumeSize | string | `"10Gi"` | Persistent volume size. |
 | prometheus.tls.enable | bool | `false` | Whether or not to use TLS when connecting to Prometheus. |
 | prometheus.tls.insecure | bool | `false` | Whether or not to skip verification of the Prometheus server's certificate. |
 | prometheus.tls.secret.caSubPath | string | `""` | The secret's subPath which contains the certificate authority. |

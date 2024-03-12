@@ -15,7 +15,7 @@ Helm's [documentation](https://helm.sh/docs) to get started.
 
 ### Secrets
 
-The Chart can accept a secret for configuring sensative options. This secret should be managed outside of helm with your preferred secret management solution. Alternatively, you can specify
+The Chart can accept a secret for configuring sensitive options. This secret should be managed outside of helm with your preferred secret management solution. Alternatively, you can specify
 these options using a values file. See the [Chart documentation](./charts/bindplane/README.md).
 
 The secret should have the following keys:

@@ -264,6 +264,8 @@ config:
   sessions_secret: ""
   # -- The license key to use for BindPlane OP. Overrides `config.secret`.
   license: ""
+  # -- When true, the license key will be referenced from the `config.secret` secret.
+  licenseUseSecret: false
 
 
 # Pod resource requests and limits can be defined here.

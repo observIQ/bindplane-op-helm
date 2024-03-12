@@ -23,6 +23,7 @@ The secret should have the following keys:
 - `password`: Basic auth password to use for the default admin user
 - `secret_key`: Random UUIDv4 to use for authenticating OpAMP clients
 - `sessions_secret`: Random UUIDv4 used to derive web interface session tokens
+- `license`: Your BindPlane license key
 
 Example: Create secret with `kubectl`:
 
@@ -31,7 +32,8 @@ kubectl -n default create secret generic bindplane \
   --from-literal=username=myuser \
   --from-literal=password=mypassword \
   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
-  --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
+  --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90 \
+  --from-literal=license=your_license_key
 ```
 
 ## Configuration

@@ -47,6 +47,7 @@ config:
   #   --from-literal=username=myuser \
   #   --from-literal=password=mypassword \
   #   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
-  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
-  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options.
+  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90 \
+  #   --from-literal=license=your_license_key
+  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options.
   secret: bindplane

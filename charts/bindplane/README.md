@@ -48,10 +48,10 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
-| config.license | string | `""` | The license key to use for BindPlane OP. Keep unset to use the free edition. |
+| config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
 | config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
-| config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options. |
+| config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options. |
 | config.secret_key | string | `""` | Secret Key to use. Overrides `config.secret`. |
 | config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |

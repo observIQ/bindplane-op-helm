@@ -224,8 +224,6 @@ transform_agent:
 # Bindplane configuration options:
 # https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
 config:
-  # -- The license key to use for BindPlane OP. Keep unset to use the free edition.
-  license: ""
   # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
   accept_eula: true
   # The URI used by clients to communicate with bindplane-op. Defaults to the
@@ -248,13 +246,14 @@ config:
   #   --from-literal=username=myuser \
   #   --from-literal=password=mypassword \
   #   --from-literal=secret_key=353753ca-ae48-40f9-9588-28cf86430910 \
-  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90
-  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, and `sessions_secret` configuration options.
+  #   --from-literal=sessions_secret=d9425db6-c4ee-4769-9c1f-a66987679e90 \
+  #   --from-literal=license=your_license_key
+  # -- Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options.
   secret: bindplane
 
   # The following options override values set in the secret. Useful
   # for quick testing where you do not want to be bothered with managing
-  # sensative values outside of helm.
+  # sensitive values outside of helm.
   # -- Username to use. Overrides `config.secret`.
   username: ""
   # -- Password to use. Overrides `config.secret`.
@@ -263,6 +262,8 @@ config:
   secret_key: ""
   # -- Sessions Secret to use. Overrides `config.secret`.
   sessions_secret: ""
+  # -- The license key to use for BindPlane OP. Overrides `config.secret`.
+  license: ""
 
 
 # Pod resource requests and limits can be defined here.

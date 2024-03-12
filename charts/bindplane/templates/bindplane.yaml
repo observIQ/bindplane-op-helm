@@ -45,10 +45,10 @@ spec:
               value: "true"
             - name: BINDPLANE_TRANSFORM_AGENT_REMOTE_AGENTS
               value: "{{ include "bindplane.fullname" . }}-transform-agent:4568"
-            {{- if .Values.config.license }}
             - name: BINDPLANE_LICENSE
+            {{- if .Values.config.license }}
               value: {{ .Values.config.license }}
-              {{- else }}
+            {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.config.secret }}

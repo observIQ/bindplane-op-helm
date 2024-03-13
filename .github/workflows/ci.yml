@@ -51,6 +51,11 @@ jobs:
           sleep 30
           kubectl -n ingress-nginx get all
 
+      - name: Create secret
+        run: |
+          kubectl -n default create secret generic bindplane \
+            --from-literal=license=${{ secrets.BINDPLANE_LICENSE }}
+
       - name: Deploy
         run: |
           helm template \

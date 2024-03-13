@@ -49,6 +49,7 @@ BindPlane OP is an open source observability pipeline.
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
+| config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
 | config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options. |

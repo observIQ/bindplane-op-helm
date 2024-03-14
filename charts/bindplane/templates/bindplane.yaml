@@ -319,6 +319,10 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- if eq .Values.backend.type "bbolt" }}
             - mountPath: /data

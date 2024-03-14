@@ -48,6 +48,13 @@ spec:
             {{- if .Values.config.license }}
             - name: BINDPLANE_LICENSE
               value: {{ .Values.config.license }}
+            {{- else if .Values.config.licenseUseSecret }}
+            - name: BINDPLANE_LICENSE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: license
+                  optional: false
             {{- end}}
             - name: BINDPLANE_ACCEPT_EULA
               value: "{{ .Values.config.accept_eula }}"

@@ -37,17 +37,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   ports:
-    - port: 4222
-      protocol: TCP
-      targetPort: client
-      name: client
-    - port: 8222
-      protocol: TCP
-      targetPort: http
-      name: http
     - port: 6222
       protocol: TCP
-      targetPort: cluster
+      targetPort: 6222
       name: cluster
   selector:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}

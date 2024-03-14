@@ -165,8 +165,6 @@ spec:
               value: "0.0.0.0"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
               value: "6222"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_ADVERTISE
-              value: "{{ include "bindplane.fullname" . }}-nats-headless.{{ .Release.Namespace }}.svc.cluster.local:6222"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
               value: "nats://{{ include "bindplane.fullname" . }}-nats-headless.{{ .Release.Namespace }}.svc.cluster.local:6222"
             - name: BINDPLANE_NATS_CLIENT_NAME

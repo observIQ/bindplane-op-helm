@@ -226,6 +226,11 @@ transform_agent:
 config:
   # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
   accept_eula: true
+
+  analytics:
+    # -- Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used.
+    disable: false
+
   # The URI used by clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 

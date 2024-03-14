@@ -48,7 +48,7 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
-| config.analytics | object | `{"disable":false}` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
+| config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
 | config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |

@@ -30,6 +30,10 @@ spec:
     spec:
       securityContext:
         fsGroup: 65534
+      {{- with .Values.prometheus.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: prometheus
           image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}

@@ -96,6 +96,8 @@ prometheus:
     volumeSize: 10Gi
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
     storageClass: ""
+  # -- Tolerations for the Prometheus pod.
+  tolerations: {}
 
 
 eventbus:
@@ -359,6 +361,10 @@ podSecurityContext:
   # This field supports all pod securityContext options.
   # BindPlane uses the following container securityContext by default:
   fsGroup: 65534
+
+# -- The Pod's tolerations
+tolerations: {}
+
 
 # -- The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container.
 containerSecurityContext:

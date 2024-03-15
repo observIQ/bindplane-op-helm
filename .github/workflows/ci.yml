@@ -26,6 +26,7 @@ jobs:
           - "default"
           - "image"
           - "ingress"
+          - "volume"
         k8s_version:
           - v1.25.0
           - v1.27.0

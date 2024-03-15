@@ -374,6 +374,9 @@ spec:
               subPath: {{ .Values.prometheus.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
+            {{- if len .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
@@ -435,6 +438,9 @@ spec:
             defaultMode: 0400
             secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
+        {{- end }}
+        {{- if len .Values.extraVolumes }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   volumeClaimTemplates:

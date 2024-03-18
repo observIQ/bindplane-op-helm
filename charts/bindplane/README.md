@@ -1,6 +1,7 @@
 # bindplane
 
-![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.48.0](https://img.shields.io/badge/AppVersion-1.48.0-informational?style=flat-square)
+
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.48.0](https://img.shields.io/badge/AppVersion-1.48.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -48,6 +49,7 @@ BindPlane OP is an open source observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
+| config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
 | config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
@@ -90,6 +92,8 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
+| extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the BindPlane pod(s). |
+| extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |
 | health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.readinessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.startupProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |

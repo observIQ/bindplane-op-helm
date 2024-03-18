@@ -228,6 +228,11 @@ transform_agent:
 config:
   # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
   accept_eula: true
+
+  analytics:
+    # -- Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used.
+    disable: false
+
   # The URI used by clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 
@@ -415,3 +420,9 @@ dev:
       # Generally this should match the version found
       # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
       tag: v2.47.2
+
+# -- Optional arbitrary volumes to add to the BindPlane pod(s).
+extraVolumes: []
+
+# -- Optional arbitrary volume mounts to add to the BindPlane pod(s).
+extraVolumeMounts: []

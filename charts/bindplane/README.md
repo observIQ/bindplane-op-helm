@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.49.0](https://img.shields.io/badge/AppVersion-1.49.0-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.49.0](https://img.shields.io/badge/AppVersion-1.49.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -91,6 +91,7 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
+| extraPodLabels | object | `{}` | Optional arbitrary labels to add to the BindPlane pod(s). |
 | extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the BindPlane pod(s). |
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |
 | health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
@@ -110,6 +111,7 @@ BindPlane OP is an open source observability pipeline.
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
 | prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
+| prometheus.extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode). |
 | prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
 | prometheus.image.name | string | `"ghcr.io/observiq/bindplane-prometheus"` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-prometheus`. NOTE: The image tag is derived from the BindPlane server tag. |
 | prometheus.port | int | `9090` | The Prometheus TCP port used for querying and writing metrics. |

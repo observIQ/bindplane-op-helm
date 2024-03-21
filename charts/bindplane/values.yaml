@@ -99,6 +99,8 @@ prometheus:
     volumeSize: 10Gi
     # -- The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class.
     storageClass: ""
+  # -- Optional arbitrary labels to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode).
+  extraPodLabels: {}
 
 
 eventbus:
@@ -419,3 +421,6 @@ extraVolumes: []
 
 # -- Optional arbitrary volume mounts to add to the BindPlane pod(s).
 extraVolumeMounts: []
+
+# -- Optional arbitrary labels to add to the BindPlane pod(s).
+extraPodLabels: {}

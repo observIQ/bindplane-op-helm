@@ -27,6 +27,9 @@ spec:
         app.kubernetes.io/stack: bindplane
         app.kubernetes.io/component: prometheus
         app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if len .Values.prometheus.extraPodLabels }}
+        {{- toYaml .Values.prometheus.extraPodLabels | nindent 8 }}
+        {{- end }}
     spec:
       securityContext:
         fsGroup: 65534

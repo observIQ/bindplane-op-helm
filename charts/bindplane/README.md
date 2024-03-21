@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.49.0](https://img.shields.io/badge/AppVersion-1.49.0-informational?style=flat-square)
+![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.49.0](https://img.shields.io/badge/AppVersion-1.49.0-informational?style=flat-square)
 
 BindPlane OP is an open source observability pipeline.
 
@@ -111,6 +111,7 @@ BindPlane OP is an open source observability pipeline.
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
 | prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
 | prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
+| prometheus.image.name | string | `"ghcr.io/observiq/bindplane-prometheus"` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-prometheus`. NOTE: The image tag is derived from the BindPlane server tag. |
 | prometheus.port | int | `9090` | The Prometheus TCP port used for querying and writing metrics. |
 | prometheus.queryPathPrefix | string | `""` | Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir. |
 | prometheus.remote | bool | `false` | When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use. |

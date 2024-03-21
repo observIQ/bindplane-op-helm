@@ -32,7 +32,7 @@ spec:
         fsGroup: 65534
       containers:
         - name: prometheus
-          image: ghcr.io/observiq/bindplane-prometheus:{{ include "bindplane.tag" . }}
+          image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true

@@ -3,6 +3,10 @@ kind: Service
 metadata:
   name: {{ include "bindplane.fullname" . }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if .Values.service.annotations }}
+{{ toYaml .Values.service.annotations | indent 4 }}
+    {{- end }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane
@@ -22,3 +26,4 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}
   sessionAffinity: None
   type: ClusterIP
+

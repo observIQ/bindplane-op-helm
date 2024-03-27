@@ -426,6 +426,18 @@ dev:
       # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
       tag: v2.47.2
 
+  # Only used for development purposes. Avoid using in production.
+  bindplane:
+    auth:
+      auth0:
+        # -- Auth0 domain to use.
+        domain: ""
+        # -- Auth0 client ID to use.
+        clientID: ""
+        # -- Auth0 audience to use.
+        audience: ""
+
+
 # -- Optional arbitrary volumes to add to the BindPlane pod(s).
 extraVolumes: []
 

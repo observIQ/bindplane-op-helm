@@ -437,4 +437,4 @@ extraVolumeMounts: []
 extraPodLabels: {}
 
 # -- Optional arbitrary environment variables to add to the BindPlane pod(s).
-extraEnv: {}
+extraEnv: []

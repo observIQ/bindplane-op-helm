@@ -244,6 +244,13 @@ spec:
             - name: BINDPLANE_GOOGLE_AUTH_CLIENT_ID
               value: {{ .Values.auth.google.clientid }}
             {{- end }}
+            {{- if eq .Values.auth.type "auth0" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: auth0
+            {{- if len .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- end }}
+            {{- end }}
             {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE
               value: "true"

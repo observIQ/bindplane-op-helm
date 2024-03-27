@@ -426,6 +426,7 @@ dev:
       # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
       tag: v2.47.2
 
+
 # -- Optional arbitrary volumes to add to the BindPlane pod(s).
 extraVolumes: []
 
@@ -434,3 +435,6 @@ extraVolumeMounts: []
 
 # -- Optional arbitrary labels to add to the BindPlane pod(s).
 extraPodLabels: {}
+
+# -- Optional arbitrary environment variables to add to the BindPlane pod(s).
+extraEnv: []

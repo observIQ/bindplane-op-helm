@@ -459,6 +459,9 @@ spec:
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
+        {{- if len .Values.extraEnv }}
+        {{- toYaml .Values.extraEnv | nindent 8 }}
+        {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   volumeClaimTemplates:
     {{- if eq .Values.backend.type "bbolt" }}

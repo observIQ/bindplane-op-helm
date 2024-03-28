@@ -247,9 +247,12 @@ spec:
             {{- if eq .Values.auth.type "auth0" }}
             - name: BINDPLANE_AUTH_TYPE
               value: auth0
-            {{- if len .Values.extraEnv }}
-            {{- toYaml .Values.extraEnv | nindent 12 }}
-            {{- end }}
+            - name: BINDPLANE_AUTH0_CLIENT_ID
+              value: {{ .Values.dev.auth.auth0.clientid }}
+            - name: BINDPLANE_AUTH0_DOMAIN
+              value: {{ .Values.dev.auth.auth0.domain }}
+            - name: BINDPLANE_AUTH0_AUDIENCE
+              value: {{ .Values.dev.auth.auth0.audience }}
             {{- end }}
             {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE

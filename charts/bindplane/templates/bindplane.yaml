@@ -318,6 +318,9 @@ spec:
               value: /prometheus-client.key
             {{- end }}
             {{- end }}
+            {{- if len .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -458,9 +461,6 @@ spec:
         {{- end }}
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
-        {{- end }}
-        {{- if len .Values.extraEnv }}
-        {{- toYaml .Values.extraEnv | nindent 8 }}
         {{- end }}
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   volumeClaimTemplates:

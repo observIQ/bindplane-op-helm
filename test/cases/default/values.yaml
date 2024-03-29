@@ -1,3 +1,7 @@
+extraEnv:
+  - name: BINDPLANE_LOGGING_LEVEL
+    value: debug
+
 # Required options
 config:
   username: bpuser

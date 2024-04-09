@@ -59,9 +59,6 @@ BindPlane OP is an observability pipeline.
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
 | containerSecurityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container. |
-| dev.bindplane.auth.auth0.audience | string | `""` |  |
-| dev.bindplane.auth.auth0.clientID | string | `""` |  |
-| dev.bindplane.auth.auth0.domain | string | `""` |  |
 | dev.collector.create | bool | `false` |  |
 | dev.collector.image.name | string | `"ghcr.io/observiq/observiq-otel-collector"` |  |
 | dev.collector.image.tag | string | `"latest"` |  |

@@ -50,5 +50,6 @@ trace:
   otlp:
     endpoint: collector.local
     insecure: true
+replicas: 2 # Don't do this with bolt store in production
 autoscaling:
   enable: false

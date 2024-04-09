@@ -11,8 +11,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   {{- if gt (int .Values.replicas) 0 }}
-  replicas: 1
+  replicas: {{ .Values.replicas }}
+  {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   serviceName: {{ include "bindplane.fullname" . }}
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:

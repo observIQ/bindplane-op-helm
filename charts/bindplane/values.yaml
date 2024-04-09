@@ -347,6 +347,9 @@ trace:
     # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver.
     insecure: false
 
+# -- Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
+replicas: 0
+
 autoscaling:
   # -- Whether or not autoscaling should be enabled. Requires an eventbus to be configured.
   enable: false
@@ -425,15 +428,11 @@ dev:
       # Generally this should match the version found
       # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
       tag: v2.47.2
-  # Only used for development purposes. Avoid using in production.
   bindplane:
     auth:
       auth0:
-        # Auth0 domain to use.
         domain: ""
-        # Auth0 client ID to use.
         clientID: ""
-        # Auth0 audience to use.
         audience: ""
 
 

@@ -1,8 +1,8 @@
 # bindplane
 
-![Version: 1.6.4](https://img.shields.io/badge/Version-1.6.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.51.0](https://img.shields.io/badge/AppVersion-1.51.0-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.51.0](https://img.shields.io/badge/AppVersion-1.51.0-informational?style=flat-square)
 
-BindPlane OP is an open source observability pipeline.
+BindPlane OP is an observability pipeline.
 
 **Homepage:** <https://github.com/observIQ/bindplane-op>
 
@@ -91,6 +91,7 @@ BindPlane OP is an open source observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
+| extraEnv | list | `[]` | Optional arbitrary environment variables to add to the BindPlane pod(s). |
 | extraPodLabels | object | `{}` | Optional arbitrary labels to add to the BindPlane pod(s). |
 | extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the BindPlane pod(s). |
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |
@@ -132,6 +133,7 @@ BindPlane OP is an open source observability pipeline.
 | prometheus.tls.secret.keySubPath | string | `""` | The secret's subPath which contains the client private key, required for mutual TLS. |
 | prometheus.tls.secret.name | string | `""` | Kubernetes TLS secret name that contains the Prometheus TLS certificate(s). |
 | prometheus.tolerations | object | `{}` | Tolerations for the Prometheus pod. |
+| replicas | int | `0` | Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set. |
 | resources.limits.memory | string | `"1000Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"1000m"` | CPU request. |
 | resources.requests.memory | string | `"1000Mi"` | Memory request. |

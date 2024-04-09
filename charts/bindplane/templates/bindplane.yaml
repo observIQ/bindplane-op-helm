@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+  {{- if gt (int .Values.replicas) 0 }}
   replicas: 1
   serviceName: {{ include "bindplane.fullname" . }}
   {{- end }}

@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.51.0](https://img.shields.io/badge/AppVersion-1.51.0-informational?style=flat-square)
+![Version: 1.7.2](https://img.shields.io/badge/Version-1.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.51.0](https://img.shields.io/badge/AppVersion-1.51.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -59,6 +59,9 @@ BindPlane OP is an observability pipeline.
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
 | containerSecurityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container. |
+| dev.bindplane.auth.auth0.audience | string | `""` |  |
+| dev.bindplane.auth.auth0.clientID | string | `""` |  |
+| dev.bindplane.auth.auth0.domain | string | `""` |  |
 | dev.collector.create | bool | `false` |  |
 | dev.collector.image.name | string | `"ghcr.io/observiq/observiq-otel-collector"` |  |
 | dev.collector.image.tag | string | `"latest"` |  |

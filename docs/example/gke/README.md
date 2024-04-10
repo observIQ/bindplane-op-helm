@@ -38,7 +38,7 @@ kubectl -n bindplane create secret generic bindplane \
 
 ## Configure
 
-Edit the `values.yaml` file in this directory.
+Edit the [values.yaml](./values.yaml) file in this directory.
 
 ### Ingress
 

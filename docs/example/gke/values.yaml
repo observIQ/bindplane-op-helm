@@ -33,7 +33,7 @@ config:
   #secret_key: ''
   #sessions_secret: ''
 
-  # Defaults to ws://bindplane.bindplane.svc.cluster.local:3001/v1/opamp,
+  # Defaults to wss://bindplane.bindplane.svc.cluster.local:3001/v1/opamp,
   # which is the bindplane namespace's bindplane service. This is suitable
   # for connecting agents within the same cluster. We are using ingress
   # so server_url needs to be updated to the ingress host.

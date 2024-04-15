@@ -24,7 +24,7 @@ jobs:
         case:
           - "default"
           - "ldap"
-          - "ingress"
+          - "image"
           - "volume"
           - "pubsub"
           - "nats"

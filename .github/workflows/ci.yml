@@ -28,7 +28,7 @@ jobs:
           - "ingress"
           - "volume"
           - "pubsub"
-          - "postgres"
+          - "nats"
         k8s_version:
           - v1.25.0
           - v1.27.0
@@ -60,7 +60,12 @@ jobs:
         run: |
           sleep 5
           kubectl -n ingress-nginx wait deployment ingress-nginx-controller --timeout=120s --for condition=Available=True
-          sleep 30
+          kubectl -n ingress-nginx get all
+
+      - name: Wait For Postgres Pods
+        run: |
+          sleep 5
+          kubectl -n postgres wait statefulset postgres --timeout=120s --for condition=Available=True
           kubectl -n ingress-nginx get all
 
       - name: Create secret

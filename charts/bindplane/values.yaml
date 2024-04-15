@@ -106,7 +106,7 @@ prometheus:
 
 
 eventbus:
-  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
+  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`, `kafka`, `nats`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
   type: ""
 
   pubsub:

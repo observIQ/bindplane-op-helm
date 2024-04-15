@@ -1,0 +1,44 @@
+extraEnv:
+  - name: BINDPLANE_LOGGING_LEVEL
+    value: debug
+
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  secret_key: 12D8FB6E-1532-4A4C-97AF-95A430BE5E6E
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  server_url: http://bindplane.local:80
+  remote_url: ws://bindplane.local:80
+  # The secret "bindplane" should exist and have the
+  # key license with a license key as the value.
+  # License is required in CI in order to use Postgres store.
+  licenseUseSecret: true
+
+ingress:
+  enable: true
+  host: bindplane.local
+  class: nginx
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password
+    
+eventbus:
+  type: nats
+
+replicas: 3
+
+resources:
+  requests:
+    memory: 200Mi
+    cpu: 100m
+  limits:
+    memory: 200Mi
+
+
+

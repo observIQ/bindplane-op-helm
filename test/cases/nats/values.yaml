@@ -27,7 +27,7 @@ backend:
     database: bindplane
     username: postgres
     password: password
-    maxConnections: 2
+    maxConnections: 20
     
 eventbus:
   type: nats

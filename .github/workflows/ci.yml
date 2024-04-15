@@ -87,7 +87,7 @@ jobs:
         run: |
           kubectl -n default get all
           kubectl -n default logs sts/release-name-bindplane || kubectl -n default logs deploy/release-name-bindplane
-
+      
       - name: "Debug: Get postgres status and logs"
         if: always()
         run: |

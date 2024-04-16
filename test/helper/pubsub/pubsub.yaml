@@ -1,0 +1,59 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: pubsub
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pubsub-emulator
+  namespace: pubsub
+spec:
+  serviceName: pubsub-emulator
+  selector:
+    matchLabels:
+      app: pubsub-emulator
+  template:
+    metadata:
+      labels:
+        app: pubsub-emulator
+    spec:
+      containers:
+        - image: messagebird/gcloud-pubsub-emulator:latest
+          name: emulator
+          ports:
+            - containerPort: 8681
+            - containerPort: 8682
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: PUBSUB_PROJECT1
+              value: bindplane-local-dev,test-topic:test-subscription
+          livenessProbe:
+            tcpSocket:
+              port: 8681
+          readinessProbe:
+            tcpSocket:
+              port: 8682
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pubsub-emulator
+  name: pubsub-emulator
+  namespace: pubsub
+spec:
+  ports:
+  - port: 8681
+    protocol: TCP
+    targetPort: 8681
+    name: emulator
+  selector:
+    app: pubsub-emulator
+  sessionAffinity: None
+  type: ClusterIP

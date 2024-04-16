@@ -271,9 +271,7 @@ spec:
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_HOST
-              {{- if .Values.prometheus.enableSideCar }}
-              value: localhost
-              {{- else if .Values.prometheus.remote }}
+              {{- if .Values.prometheus.remote }}
               value: {{ .Values.prometheus.host }}
               {{- else }}
               value: {{ include "bindplane.fullname" . }}-prometheus
@@ -401,30 +399,6 @@ spec:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 5",]
-        {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-        {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
-        - name: prometheus
-          image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            runAsNonRoot: true
-            readOnlyRootFilesystem: true
-            runAsUser: 65534
-            capabilities:
-              drop: ["ALL"]
-          ports:
-            - name: http
-              containerPort: 9090
-              protocol: TCP
-          {{- with .Values.prometheus.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          volumeMounts:
-            - mountPath: /prometheus
-              name: {{ include "bindplane.fullname" . }}-prometheus-data
-        {{- end }}
-        {{- end }}
       terminationGracePeriodSeconds: 60
       volumes:
         {{- if eq .Values.eventbus.type "pubsub" }}
@@ -462,45 +436,4 @@ spec:
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
-  {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-  volumeClaimTemplates:
-    {{- if eq .Values.backend.type "bbolt" }}
-    - metadata:
-        name: {{ include "bindplane.fullname" . }}-data
-        labels:
-          app.kubernetes.io/name: {{ include "bindplane.name" . }}
-          app.kubernetes.io/stack: bindplane
-          app.kubernetes.io/component: jobs
-          app.kubernetes.io/instance: {{ .Release.Name }}
-          app.kubernetes.io/managed-by: {{ .Release.Service }}
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: {{ .Values.backend.bbolt.volumeSize }}
-        {{- if .Values.backend.bbolt.storageClass }}
-        storageClassName: {{ .Values.backend.bbolt.storageClass }}
-        {{- end }}
-    {{- end }}
-    {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
-    - metadata:
-        name: {{ include "bindplane.fullname" . }}-prometheus-data
-        labels:
-          app.kubernetes.io/name: {{ include "bindplane.name" . }}
-          app.kubernetes.io/stack: bindplane
-          app.kubernetes.io/component: jobs
-          app.kubernetes.io/instance: {{ .Release.Name }}
-          app.kubernetes.io/managed-by: {{ .Release.Service }}
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: {{ .Values.prometheus.storage.volumeSize }}
-        {{- if .Values.prometheus.storage.storageClass }}
-        storageClassName: {{ .Values.prometheus.storage.storageClass }}
-        {{- end }}
-    {{- end }}
-  {{- end }}
 {{- end }}

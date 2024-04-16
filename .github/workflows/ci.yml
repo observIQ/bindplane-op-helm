@@ -59,6 +59,7 @@ jobs:
         run: |
           sleep 5
           kubectl -n ingress-nginx wait deployment ingress-nginx-controller --timeout=120s --for condition=Available=True
+          sleep 30
           kubectl -n ingress-nginx get all
 
       - name: Create secret

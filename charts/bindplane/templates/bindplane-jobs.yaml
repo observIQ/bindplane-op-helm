@@ -1,40 +1,29 @@
+{{- if eq (include "bindplane.deployment_type" .) "Deployment" }}
 apiVersion: apps/v1
-kind: {{ include "bindplane.deployment_type" . }}
+kind: Deployment
 metadata:
-  name: {{ include "bindplane.fullname" . }}
+  name: {{ include "bindplane.fullname" . }}-jobs
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: server
+    app.kubernetes.io/component: jobs
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  {{- if gt (int .Values.replicas) 0 }}
-  replicas: {{ .Values.replicas }}
-  {{- end }}
-  {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
-  serviceName: {{ include "bindplane.fullname" . }}
-  {{- else }}
-  minReadySeconds: 20
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-    type: RollingUpdate
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "bindplane.name" . }}
       app.kubernetes.io/stack: bindplane
-      app.kubernetes.io/component: server
+      app.kubernetes.io/component: jobs
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane
-        app.kubernetes.io/component: server
+        app.kubernetes.io/component: jobs
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- if len .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
@@ -58,11 +47,7 @@ spec:
               name: http
           env:
             - name: BINDPLANE_MODE
-              {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
               value: all
-              {{- else }}
-              value: node
-              {{- end }}
             - name: BINDPLANE_ANALYTICS_DISABLED
               value: "{{ .Values.config.analytics.disable }}"
             - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
@@ -173,14 +158,6 @@ spec:
             {{- if .Values.eventbus.pubsub.credentials.secret }}
             - name: BINDPLANE_GOOGLE_PUB_SUB_CREDENTIALS_FILE
               value: /credentials.json
-            {{- end }}
-            {{- if .Values.eventbus.pubsub.endpoint }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_ENDPOINT
-              value: {{ .Values.eventbus.pubsub.endpoint }}
-            {{- end }}
-            {{- if .Values.eventbus.pubsub.insecure }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_INSECURE
-              value: "{{ .Values.eventbus.pubsub.insecure }}"
             {{- end }}
             {{- end }}
             {{- if eq .Values.eventbus.type "kafka" }}
@@ -344,7 +321,7 @@ spec:
             {{- if len .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
-          {{- with .Values.resources }}
+          {{- with .Values.jobs.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -493,7 +470,7 @@ spec:
         labels:
           app.kubernetes.io/name: {{ include "bindplane.name" . }}
           app.kubernetes.io/stack: bindplane
-          app.kubernetes.io/component: server
+          app.kubernetes.io/component: jobs
           app.kubernetes.io/instance: {{ .Release.Name }}
           app.kubernetes.io/managed-by: {{ .Release.Service }}
       spec:
@@ -512,7 +489,7 @@ spec:
         labels:
           app.kubernetes.io/name: {{ include "bindplane.name" . }}
           app.kubernetes.io/stack: bindplane
-          app.kubernetes.io/component: server
+          app.kubernetes.io/component: jobs
           app.kubernetes.io/instance: {{ .Release.Name }}
           app.kubernetes.io/managed-by: {{ .Release.Service }}
       spec:
@@ -526,3 +503,4 @@ spec:
         {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}

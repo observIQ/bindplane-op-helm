@@ -33,3 +33,11 @@ eventbus:
     endpoint: "pubsub-emulator.pubsub.svc.cluster.local:8681"
 
 replicas: 3
+
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    memory: 100Mi
+    cpu: 100m

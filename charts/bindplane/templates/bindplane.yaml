@@ -253,7 +253,7 @@ spec:
             - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
               value: "6222"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless:6222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
             - name: BINDPLANE_NATS_CLIENT_NAME
               valueFrom:
                 fieldRef:

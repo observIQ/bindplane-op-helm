@@ -20,7 +20,6 @@ jobs:
   integration:
     runs-on: ubuntu-20.04
     strategy:
-      max-parallel: 3
       matrix:
         case:
           - "default"

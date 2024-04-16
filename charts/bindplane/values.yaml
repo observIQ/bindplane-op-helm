@@ -127,6 +127,10 @@ eventbus:
       secret: ""
       # -- Sub path for the secret which contains the Google Cloud credential JSON
       subPath: ""
+    # -- For testing against an emulator only.
+    endpoint: ""
+    # -- For testing against an emulator only.
+    insecure: false
 
   kafka:
     # -- Comma separated list of brokers to use, in the form of `host:port`.

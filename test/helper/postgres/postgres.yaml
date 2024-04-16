@@ -1,0 +1,75 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: postgres
+spec:
+  serviceName: postgres
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+        - name: take-data-dir-ownership
+          image: alpine:3
+          command:
+          - chown
+          - -R
+          - 70:70
+          - /data
+          volumeMounts:
+          - name: database
+            mountPath: /data
+      containers:
+        - image: postgres:14.7-alpine3.17
+          name: postgres
+          ports:
+            - containerPort: 5432
+              name: postgres
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              memory: 100Mi
+          env:
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: PGDATA
+              value: /data/postgresql
+          volumeMounts:
+            - mountPath: /data
+              name: database
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+      volumes:
+        - name: database
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: postgres
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: postgres
+    name: postgres
+  selector:
+    app: postgres
+  sessionAffinity: None
+  type: ClusterIP

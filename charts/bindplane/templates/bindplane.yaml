@@ -168,6 +168,14 @@ spec:
             - name: BINDPLANE_GOOGLE_PUB_SUB_CREDENTIALS_FILE
               value: /credentials.json
             {{- end }}
+            {{- if .Values.eventbus.pubsub.endpoint }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_ENDPOINT
+              value: {{ .Values.eventbus.pubsub.endpoint }}
+            {{- end }}
+            {{- if .Values.eventbus.pubsub.insecure }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_INSECURE
+              value: "{{ .Values.eventbus.pubsub.insecure }}"
+            {{- end }}
             {{- end }}
             {{- if eq .Values.eventbus.type "kafka" }}
             - name: BINDPLANE_EVENT_BUS_TYPE

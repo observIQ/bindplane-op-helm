@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.7.3](https://img.shields.io/badge/Version-1.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.52.0](https://img.shields.io/badge/AppVersion-1.52.0-informational?style=flat-square)
+![Version: 1.7.4](https://img.shields.io/badge/Version-1.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.52.0](https://img.shields.io/badge/AppVersion-1.52.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -91,6 +91,8 @@ BindPlane OP is an observability pipeline.
 | eventbus.kafka.topic | string | `""` | Topic to use. |
 | eventbus.pubsub.credentials.secret | string | `""` | Optional Kubernetes secret which contains Google Cloud JSON service account credentials. Not required when running within Google Cloud with the Pub/Sub scope enabled. |
 | eventbus.pubsub.credentials.subPath | string | `""` | Sub path for the secret which contains the Google Cloud credential JSON |
+| eventbus.pubsub.endpoint | string | `""` | For testing against an emulator only. |
+| eventbus.pubsub.insecure | bool | `false` | For testing against an emulator only. |
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |

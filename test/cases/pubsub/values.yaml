@@ -1,0 +1,43 @@
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  secret_key: 12D8FB6E-1532-4A4C-97AF-95A430BE5E6E
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  licenseUseSecret: true
+
+extraPodLabels:
+  extraKey: extraValue
+  extraKey2: extraValue2
+
+prometheus:
+  extraPodLabels:
+    extraKeyProm: extraValueProm
+    extraKeyProm2: extraValueProm2
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password
+    maxConnections: 20
+
+eventbus:
+  type: 'pubsub'
+  pubsub:
+    projectid: 'my-project'
+    topic: 'bindplane'
+    insecure: true
+    endpoint: "pubsub-emulator.pubsub.svc.cluster.local:8681"
+
+replicas: 3
+
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    memory: 100Mi
+    cpu: 100m

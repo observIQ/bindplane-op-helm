@@ -20,13 +20,13 @@ jobs:
   integration:
     runs-on: ubuntu-20.04
     strategy:
-      max-parallel: 3
       matrix:
         case:
           - "default"
           - "image"
           - "ingress"
           - "volume"
+          - "pubsub"
         k8s_version:
           - v1.25.0
           - v1.27.0
@@ -44,6 +44,12 @@ jobs:
           cache: true
           kubernetes-version: ${{ matrix.k8s_version }}
           addons: default-storageclass,storage-provisioner,ingress
+
+      - name: Deploy Postgres
+        run: kubectl apply -f test/helper/postgres/postgres.yaml
+
+      - name: Deploy PubSub Emulator
+        run: kubectl apply -f test/helper/pubsub/pubsub.yaml
 
       - name: Wait For Ingress Pods
         run: |
@@ -71,4 +77,16 @@ jobs:
         if: always()
         run: |
           kubectl -n default get all
-          kubectl -n default logs pod/release-name-bindplane-0
+          kubectl -n default logs sts/release-name-bindplane || kubectl -n default logs deploy/release-name-bindplane
+
+      - name: "Debug: Get postgres status and logs"
+        if: always()
+        run: |
+          kubectl -n postgres get all
+          kubectl -n postgres logs pod/postgres-0
+
+      - name: "Debug: Get pubsub status and logs"
+        if: always()
+        run: |
+          kubectl -n pubsub get all
+          kubectl -n pubsub logs pod/pubsub-emulator-0

@@ -14,11 +14,22 @@ config:
 enterprise: false
 mutliAccount: false
 backend:
-  type: bbolt
+  type: postgres
   bbolt:
     volumeSize: 2Gi
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password
+    maxConnections: 20
 eventbus:
-  type: ""
+  type: 'pubsub'
+  pubsub:
+    projectid: 'my-project'
+    topic: 'bindplane'
+    insecure: true
+    endpoint: "pubsub-emulator.pubsub.svc.cluster.local:8681"
 auth:
   type: ldap
   ldap:
@@ -50,6 +61,6 @@ trace:
   otlp:
     endpoint: collector.local
     insecure: true
-replicas: 2 # Don't do this with bolt store in production
+replicas: 3
 autoscaling:
   enable: false

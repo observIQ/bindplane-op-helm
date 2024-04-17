@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.7.4](https://img.shields.io/badge/Version-1.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.52.0](https://img.shields.io/badge/AppVersion-1.52.0-informational?style=flat-square)
+![Version: 1.7.5](https://img.shields.io/badge/Version-1.7.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.53.0](https://img.shields.io/badge/AppVersion-1.53.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 

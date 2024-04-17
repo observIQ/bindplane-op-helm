@@ -6,7 +6,7 @@ type: application
 version: 1.8.0
 # The BindPlane OP tagged release. If the user does not
 # set the `image.tag` values option, this version is used.
-appVersion: 1.52.0
+appVersion: 1.53.0
 keywords:
   - kubernetes
   - bindplane

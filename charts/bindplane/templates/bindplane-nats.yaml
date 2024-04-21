@@ -1,29 +1,31 @@
-{{- if eq (include "bindplane.deployment_type" .) "Deployment" }}
+{{- if eq .Values.eventbus.type "nats" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "bindplane.fullname" . }}-jobs
+  name: {{ include "bindplane.fullname" . }}-nats
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: jobs
+    app.kubernetes.io/component: nats
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 1
+  replicas: 3
+  serviceName: {{ include "bindplane.fullname" . }}-nats-cluster-headless
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "bindplane.name" . }}
       app.kubernetes.io/stack: bindplane
-      app.kubernetes.io/component: jobs
+      app.kubernetes.io/component: nats
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane
-        app.kubernetes.io/component: jobs
+        app.kubernetes.io/component: nats
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- if len .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
@@ -38,54 +40,22 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.backend.postgres.sslsecret.name }}
-      initContainers:
-        - name: postgres-tls
-          image: busybox
-          command:
-          - sh
-          - -c
-          - /bin/sh /init.sh
-          volumeMounts:
-            - name: postgres-tls-init
-              mountPath: /init.sh
-              subPath: init.sh
-            - mountPath: /postgres-tls
-              name: postgres-tls-dir
-            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
-            - mountPath: /ca.crt
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
-            {{- end }}
-            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
-            - mountPath: /client.crt
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
-            - mountPath: /client.key
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
-            {{- end }}
-      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001
-              name: http
+              name: http            
+            - containerPort: 4222
+              name: nats-client
+            - containerPort: 6222
+              name: nats-cluster
+            - containerPort: 8222
+              name: nats-http
           env:
-            - name: KUBERNETES_NAMESPACE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: KUBERNETES_POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: KUBERNETES_CONTAINER_NAME
-              value: "server"
             - name: BINDPLANE_MODE
-              value: all
+              value: node
             - name: BINDPLANE_ANALYTICS_DISABLED
               value: "{{ .Values.config.analytics.disable }}"
             - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
@@ -131,10 +101,16 @@ spec:
                   key: password
                   optional: false
               {{- end}}
-            {{- if .Values.config.secret_key }}
             - name: BINDPLANE_SECRET_KEY
+              {{- if  .Values.config.secret_key }}
               value: {{ .Values.config.secret_key }}
-            {{- end }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: secret_key
+                  optional: false
+              {{- end }}
             - name: BINDPLANE_SESSION_SECRET
               {{- if  .Values.config.sessions_secret }}
               value: {{ .Values.config.sessions_secret }}
@@ -152,122 +128,45 @@ spec:
               value: {{ .Values.trace.otlp.endpoint }}
             - name: BINDPLANE_TRACING_OTLP_INSECURE
               value: "{{ .Values.trace.otlp.insecure }}"
-            - name: BINDPLANE_TRACING_SAMPLING_RATE
-              value: "{{ .Values.trace.otlp.samplingRate }}"
             {{- end }}
             - name: BINDPLANE_LOGGING_OUTPUT
               value: stdout
             - name: BINDPLANE_CONFIG_HOME
               value: /data  
-            {{- if eq .Values.backend.type "postgres" }}
-            - name: BINDPLANE_STORE_TYPE
-              value: postgres
-            - name: BINDPLANE_POSTGRES_HOST
-              value: {{ .Values.backend.postgres.host }}
-            - name: BINDPLANE_POSTGRES_PORT
-              value: "{{ .Values.backend.postgres.port }}"
-            - name: BINDPLANE_POSTGRES_USERNAME
-              value: {{ .Values.backend.postgres.username }}
-            - name: BINDPLANE_POSTGRES_PASSWORD
-              value: {{ .Values.backend.postgres.password }}
-            - name: BINDPLANE_POSTGRES_DATABASE
-              value: {{ .Values.backend.postgres.database }}
-            - name: BINDPLANE_POSTGRES_SSL_MODE
-              value: {{ .Values.backend.postgres.sslmode }}
-            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
-            - name: BINDPLANE_POSTGRES_SSL_ROOT_CERT
-              value: /postgres-tls/ca.crt
-            {{- end }}
-            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
-            - name: BINDPLANE_POSTGRES_SSL_CERT
-              value: /postgres-tls/client.crt
-            - name: BINDPLANE_POSTGRES_SSL_KEY
-              value: /postgres-tls/client.key
-            {{- end }}
-            - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
-              value: "{{ .Values.backend.postgres.maxConnections }}"
-            {{- else }}
             - name: BINDPLANE_STORE_TYPE
               value: bbolt
-            - name: BINDPLANE_STORE_BBOLT_PATH
-              value: /data/storage
-            {{- end }}
-            {{- if eq .Values.eventbus.type "pubsub" }}
-            - name: BINDPLANE_EVENT_BUS_TYPE
-              value: googlePubSub
-            - name: BINDPLANE_GOOGLE_PUB_SUB_PROJECT_ID
-              value: {{ .Values.eventbus.pubsub.projectid }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_TOPIC
-              value: {{ .Values.eventbus.pubsub.topic }}
-            {{- if .Values.eventbus.pubsub.credentials.secret }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_CREDENTIALS_FILE
-              value: /credentials.json
-            {{- end }}
-            {{- if .Values.eventbus.pubsub.endpoint }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_ENDPOINT
-              value: {{ .Values.eventbus.pubsub.endpoint }}
-            {{- end }}
-            {{- if .Values.eventbus.pubsub.insecure }}
-            - name: BINDPLANE_GOOGLE_PUB_SUB_INSECURE
-              value: "{{ .Values.eventbus.pubsub.insecure }}"
-            {{- end }}
-            {{- end }}
-            {{- if eq .Values.eventbus.type "kafka" }}
-            - name: BINDPLANE_EVENT_BUS_TYPE
-              value: kafka
-            - name:  BINDPLANE_KAFKA_BROKERS
-              value: {{ .Values.eventbus.kafka.brokers }}
-            - name:  BINDPLANE_KAFKA_PROTOCOL_VERSION
-              value: "{{ .Values.eventbus.kafka.protocolVersion }}"
-            - name:  BINDPLANE_KAFKA_TOPIC
-              value: {{ .Values.eventbus.kafka.topic }}
-            - name:  BINDPLANE_KAFKA_AUTH_TYPE
-              value: {{ .Values.eventbus.kafka.auth.type }}
-            {{- if eq .Values.eventbus.kafka.auth.type "plainText" }}
-            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_USERNAME
-              value: {{ .Values.eventbus.kafka.auth.plain.username }}
-            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_PASSWORD
-              value: {{ .Values.eventbus.kafka.auth.plain.password }}
-            {{- end }}
-            {{- if eq .Values.eventbus.kafka.auth.type "sasl" }}
-            - name:  BINDPLANE_KAFKA_SASL_USERNAME
-              value: {{ .Values.eventbus.kafka.auth.sasl.username }}
-            - name:  BINDPLANE_KAFKA_SASL_PASSWORD
-              value: {{ .Values.eventbus.kafka.auth.sasl.password }}
-            - name:  BINDPLANE_KAFKA_SASL_MECHANISM
-              value: {{ .Values.eventbus.kafka.auth.sasl.mechanism }}
-            - name:  BINDPLANE_KAFKA_SASL_VERSION
-              value: "{{ .Values.eventbus.kafka.auth.sasl.version }}"
-            {{- end }}
-            {{- if eq .Values.eventbus.kafka.tls.enable true }}
-            - name:  BINDPLANE_KAFKA_ENABLE_TLS
-              value: "true"
-            {{- if .Values.eventbus.kafka.tls.secret.name }}
-            - name:  BINDPLANE_KAFKA_TLS_CERT
-              value: /kafka.crt
-            - name:  BINDPLANE_KAFKA_TLS_KEY
-              value: /kafka.key
-            - name:  BINDPLANE_KAFKA_TLS_CA
-              value: /kafka-ca.crt
-            {{- end }}
-            {{- if eq .Values.eventbus.kafka.tls.insecure true}}
-            - name:  BINDPLANE_KAFKA_TLS_SKIP_VERIFY
-              value: "true"
-            {{- end }}
-            {{- end }}
-            {{- end }}
-            {{- if eq .Values.eventbus.type "nats" }}
             - name: BINDPLANE_EVENT_BUS_TYPE
               value: nats
+            - name: BINDPLANE_NATS_SERVER_ENABLE
+              value: "true"
+            - name: BINDPLANE_NATS_SERVER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: BINDPLANE_NATS_SERVER_CLIENT_HOST
+              value: "0.0.0.0"
+            - name: BINDPLANE_NATS_SERVER_CLIENT_PORT
+              value: "4222"
+            - name: BINDPLANE_NATS_SERVER_HTTP_HOST
+              value: "127.0.0.1"
+            - name: BINDPLANE_NATS_SERVER_HTTP_PORT
+              value: "8222"
+            - name: BINDPLANE_NATS_SERVER_CLUSTER_NAME
+              value: bindplane-{{ include "bindplane.fullname" . }}
+            - name: BINDPLANE_NATS_SERVER_CLUSTER_HOST
+              value: "0.0.0.0"
+            - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
+              value: "6222"
+            - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
+              value: nats://{{ include "bindplane.fullname" . }}-nats-0.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-1.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-2.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
             - name: BINDPLANE_NATS_CLIENT_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: BINDPLANE_NATS_CLIENT_ENDPOINT
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster.{{ .Release.Namespace }}.svc.cluster.local:4222
+              value: nats://127.0.0.1:4222
             - name: BINDPLANE_NATS_CLIENT_SUBJECT
               value: bindplane-event-bus
-            {{- end }}
             {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}
@@ -296,12 +195,6 @@ spec:
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - name: BINDPLANE_LDAP_TLS_CA
               value: /ldap-ca.crt
-            {{- end }}
-            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
-            - name: BINDPLANE_LDAP_TLS_CERT
-              value: /ldap-client.crt
-            - name: BINDPLANE_LDAP_TLS_KEY
-              value: /ldap-client.key
             {{- end }}
             {{- if .Values.auth.ldap.tls.insecure }}
             - name: BINDPLANE_LDAP_TLS_SKIP_VERIFY
@@ -341,7 +234,7 @@ spec:
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_HOST
-              {{- if .Values.prometheus.remote }}
+              {{-  if .Values.prometheus.remote }}
               value: {{ .Values.prometheus.host }}
               {{- else }}
               value: {{ include "bindplane.fullname" . }}-prometheus
@@ -389,7 +282,7 @@ spec:
             {{- if len .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
-          {{- with .Values.jobs.resources }}
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -410,47 +303,13 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-            {{- if eq .Values.backend.type "bbolt" }}
             - mountPath: /data
-              name: {{ include "bindplane.fullname" . }}-data
-            {{- end }}
-            {{- if eq .Values.eventbus.type "pubsub" }}
-            {{- if .Values.eventbus.pubsub.credentials.secret }}
-            - mountPath: /credentials.json
-              name: {{ .Values.eventbus.pubsub.credentials.secret }}
-              subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
-            {{- end }}
-            {{- end }}
+              name: data
             {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - mountPath: /ldap-ca.crt
               name: {{ .Values.auth.ldap.tls.ca.secret }}
               subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
-            {{- end }}
-            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
-            - mountPath: /ldap-client.crt
-              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
-              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.crtSubPath }}
-            - mountPath: /ldap-client.key
-              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
-              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.keySubPath }}
-            {{- end}}
-            {{- end }}
-            {{- if eq .Values.eventbus.type "kafka" }}
-            {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
-            - mountPath: /kafka-ca.crt
-              name: {{ .Values.eventbus.kafka.tls.secret.name }}
-              subPath: {{ .Values.eventbus.kafka.tls.secret.caSubPath }}
-            {{- end }}
-            {{- if .Values.eventbus.kafka.tls.secret.certSubPath }}
-            - mountPath: /kafka.crt
-              name: {{ .Values.eventbus.kafka.tls.secret.name }}
-              subPath: {{ .Values.eventbus.kafka.tls.secret.certSubPath }}
-            {{- end }}
-            {{- if .Values.eventbus.kafka.tls.secret.keySubPath }}
-            - mountPath: /kafka.key
-              name: {{ .Values.eventbus.kafka.tls.secret.name }}
-              subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
             {{- if .Values.prometheus.tls.enable }}
@@ -470,10 +329,6 @@ spec:
               subPath: {{ .Values.prometheus.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
-            {{- if .Values.backend.postgres.sslsecret.name }}
-            - mountPath: /postgres-tls
-              name: postgres-tls-dir
-            {{- end }}
             {{- if len .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
@@ -483,34 +338,14 @@ spec:
                 command: ["sh", "-c", "sleep 5",]
       terminationGracePeriodSeconds: 60
       volumes:
-        {{- if eq .Values.eventbus.type "pubsub" }}
-        {{- if .Values.eventbus.pubsub.credentials.secret }}
-        - name: {{ .Values.eventbus.pubsub.credentials.secret }}
-          secret:
-            defaultMode: 0400
-            secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
-        {{- end }}
-        {{- end }}
+        - name: data
+          emptyDir: {}
         {{- if eq (include "bindplane.auth.type" .) "ldap" }}
         {{- if .Values.auth.ldap.tls.ca.secret }}
         - name: {{ .Values.auth.ldap.tls.ca.secret }}
           secret:
             defaultMode: 0400
             secretName: {{ .Values.auth.ldap.tls.ca.secret }}
-        {{- end }}
-        {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
-        - name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
-          secret:
-            defaultMode: 0400
-            secretName: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}
-        {{- end }}
-        {{- end }}
-        {{- if eq .Values.eventbus.type "kafka" }}
-        {{- if .Values.eventbus.kafka.tls.secret.name }}
-        - name: {{ .Values.eventbus.kafka.tls.secret.name }}
-          secret:
-            defaultMode: 0400
-            secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
         {{- if .Values.prometheus.tls.enable }}
@@ -520,17 +355,6 @@ spec:
             defaultMode: 0400
             secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
-        {{- end }}
-        {{- if .Values.backend.postgres.sslsecret.name }}
-        - name: postgres-tls-dir
-          emptyDir: {}
-        - name: {{ .Values.backend.postgres.sslsecret.name }}
-          secret:
-            defaultMode: 0400
-            secretName: {{ .Values.backend.postgres.sslsecret.name }}
-        - name: postgres-tls-init
-          configMap:
-            name: postgres-tls-init
         {{- end }}
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}

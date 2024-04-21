@@ -37,10 +37,10 @@ spec:
               name: postgres
           resources:
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 500m
+              memory: 6000Mi
             limits:
-              memory: 100Mi
+              memory: 6000Mi
           env:
             - name: POSTGRESQL_PASSWORD
               value: password

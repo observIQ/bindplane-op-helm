@@ -16,7 +16,7 @@ spec:
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   serviceName: {{ include "bindplane.fullname" . }}
   {{- else }}
-  minReadySeconds: 20
+  minReadySeconds: 3
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -282,34 +282,12 @@ spec:
             {{- if eq .Values.eventbus.type "nats" }}
             - name: BINDPLANE_EVENT_BUS_TYPE
               value: nats
-            - name: BINDPLANE_NATS_SERVER_ENABLE
-              value: "true"
-            - name: BINDPLANE_NATS_SERVER_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: BINDPLANE_NATS_SERVER_CLIENT_HOST
-              value: "127.0.0.1"
-            - name: BINDPLANE_NATS_SERVER_CLIENT_PORT
-              value: "4222"
-            - name: BINDPLANE_NATS_SERVER_HTTP_HOST
-              value: "127.0.0.1"
-            - name: BINDPLANE_NATS_SERVER_HTTP_PORT
-              value: "8222"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_NAME
-              value: bindplane-{{ include "bindplane.fullname" . }}
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_HOST
-              value: "0.0.0.0"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
-              value: "6222"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
             - name: BINDPLANE_NATS_CLIENT_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: BINDPLANE_NATS_CLIENT_ENDPOINT
-              value: nats://127.0.0.1:4222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster.{{ .Release.Namespace }}.svc.cluster.local:4222
             - name: BINDPLANE_NATS_CLIENT_SUBJECT
               value: bindplane-event-bus
             {{- end }}

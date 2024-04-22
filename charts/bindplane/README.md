@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.7.5](https://img.shields.io/badge/Version-1.7.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.53.0](https://img.shields.io/badge/AppVersion-1.53.0-informational?style=flat-square)
+![Version: 1.9.0](https://img.shields.io/badge/Version-1.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.53.0](https://img.shields.io/badge/AppVersion-1.53.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -54,7 +54,7 @@ BindPlane OP is an observability pipeline.
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
 | config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options. |
-| config.secret_key | string | `""` | Secret Key to use. Overrides `config.secret`. |
+| config.secret_key | string | `""` | DEPRECATED: New deployments should leave this option unset. |
 | config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
@@ -62,10 +62,6 @@ BindPlane OP is an observability pipeline.
 | dev.bindplane.auth.auth0.audience | string | `""` |  |
 | dev.bindplane.auth.auth0.clientID | string | `""` |  |
 | dev.bindplane.auth.auth0.domain | string | `""` |  |
-| dev.collector.create | bool | `false` |  |
-| dev.collector.image.name | string | `"ghcr.io/observiq/observiq-otel-collector"` |  |
-| dev.collector.image.tag | string | `"latest"` |  |
-| dev.collector.labels | string | `"configuration=test"` |  |
 | dev.namespace.create | bool | `false` |  |
 | dev.namespace.name | string | `""` |  |
 | dev.prometheus.create | bool | `false` |  |
@@ -111,6 +107,9 @@ BindPlane OP is an observability pipeline.
 | ingress.host | string | `nil` | Hostname to use when ingress is enabled. |
 | ingress.tls.enable | bool | `false` | Whether or not to enable ingress transport layer security (TLS). |
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
+| jobs.resources.limits.memory | string | `"1000Mi"` | Memory limit. |
+| jobs.resources.requests.cpu | string | `"1000m"` | CPU request. |
+| jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |

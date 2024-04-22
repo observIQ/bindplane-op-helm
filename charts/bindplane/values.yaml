@@ -274,7 +274,7 @@ config:
   username: ""
   # -- Password to use. Overrides `config.secret`.
   password: ""
-  # -- Secret Key to use. Overrides `config.secret`.
+  # -- DEPRECATED: New deployments should leave this option unset.
   secret_key: ""
   # -- Sessions Secret to use. Overrides `config.secret`.
   sessions_secret: ""
@@ -424,15 +424,6 @@ dev:
     # resources to the namespace. Helm or ArgoCD will need to be configured
     # to use this namespace.
     name: ""
-
-  # Manages a collector deployment for development purposes.
-  collector:
-    # Whether or not the collector should be deployed.
-    create: false
-    image:
-      name: ghcr.io/observiq/observiq-otel-collector
-      tag: latest
-    labels: "configuration=test"
   
   # DEPRECATED: Use the `prometheus` top level section instead.
   # Manages a prometheus deployment for development purposes. Production

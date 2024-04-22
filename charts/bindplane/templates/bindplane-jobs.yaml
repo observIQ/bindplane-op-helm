@@ -93,16 +93,10 @@ spec:
                   key: password
                   optional: false
               {{- end}}
+            {{- if .Values.config.secret_key }}
             - name: BINDPLANE_SECRET_KEY
-              {{- if  .Values.config.secret_key }}
               value: {{ .Values.config.secret_key }}
-              {{- else }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.config.secret }}
-                  key: secret_key
-                  optional: false
-              {{- end }}
+            {{- end }}
             - name: BINDPLANE_SESSION_SECRET
               {{- if  .Values.config.sessions_secret }}
               value: {{ .Values.config.sessions_secret }}

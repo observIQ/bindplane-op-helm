@@ -22,7 +22,7 @@ auth:
       insecure: false
       ca:
         secret: ldap-tls
-        subPath: ca.pem
+        subPath: ca.crt
       clientKeyPair:
         secret: ldap-tls
         crtSubPath: client.crt

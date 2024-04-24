@@ -1,0 +1,30 @@
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  licenseUseSecret: true
+
+image:
+  name: ghcr.io/observiq/bindplane-ee
+  tag: 1.53.0
+
+auth:
+  type: ldap
+  ldap:
+    protocol: ldaps
+    server: ldap.example.com
+    port: 636
+    baseDN: dc=example,dc=com
+    bindUser: cn=bindplane,dc=example,dc=com
+    bindPassword: bindplanepass
+    searchFilter: (sAMAccountName=%s)
+    tls:
+      insecure: false
+      ca:
+        secret: ldap-tls
+        subPath: ca.crt
+      clientKeyPair:
+        secret: ldap-tls
+        crtSubPath: client.crt
+        keySubPath: client.key

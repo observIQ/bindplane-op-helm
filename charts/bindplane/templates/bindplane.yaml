@@ -250,6 +250,12 @@ spec:
             - name: BINDPLANE_LDAP_TLS_CA
               value: /ldap-ca.crt
             {{- end }}
+            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+            - name: BINDPLANE_LDAP_TLS_CERT
+              value: /ldap-client.crt
+            - name: BINDPLANE_LDAP_TLS_KEY
+              value: /ldap-client.key
+            {{- end }}
             {{- if .Values.auth.ldap.tls.insecure }}
             - name: BINDPLANE_LDAP_TLS_SKIP_VERIFY
               value: "true"
@@ -376,6 +382,14 @@ spec:
               name: {{ .Values.auth.ldap.tls.ca.secret }}
               subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
             {{- end }}
+            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+            - mountPath: /ldap-client.crt
+              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.crtSubPath }}
+            - mountPath: /ldap-client.key
+              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.keySubPath }}
+            {{- end}}
             {{- end }}
             {{- if eq .Values.eventbus.type "kafka" }}
             {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
@@ -458,6 +472,12 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.auth.ldap.tls.ca.secret }}
+        {{- end }}
+        {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+        - name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}
         {{- end }}
         {{- end }}
         {{- if eq .Values.eventbus.type "kafka" }}

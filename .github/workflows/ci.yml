@@ -23,7 +23,7 @@ jobs:
       matrix:
         case:
           - "default"
-          - "image"
+          - "ldap"
           - "ingress"
           - "volume"
           - "pubsub"

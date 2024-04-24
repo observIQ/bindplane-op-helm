@@ -211,6 +211,21 @@ auth:
         secret: ""
         # -- The secret's subPath which contains the certificate.
         subPath: ""
+      # Secret name and key which has the ldap server's certificate authority public certificate.
+      # You can create the secret with:
+      #   kubectl create secret generic ldap-tls --from-file ./client.crt --from-file ./client.key
+      # And use the following values:
+      #  ca:
+      #    name: ldap-ca
+      #    subPath: ca.crt
+      clientKeyPair:
+        # -- Name of the Kubernetes secret which contains the ldap client keypair. This can be the same secret as `auth.ldap.ca.secret`
+        # as long as it has the client certificate and key.
+        secret: ""
+        # -- The secret's subPath which contains the client certificate.
+        crtSubPath: ""
+        # -- The secret's subPath which contains the client private key.
+        keySubPath: ""
 
   google:
     # -- Google OAUTH clientid

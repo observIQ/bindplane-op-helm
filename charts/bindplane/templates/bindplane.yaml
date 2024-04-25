@@ -49,6 +49,33 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.backend.postgres.sslsecret.name }}
+      initContainers:
+        - name: postgres-tls
+          image: busybox
+          command:
+          - sh
+          - -c
+          - /bin/chmod 0400 /postgres-ca.crt /postgres-client.crt /postgres-client.key || true
+          volumeMounts:
+            {{- if .Values.backend.postgres.sslsecret.name }}
+            - mountPath: /postgres-tls
+              name: postgres-tls-dir
+            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            - mountPath: /postgres-ca.crt
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - mountPath: /postgres-client.crt
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - mountPath: /postgres-client.key
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+            {{- end }}
+            {{- end }}
+      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}

@@ -134,6 +134,16 @@ spec:
               value: {{ .Values.backend.postgres.database }}
             - name: BINDPLANE_POSTGRES_SSL_MODE
               value: {{ .Values.backend.postgres.sslmode }}
+            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            - name: BINDPLANE_POSTGRES_SSL_ROOT_CERT
+              value: /postgres-ca.crt
+            {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - name: BINDPLANE_POSTGRES_SSL_CERT
+              value: /postgres-client.crt
+            - name: BINDPLANE_POSTGRES_SSL_KEY
+              value: /postgres-client.key
+            {{- end }}
             - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
               value: "{{ .Values.backend.postgres.maxConnections }}"
             {{- else }}
@@ -408,6 +418,21 @@ spec:
               subPath: {{ .Values.prometheus.tls.secret.keySubPath }}
             {{- end }}
             {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.name }}
+            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            - mountPath: /postgres-ca.crt
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - mountPath: /postgres-client.crt
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - mountPath: /postgres-client.key
+              name: {{ .Values.backend.postgres.sslsecret.name }}
+              subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+            {{- end }}
+            {{- end }}
             {{- if len .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
@@ -454,6 +479,12 @@ spec:
             defaultMode: 0400
             secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
+        {{- end }}
+        {{- if .Values.backend.postgres.sslsecret.name }}
+        - name: {{ .Values.backend.postgres.sslsecret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.backend.postgres.sslsecret.name }}
         {{- end }}
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}

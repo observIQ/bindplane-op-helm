@@ -18,8 +18,20 @@ backend:
     port: 5432
     # -- Database to use.
     database: ""
-    # -- SSL mode to use when connecting to Postgres over TLS. See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for valid options.
+    # -- SSL mode to use when connecting to Postgres over TLS. Supported options include "disable", "require", "verify-ca", "verify-full". See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for more information.
     sslmode: "disable"
+    sslsecret:
+      # -- Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to
+      # `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane
+      # container.
+      name: ""
+      # -- Path to the CA certificate used to verify the Postgres server's certificate.
+      sslrootcertSubPath: ""
+      # -- Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required.
+      sslcertSubPath: ""
+      # -- Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required.
+      # Required when `sslcertSubPath` is set.
+      sslkeySubPath: ""
     # -- Username to use when connecting to Postgres.
     username: ""
     # -- Password for the username used to connect to Postgres.

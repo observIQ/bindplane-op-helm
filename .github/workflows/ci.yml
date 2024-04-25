@@ -52,8 +52,8 @@ jobs:
       - name: Deploy PubSub Emulator
         run: kubectl apply -f test/helper/pubsub/pubsub.yaml
 
-      - name: Deploy LDAP Certificate
-        run: .github/scripts/ldap.sh
+      - name: Deploy Certificate
+        run: .github/scripts/tls.sh
 
       - name: Wait For Ingress Pods
         run: |

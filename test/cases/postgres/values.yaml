@@ -17,8 +17,8 @@ backend:
     sslsecret:
       name: postgres-tls
       sslrootcertSubPath: ca.crt
-      sslcertSubPath: tls.crt
-      sslkeySubPath: tls.key
+      sslcertSubPath: client.crt
+      sslkeySubPath: client.key
 
 replicas: 2
 

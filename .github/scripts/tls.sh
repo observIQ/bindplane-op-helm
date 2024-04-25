@@ -28,3 +28,8 @@ kubectl create secret generic ldap-tls \
     --from-file ca.crt \
     --from-file client.crt \
     --from-file client.key
+
+kubectl create secret generic postgres-tls \
+    --from-file ca.crt \
+    --from-file client.crt \
+    --from-file client.key

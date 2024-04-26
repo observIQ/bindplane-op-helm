@@ -142,7 +142,7 @@ spec:
             - name: BINDPLANE_NATS_SERVER_CLIENT_PORT
               value: "4222"
             - name: BINDPLANE_NATS_SERVER_HTTP_HOST
-              value: "127.0.0.1"
+              value: "0.0.0.0"
             - name: BINDPLANE_NATS_SERVER_HTTP_PORT
               value: "8222"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_NAME
@@ -280,18 +280,33 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.health.startupProbe }}
           startupProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.health.readinessProbe }}
+            httpGet:
+              path: /healthz
+              port: nats-http
+            initialDelaySeconds: 0
+            timeoutSeconds: 5
+            periodSeconds: 1
+            successThreshold: 1
+            failureThreshold: 10
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.health.livenessProbe }}
+            httpGet:
+              path: /healthz?js-server-only=true
+              port: nats-http
+            initialDelaySeconds: 0
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            httpGet:
+              path: /healthz?js-enabled-only=true
+              port: nats-http
+            initialDelaySeconds: 0
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
           {{- with .Values.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}

@@ -16,7 +16,7 @@ spec:
   {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
   serviceName: {{ include "bindplane.fullname" . }}
   {{- else }}
-  minReadySeconds: 3
+  minReadySeconds: 20
   strategy:
     rollingUpdate:
       maxSurge: 1

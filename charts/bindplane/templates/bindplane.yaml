@@ -279,7 +279,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: BINDPLANE_NATS_CLIENT_ENDPOINT
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:4222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-client-headless.{{ .Release.Namespace }}.svc.cluster.local:4222
             - name: BINDPLANE_NATS_CLIENT_SUBJECT
               value: bindplane-event-bus
             {{- end }}

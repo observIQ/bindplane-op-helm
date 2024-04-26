@@ -327,6 +327,18 @@ resources:
     # Disable cpu limit by default, for burstable qos class
     # cpu: 1000m
 
+nats:
+  # -- NATs server resources request block, when event bus type is `nats`.
+  resources:
+    requests:
+      # -- Memory request for the NATs server pods, when event bus type is `nats`.
+      memory: 1000Mi
+      # -- CPU request for the NATs server pods, when event bus type is `nats`.
+      cpu: 1000m
+    limits:
+      # -- Memory limit for the NATs server pods, when event bus type is `nats`.
+      memory: 1000Mi
+
 # Configuration for the jobs pod
 jobs:
   resources:

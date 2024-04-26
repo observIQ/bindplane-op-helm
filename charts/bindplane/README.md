@@ -118,6 +118,10 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.requests.cpu | string | `"1000m"` | CPU request. |
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
+| nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
+| nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
+| nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
+| nats.resources.requests.memory | string | `"1000Mi"` | Memory request for the NATs server pods, when event bus type is `nats`. |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |

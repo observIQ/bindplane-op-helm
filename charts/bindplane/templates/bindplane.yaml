@@ -84,14 +84,6 @@ spec:
           ports:
             - containerPort: 3001
               name: http
-            {{- if eq .Values.eventbus.type "nats" }}
-            - containerPort: 4222
-              name: nats-client
-            - containerPort: 6222
-              name: nats-cluster
-            - containerPort: 8222
-              name: nats-http
-            {{- end }}
           env:
             - name: KUBERNETES_NAMESPACE_NAME
               valueFrom:
@@ -287,7 +279,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: BINDPLANE_NATS_CLIENT_ENDPOINT
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster.{{ .Release.Namespace }}.svc.cluster.local:4222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:4222
             - name: BINDPLANE_NATS_CLIENT_SUBJECT
               value: bindplane-event-bus
             {{- end }}

@@ -57,32 +57,4 @@ spec:
   type: ClusterIP
   clusterIP: None
   publishNotReadyAddresses: true
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "bindplane.fullname" . }}-nats-cluster
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    {{- if .Values.service.annotations }}
-{{ toYaml .Values.service.annotations | indent 4 }}
-    {{- end }}
-  labels:
-    app.kubernetes.io/name: {{ include "bindplane.name" . }}
-    app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: nats
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-spec:
-  ports:
-    - port: 4222
-      protocol: TCP
-      targetPort: nats-cluster
-      name: nats-cluster
-  selector:
-    app.kubernetes.io/name: {{ include "bindplane.name" . }}
-    app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: nats
-    app.kubernetes.io/instance: {{ .Release.Name }}
-  type: ClusterIP
 {{- end }}

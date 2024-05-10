@@ -3,6 +3,19 @@ apiVersion: v1
 metadata:
   name: postgres
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgres-tls-init
+  namespace: postgres
+data:
+  init.sh: |
+    #!/bin/sh
+    set -e
+    cp /ca.crt /server.crt /server.key /postgres-tls
+    chmod 0400 /postgres-tls/*
+    chown -R 1001:1001 /postgres-tls
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -29,8 +42,29 @@ spec:
           volumeMounts:
           - name: database
             mountPath: /data
+        - name: postgres-tls
+          image: busybox
+          command:
+          - sh
+          - -c
+          - /bin/sh /init.sh
+          volumeMounts:
+          - name: postgres-tls-init
+            mountPath: /init.sh
+            subPath: init.sh
+          - name: postgres-tls-dir
+            mountPath: /postgres-tls
+          - name: postgres-tls
+            mountPath: /ca.crt
+            subPath: ca.crt
+          - name: postgres-tls
+            mountPath: /server.crt
+            subPath: server.crt
+          - name: postgres-tls
+            mountPath: /server.key
+            subPath: server.key
       containers:
-        - image: postgres:14.7-alpine3.17
+        - image: bitnami/postgresql:14
           name: postgres
           ports:
             - containerPort: 5432
@@ -42,19 +76,35 @@ spec:
             limits:
               memory: 100Mi
           env:
-            - name: POSTGRES_PASSWORD
+            - name: POSTGRESQL_PASSWORD
               value: password
-            - name: PGDATA
-              value: /data/postgresql
+            - name: POSTGRESQL_ENABLE_TLS
+              value: "yes"
+            - name: POSTGRESQL_TLS_CERT_FILE
+              value: /postgres-tls/server.crt
+            - name: POSTGRESQL_TLS_KEY_FILE
+              value: /postgres-tls/server.key
+            - name: POSTGRESQL_TLS_CA_FILE
+              value: /postgres-tls/ca.crt
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /bitnami/postgresql
               name: database
+            - mountPath: /postgres-tls
+              name: postgres-tls-dir
           livenessProbe:
             tcpSocket:
               port: 5432
       volumes:
         - name: database
           emptyDir: {}
+        - name:  postgres-tls
+          secret:
+            secretName:  postgres-tls
+        - name: postgres-tls-dir
+          emptyDir: {}
+        - name: postgres-tls-init
+          configMap:
+            name: postgres-tls-init
 ---
 apiVersion: v1
 kind: Service

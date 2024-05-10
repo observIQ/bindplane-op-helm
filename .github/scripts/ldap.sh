@@ -2,7 +2,7 @@
 
 set -e
 
-curl -L -o step-cli_amd64.deb https://dl.smallstep.com/cli/docs-cli-install/latest/step-cli_amd64.deb
+curl -L -o step-cli_amd64.deb https://github.com/smallstep/cli/releases/download/v0.26.1/step-cli_0.26.1_amd64.deb
 sudo apt-get install -y -qq -f ./step-cli_amd64.deb
 
 

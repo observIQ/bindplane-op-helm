@@ -65,7 +65,7 @@ kubectl create secret generic postgres-tls \
     --from-file client.crt \
     --from-file client.key
 
-kubectl create namespace postgres
+kubectl create namespace postgres || true
 
 kubectl create secret generic postgres-tls \
     -n postgres \

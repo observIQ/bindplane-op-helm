@@ -1,16 +1,3 @@
-{{- if .Values.backend.postgres.sslsecret.name }}
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: postgres-tls-init
-data:
-  init.sh: |
-    #!/bin/sh
-    set -e
-    cp /ca.crt /client.crt /client.key /postgres-tls
-    chmod 0400 /postgres-tls/*
-    chown -R 65534:65534 /postgres-tls
-{{ end }}
 ---
 apiVersion: apps/v1
 kind: {{ include "bindplane.deployment_type" . }}

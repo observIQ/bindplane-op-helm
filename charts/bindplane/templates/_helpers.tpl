@@ -49,7 +49,7 @@ The Transform Agent image to use
 The Transform Agent image tag to use
 */}}
 {{- define "bindplane.transform_agent_tag" -}}
-{{- printf "%s" (default (printf "latest") .Values.transform_agent.tag) }}
+{{- printf "%s" (default (printf "%s-bindplane" .Chart.AppVersion) .Values.transform_agent.tag) }}
 {{- end -}}
 
 {{/*

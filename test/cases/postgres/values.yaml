@@ -1,0 +1,40 @@
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  licenseUseSecret: true
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password
+    maxConnections: 12
+    sslmode: verify-ca
+    sslsecret:
+      name: postgres-tls
+      sslrootcertSubPath: ca.crt
+      sslcertSubPath: client.crt
+      sslkeySubPath: client.key
+
+replicas: 2
+
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    memory: 100Mi
+    cpu: 100m
+
+jobs:
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 100Mi
+      cpu: 100m

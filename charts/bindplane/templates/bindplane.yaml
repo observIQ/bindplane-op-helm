@@ -167,6 +167,8 @@ spec:
               value: {{ .Values.trace.otlp.endpoint }}
             - name: BINDPLANE_TRACING_OTLP_INSECURE
               value: "{{ .Values.trace.otlp.insecure }}"
+            - name: BINDPLANE_TRACING_SAMPLING_RATE
+              value: "{{ .Values.trace.otlp.samplingRate }}"
             {{- end }}
             - name: BINDPLANE_LOGGING_OUTPUT
               value: stdout

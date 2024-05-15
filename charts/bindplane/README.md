@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.10.3](https://img.shields.io/badge/Version-1.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.56.0](https://img.shields.io/badge/AppVersion-1.56.0-informational?style=flat-square)
+![Version: 1.11.1](https://img.shields.io/badge/Version-1.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.57.0](https://img.shields.io/badge/AppVersion-1.57.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -48,9 +48,9 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.password | string | `""` | Password for the username used to connect to Postgres. |
 | backend.postgres.port | int | `5432` | TCP port used to connect to Postgres. |
 | backend.postgres.sslmode | string | `"disable"` | SSL mode to use when connecting to Postgres over TLS. Supported options include "disable", "require", "verify-ca", "verify-full". See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for more information. |
-| backend.postgres.sslsecret.name | string | `"bindplane-postgres-tls"` | Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane container. |
+| backend.postgres.sslsecret.name | string | `""` | Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane container. Requires BindPlane v1.56.0 or newer. |
 | backend.postgres.sslsecret.sslcertSubPath | string | `""` | Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required. |
-| backend.postgres.sslsecret.sslkeySubPath | string | `""` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. |
+| backend.postgres.sslsecret.sslkeySubPath | string | `""` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
 | backend.postgres.sslsecret.sslrootcertSubPath | string | `""` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |

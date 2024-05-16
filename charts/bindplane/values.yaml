@@ -391,6 +391,8 @@ trace:
     endpoint: ""
     # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver.
     insecure: false
+    # -- Sampling rate between 0 and 1. 1 being 100% of traces are sent.
+    samplingRate: "1"
 
 # -- Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
 replicas: 0

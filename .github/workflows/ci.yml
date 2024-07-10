@@ -48,7 +48,7 @@ jobs:
           addons: default-storageclass,storage-provisioner,ingress
 
       - name: Deploy Postgres
-        run: kubectl apply -f test/helper/postgres/postgres.yaml
+        run: kubectl apply -f test/helper/postgres/postgres.tls.yaml
 
       - name: Deploy PubSub Emulator
         run: kubectl apply -f test/helper/pubsub/pubsub.yaml

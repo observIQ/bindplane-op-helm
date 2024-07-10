@@ -1,0 +1,125 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: postgres
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgres-tls-init
+  namespace: postgres
+data:
+  init.sh: |
+    #!/bin/sh
+    set -e
+    cp /ca.crt /server.crt /server.key /postgres-tls
+    chmod 0400 /postgres-tls/*
+    chown -R 1001:1001 /postgres-tls
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: postgres
+spec:
+  serviceName: postgres
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+        - name: take-data-dir-ownership
+          image: alpine:3
+          command:
+          - chown
+          - -R
+          - 70:70
+          - /data
+          volumeMounts:
+          - name: database
+            mountPath: /data
+        - name: postgres-tls
+          image: busybox
+          command:
+          - sh
+          - -c
+          - /bin/sh /init.sh
+          volumeMounts:
+          - name: postgres-tls-init
+            mountPath: /init.sh
+            subPath: init.sh
+          - name: postgres-tls-dir
+            mountPath: /postgres-tls
+          - name: postgres-tls
+            mountPath: /ca.crt
+            subPath: ca.crt
+          - name: postgres-tls
+            mountPath: /server.crt
+            subPath: server.crt
+          - name: postgres-tls
+            mountPath: /server.key
+            subPath: server.key
+      containers:
+        - image: bitnami/postgresql:14
+          name: postgres
+          ports:
+            - containerPort: 5432
+              name: postgres
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              memory: 100Mi
+          env:
+            - name: POSTGRESQL_PASSWORD
+              value: password
+            - name: POSTGRESQL_ENABLE_TLS
+              value: "yes"
+            - name: POSTGRESQL_TLS_CERT_FILE
+              value: /postgres-tls/server.crt
+            - name: POSTGRESQL_TLS_KEY_FILE
+              value: /postgres-tls/server.key
+            - name: POSTGRESQL_TLS_CA_FILE
+              value: /postgres-tls/ca.crt
+          volumeMounts:
+            - mountPath: /bitnami/postgresql
+              name: database
+            - mountPath: /postgres-tls
+              name: postgres-tls-dir
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+      volumes:
+        - name: database
+          emptyDir: {}
+        - name:  postgres-tls
+          secret:
+            secretName:  postgres-tls
+        - name: postgres-tls-dir
+          emptyDir: {}
+        - name: postgres-tls-init
+          configMap:
+            name: postgres-tls-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: postgres
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: postgres
+    name: postgres
+  selector:
+    app: postgres
+  sessionAffinity: None
+  type: ClusterIP

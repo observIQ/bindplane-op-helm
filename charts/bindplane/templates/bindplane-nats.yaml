@@ -101,10 +101,10 @@ spec:
                   key: password
                   optional: false
               {{- end}}
-              {{- if .Values.config.secret_key }}
-              - name: BINDPLANE_SECRET_KEY
-                value: {{ .Values.config.secret_key }}
-              {{- end }}
+            {{- if .Values.config.secret_key }}
+            - name: BINDPLANE_SECRET_KEY
+              value: {{ .Values.config.secret_key }}
+            {{- end }}
             - name: BINDPLANE_SESSION_SECRET
               {{- if  .Values.config.sessions_secret }}
               value: {{ .Values.config.sessions_secret }}

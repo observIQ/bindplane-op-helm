@@ -71,3 +71,12 @@ spec:
     app: postgres
   sessionAffinity: None
   type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
+type: Opaque
+data:
+  username: cG9zdGdyZXM=
+  password: cGFzc3dvcmQ=

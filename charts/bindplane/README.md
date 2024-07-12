@@ -42,6 +42,9 @@ BindPlane OP is an observability pipeline.
 | autoscaling.targetMemoryUtilizationPercentage | int | `60` | Autoscaling target Memory usage percentage. |
 | backend.bbolt.storageClass | string | `""` | The Kubernetes storage class to use for the volumeClaimTemplate. If unset, the volume claim will use the cluster's default storage class. |
 | backend.bbolt.volumeSize | string | `"10Gi"` | Persistent volume size. |
+| backend.postgres.credentialSecret.name | string | `""` | Kubernetes secret name that contains the Postgres username and password. |
+| backend.postgres.credentialSecret.passwordKey | string | `""` | The secret's subPath which contains the password. |
+| backend.postgres.credentialSecret.usernameKey | string | `""` | The secret's subPath which contains the username. |
 | backend.postgres.database | string | `""` | Database to use. |
 | backend.postgres.host | string | `"localhost"` | Hostname or IP address of the Postgres server. |
 | backend.postgres.maxConnections | int | `100` | Max number of connections to use when communicating with Postgres. |

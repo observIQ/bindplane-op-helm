@@ -40,9 +40,9 @@ backend:
       # -- Kubernetes secret name that contains the Postgres username and password.
       name: ""
       # -- The secret's subPath which contains the username.
-      usernamePath: ""
+      usernameKey: ""
       # -- The secret's subPath which contains the password.
-      passwordPath: ""
+      passwordKey: ""
     # -- Max number of connections to use when communicating with Postgres.
     maxConnections: 100
 

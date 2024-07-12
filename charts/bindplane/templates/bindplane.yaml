@@ -182,9 +182,25 @@ spec:
             - name: BINDPLANE_POSTGRES_PORT
               value: "{{ .Values.backend.postgres.port }}"
             - name: BINDPLANE_POSTGRES_USERNAME
+              {{- if .Values.backend.postgres.credentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.postgres.credentialSecret.name }}
+                  key: {{ .Values.backend.postgres.credentialSecret.usernameKey }}
+                  optional: false
+              {{- else }}
               value: {{ .Values.backend.postgres.username }}
+              {{- end }}
             - name: BINDPLANE_POSTGRES_PASSWORD
+              {{- if .Values.backend.postgres.credentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.postgres.credentialSecret.name }}
+                  key: {{ .Values.backend.postgres.credentialSecret.passwordKey }}
+                  optional: false
+              {{- else }}
               value: {{ .Values.backend.postgres.password }}
+              {{- end }}
             - name: BINDPLANE_POSTGRES_DATABASE
               value: {{ .Values.backend.postgres.database }}
             - name: BINDPLANE_POSTGRES_SSL_MODE

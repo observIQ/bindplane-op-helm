@@ -271,6 +271,18 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- if eq .Values.eventbus.type "nats" }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: nats
+            - name: BINDPLANE_NATS_CLIENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: BINDPLANE_NATS_CLIENT_ENDPOINT
+              value: nats://{{ include "bindplane.fullname" . }}-nats-client-headless.{{ .Release.Namespace }}.svc.cluster.local:4222
+            - name: BINDPLANE_NATS_CLIENT_SUBJECT
+              value: bindplane-event-bus
+            {{- end }}
             {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}

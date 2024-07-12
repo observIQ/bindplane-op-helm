@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.11.9](https://img.shields.io/badge/Version-1.11.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.63.1](https://img.shields.io/badge/AppVersion-1.63.1-informational?style=flat-square)
+![Version: 1.12.0](https://img.shields.io/badge/Version-1.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.63.1](https://img.shields.io/badge/AppVersion-1.63.1-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -105,7 +105,7 @@ BindPlane OP is an observability pipeline.
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |
 | health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.readinessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
-| health.startupProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
+| health.startupProbe | object | `{"failureThreshold":20,"httpGet":{"path":"/health","port":"http"},"initialDelaySeconds":0,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | image.name | string | `""` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-ee`. |
 | image.tag | string | `""` | Image tag to use. Defaults to the version defined in the Chart's release. |
 | ingress.annotations | object | `{}` | Custom annotations which will be added to the ingress object. Useful for specifying things such as `cert-manager.io/cluster-issuer`. |
@@ -118,6 +118,10 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.requests.cpu | string | `"1000m"` | CPU request. |
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
+| nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
+| nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
+| nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
+| nats.resources.requests.memory | string | `"1000Mi"` | Memory request for the NATs server pods, when event bus type is `nats`. |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |

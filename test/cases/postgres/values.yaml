@@ -10,8 +10,10 @@ backend:
   postgres:
     host: postgres.postgres.svc.cluster.local
     database: bindplane
-    username: postgres
-    password: password
+    credentialSecret:
+      name: postgres-credentials
+      usernameKey: username
+      passwordKey: password
     maxConnections: 12
     sslmode: verify-ca
     sslsecret:

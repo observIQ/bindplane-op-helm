@@ -11,3 +11,4 @@ In order for changes to be captured in changelog correctly please add one of the
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
 - [ ] CI passes
+- [ ] Changes to ports, services, or other networking have been tested with **istio**

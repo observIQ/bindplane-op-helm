@@ -61,7 +61,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bindplane.fullname" . }}-nats-client-headless
+  name: {{ include "bindplane.fullname" . }}-nats-headless
   namespace: {{ .Release.Namespace }}
   annotations:
     {{- if .Values.service.annotations }}
@@ -77,8 +77,8 @@ spec:
   ports:
     - port: 4222
       protocol: TCP
-      targetPort: nats-client
-      name: nats-client
+      targetPort: tcp
+      name: tcp
   selector:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane

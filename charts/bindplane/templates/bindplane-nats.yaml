@@ -48,7 +48,7 @@ spec:
             - containerPort: 3001
               name: http            
             - containerPort: 4222
-              name: nats-client
+              name: tcp
             - containerPort: 6222
               name: nats-cluster
             - containerPort: 8222

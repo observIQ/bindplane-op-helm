@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
+      max-parallel: 5
       matrix:
         case:
           - "default"
@@ -76,7 +77,7 @@ jobs:
             kubectl apply -f -
 
       - name: Wait For Pods
-        run: kubectl -n default wait --for=condition=ready pods --all --timeout=120s
+        run: kubectl -n default wait --for=condition=ready pods --all --timeout=180s
 
       - name: "Debug: Get status and logs"
         if: always()

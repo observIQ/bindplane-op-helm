@@ -62,7 +62,6 @@ BindPlane OP is an observability pipeline.
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
 | config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
-| config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options. |
 | config.secret_key | string | `""` | DEPRECATED: New deployments should leave this option unset. |
 | config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |

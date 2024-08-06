@@ -12,7 +12,6 @@ config:
   password: bppass
   sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
   server_url: http://bindplane.local:80
-  remote_url: ws://bindplane.local:80
   # The secret "bindplane" should exist and have the
   # key license with a license key as the value.
   # License is required in CI in order to use Postgres store.

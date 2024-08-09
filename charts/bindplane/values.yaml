@@ -125,7 +125,7 @@ prometheus:
 
 
 eventbus:
-  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`, `kafka`, `nats`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
+  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`, or `nats`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
   type: ""
 
   pubsub:
@@ -151,44 +151,30 @@ eventbus:
     # -- For testing against an emulator only.
     insecure: false
 
-  kafka:
-    # -- Comma separated list of brokers to use, in the form of `host:port`.
-    brokers: ""
-    # -- Protocol version of the Kafka brokers in 'MAJOR.MINOR.PATCH' format
-    protocolVersion: ""
-    # -- Topic to use.
-    topic: ""
-    auth:
-      # -- How to authenticate to Kafka. One of: none|plainText|sasl.
-      type: ""
-      plain:
-        # -- Username to use for plain authentication.
-        username: ""
-        # -- Password to use for plain authentication.
-        password: ""
-      sasl:
-        # -- Username to use for SASL authentication.
-        username: ""
-        # -- Password to use for SASL authentication.
-        password: ""
-        # -- Mechanism for SASL authentication. One of plain|scramSHA256|scramSHA512.
-        mechanism: ""
-        # -- Version of SASL authentication to use. One of 0|1".
-        version: ""
-    tls:
-      # -- Whether or not to use TLS when connecting to Kafka.
-      enable: false
-      # -- Whether or not to skip verification of the Kafka broker certificate(s).
-      insecure: false
-      secret:
-        # -- Kubernetes TLS secret name.
-        name:
-        # -- The secret's subPath which contains the certificate authority.
-        caSubPath: ""
-        # -- The secret's subPath which contains the certificate for mutual TLS.
-        crtSubPath: ""
-        # -- The secret's subPath which contains the private key for mutual TLS.
-        keySubPath: ""
+  # Kafka is deprecated and will be removed in a future release, please use NATS instead.
+  # https://observiq.com/docs/advanced-setup/kubernetes-installation/server/components/eventbus
+  # kafka:
+  #   brokers: ""
+  #   protocolVersion: ""
+  #   topic: ""
+  #   auth:
+  #     type: ""
+  #     plain:
+  #       username: ""
+  #       password: ""
+  #     sasl:
+  #       username: ""
+  #       password: ""
+  #       mechanism: ""
+  #       version: ""
+  #   tls:
+  #     enable: false
+  #     insecure: false
+  #     secret:
+  #       name:
+  #       caSubPath: ""
+  #       crtSubPath: ""
+  #       keySubPath: ""
 
 auth:
   # Supported options:

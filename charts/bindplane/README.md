@@ -79,22 +79,6 @@ BindPlane OP is an observability pipeline.
 | dev.prometheus.image.tag | string | `"v2.47.2"` |  |
 | email.sendgrid.token | string | `""` | The sendgrid API token to use when authenticating to Sendgrid. |
 | email.type | string | `""` | The optional email backend type to use. Valid options include `sendgrid`. Requires an auth type other than `system`. |
-| eventbus.kafka.auth.plain.password | string | `""` | Password to use for plain authentication. |
-| eventbus.kafka.auth.plain.username | string | `""` | Username to use for plain authentication. |
-| eventbus.kafka.auth.sasl.mechanism | string | `""` | Mechanism for SASL authentication. One of plain|scramSHA256|scramSHA512. |
-| eventbus.kafka.auth.sasl.password | string | `""` | Password to use for SASL authentication. |
-| eventbus.kafka.auth.sasl.username | string | `""` | Username to use for SASL authentication. |
-| eventbus.kafka.auth.sasl.version | string | `""` | Version of SASL authentication to use. One of 0|1". |
-| eventbus.kafka.auth.type | string | `""` | How to authenticate to Kafka. One of: none|plainText|sasl. |
-| eventbus.kafka.brokers | string | `""` | Comma separated list of brokers to use, in the form of `host:port`. |
-| eventbus.kafka.protocolVersion | string | `""` | Protocol version of the Kafka brokers in 'MAJOR.MINOR.PATCH' format |
-| eventbus.kafka.tls.enable | bool | `false` | Whether or not to use TLS when connecting to Kafka. |
-| eventbus.kafka.tls.insecure | bool | `false` | Whether or not to skip verification of the Kafka broker certificate(s). |
-| eventbus.kafka.tls.secret.caSubPath | string | `""` | The secret's subPath which contains the certificate authority. |
-| eventbus.kafka.tls.secret.crtSubPath | string | `""` | The secret's subPath which contains the certificate for mutual TLS. |
-| eventbus.kafka.tls.secret.keySubPath | string | `""` | The secret's subPath which contains the private key for mutual TLS. |
-| eventbus.kafka.tls.secret.name | string | `nil` | Kubernetes TLS secret name. |
-| eventbus.kafka.topic | string | `""` | Topic to use. |
 | eventbus.pubsub.credentials.secret | string | `""` | Optional Kubernetes secret which contains Google Cloud JSON service account credentials. Not required when running within Google Cloud with the Pub/Sub scope enabled. |
 | eventbus.pubsub.credentials.subPath | string | `""` | Sub path for the secret which contains the Google Cloud credential JSON |
 | eventbus.pubsub.endpoint | string | `""` | For testing against an emulator only. |

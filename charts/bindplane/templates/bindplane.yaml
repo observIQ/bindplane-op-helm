@@ -354,6 +354,8 @@ spec:
               value: {{ .Values.dev.auth.auth0.domain }}
             - name: BINDPLANE_AUTH0_AUDIENCE
               value: {{ .Values.dev.auth.auth0.audience }}
+            - name: BINDPLANE_AUTH0_MANAGEMENT_DOMAIN
+              value: {{ .Values.dev.auth.auth0.managementdomain }}
             - name: BINDPLANE_AUTH0_MANAGEMENT_CLIENT_ID
               value: {{ .Values.dev.auth.auth0.managementclientid }}
             - name: BINDPLANE_AUTH0_MANAGEMENT_CLIENT_SECRET

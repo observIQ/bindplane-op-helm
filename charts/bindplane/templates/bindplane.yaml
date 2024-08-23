@@ -49,8 +49,22 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.backend.postgres.sslsecret.name }}
       initContainers:
+      {{- if eq .Values.backend.type "bbolt" }}
+        - name: set-data-permissions
+          image: busybox
+          command:
+          - sh
+          - -c
+          - /bin/sh /set-data-permissions.sh
+          volumeMounts:
+            - name: data-permissions-init
+              mountPath: /set-data-permissions.sh
+              subPath: set-data-permissions.sh
+            - name: {{ include "bindplane.fullname" . }}-data
+              mountPath: /data
+      {{- end }}
+      {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls
           image: busybox
           command:
@@ -584,6 +598,9 @@ spec:
             secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
         {{- end }}
+        - name: data-permissions-init
+          configMap:
+            name: data-permissions-init
         {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls-dir
           emptyDir: {}

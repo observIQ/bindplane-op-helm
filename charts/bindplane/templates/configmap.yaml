@@ -1,3 +1,14 @@
+{{- if eq .Values.backend.type "bbolt" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: data-permissions-init
+data:
+  set-data-permissions.sh: |
+    #!/bin/sh
+    chown -R 65534:65534 /data
+    chmod 0750 /data
+{{ end }}
 {{- if .Values.backend.postgres.sslsecret.name }}
 kind: ConfigMap
 apiVersion: v1

@@ -111,6 +111,7 @@ spec:
               {{- else }}
               value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3001
               {{- end }}
+            {{ if eq .Values.auth.type "system" }}
             - name: BINDPLANE_USERNAME
               {{- if  .Values.config.username }}
               value: {{ .Values.config.username }}
@@ -131,6 +132,7 @@ spec:
                   key: password
                   optional: false
               {{- end}}
+            {{- end }}
             {{- if .Values.config.secret_key }}
             - name: BINDPLANE_SECRET_KEY
               value: {{ .Values.config.secret_key }}
@@ -300,9 +302,25 @@ spec:
             - name: BINDPLANE_LDAP_BASE_DN
               value: {{ .Values.auth.ldap.baseDN }}
             - name: BINDPLANE_LDAP_BIND_USER
+              {{ if .Values.auth.ldap.bindCredentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{  .Values.auth.ldap.bindCredentialSecret.name }}
+                  key: {{ .Values.auth.ldap.bindCredentialSecret.usernameKey }}
+                  optional: false
+              {{ else }}
               value: {{ .Values.auth.ldap.bindUser }}
+              {{ end }}
             - name: BINDPLANE_LDAP_BIND_PASSWORD
+              {{ if .Values.auth.ldap.bindCredentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{  .Values.auth.ldap.bindCredentialSecret.name }}
+                  key: {{ .Values.auth.ldap.bindCredentialSecret.passwordKey }}
+                  optional: false
+              {{ else }}
               value: {{ .Values.auth.ldap.bindPassword }}
+              {{ end }}
             - name: BINDPLANE_LDAP_SEARCH_FILTER
               {{- if eq .Values.auth.type "active-directory"}}
               value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))" ) }}

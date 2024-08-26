@@ -199,13 +199,6 @@ auth:
     bindUser: ""
     # -- Password to use for the bind user.
     bindPassword: ""
-    bindCredentialSecret:
-      # -- Kubernetes secret name that contains the bind username and password.
-      name: ""
-      # -- The secret's subPath which contains the bind username.
-      usernameKey: ""
-      # -- The secret's subPath which contains the bind password.
-      passwordKey: ""
     # -- Search filter to use when looking up users. Defaults to `(uid=%s)` (ldap) and `(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))` (active-directory).
     searchFilter: ""
     tls:

@@ -12,6 +12,7 @@ BindPlane OP is an observability pipeline.
 | ---- | ------ | --- |
 | jsirianni | <joe@observiq.com> |  |
 | algchoo | <austin.georgiades@observiq.com> |  |
+| tbm48813 | <travis.malcuit@observiq.com> |  |
 
 ## Values
 

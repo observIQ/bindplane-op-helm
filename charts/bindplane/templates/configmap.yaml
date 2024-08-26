@@ -7,7 +7,7 @@ data:
   set-data-permissions.sh: |
     #!/bin/sh
     chown -R 65534:65534 /data
-    chmod 770 /data
+    chmod 0750 /data
 {{ end }}
 {{- if .Values.backend.postgres.sslsecret.name }}
 kind: ConfigMap

@@ -10,11 +10,9 @@ BindPlane OP is an observability pipeline.
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| jsirianni | <joe.sirianni@observiq.com> |  |
-
-## Source Code
-
-* <https://github.com/observIQ/bindplane-op/>
+| jsirianni | <joe@observiq.com> |  |
+| algchoo | <austin.georgiades@observiq.com> |  |
+| tbm48813 | <travis.malcuit@observiq.com> |  |
 
 ## Values
 

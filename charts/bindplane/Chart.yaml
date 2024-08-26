@@ -16,8 +16,16 @@ keywords:
   - observability
 home: https://github.com/observIQ/bindplane-op
 icon: https://raw.githubusercontent.com/observIQ/bindplane-op/main/docs/images/bindplaneop.png
-sources:
-  - https://github.com/observIQ/bindplane-op/
+annotations:
+  "documentation": |
+    - name: BindPlane OP Documentation
+      url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/install
+    - name: High Availability Deployment
+      url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/deployment
 maintainers:
   - name: jsirianni
-    email: joe.sirianni@observiq.com
+    email: joe@observiq.com
+  - name: algchoo
+    email: austin.georgiades@observiq.com
+  - name: tbm48813
+    email: travis.malcuit@observiq.com

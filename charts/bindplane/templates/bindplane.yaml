@@ -40,6 +40,10 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.affinity.bindplane }}
+      affinity:
+      {{- toYaml .Values.affinity.bindplane | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "bindplane.fullname" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:

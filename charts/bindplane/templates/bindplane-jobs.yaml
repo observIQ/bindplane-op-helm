@@ -38,6 +38,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.affinity.jobs }}
+      affinity:
+      {{- toYaml .Values.affinity.jobs | nindent 8 }}
+      {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
       initContainers:
         - name: postgres-tls

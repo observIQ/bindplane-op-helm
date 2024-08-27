@@ -39,7 +39,7 @@ spec:
       {{- end }}
       {{- if .Values.affinity.prometheus }}
       affinity:
-      {{- .toYaml .Values.affinity.prometheus | nindent 8 }}
+      {{- toYaml .Values.affinity.prometheus | nindent 8 }}
       {{- end }}
       containers:
         - name: prometheus

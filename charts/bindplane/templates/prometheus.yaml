@@ -37,6 +37,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.affinity.prometheus }}
+      affinity:
+      {{- toYaml .Values.affinity.prometheus | nindent 8 }}
+      {{- end }}
       containers:
         - name: prometheus
           image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}

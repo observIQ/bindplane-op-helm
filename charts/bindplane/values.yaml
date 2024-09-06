@@ -427,6 +427,9 @@ affinity:
   # -- This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod.
   # The Prometheus pod is a single pod deployment.
   prometheus: {}
+  # -- This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod.
+  # The transform agent pod is a single pod deployment.
+  transform-agent: {}
 
 autoscaling:
   # -- Whether or not autoscaling should be enabled. Requires an eventbus to be configured.

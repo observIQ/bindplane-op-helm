@@ -25,6 +25,10 @@ spec:
         app.kubernetes.io/component: transform-agent
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.affinity.transform-agent }}
+      affinity:
+      {{- toYaml .Values.affinity.transform-agent | nindent 8 }}
+      {{- end }}
       serviceAccountName: default
       {{- with .Values.podSecurityContext }}
       securityContext:

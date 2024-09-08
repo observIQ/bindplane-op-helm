@@ -41,6 +41,10 @@ spec:
       affinity:
       {{- toYaml .Values.affinity.prometheus | nindent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints.prometheus }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.prometheus | nindent 8 }}
+      {{- end }}
       containers:
         - name: prometheus
           image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}

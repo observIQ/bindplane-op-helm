@@ -44,6 +44,10 @@ spec:
       affinity:
       {{- toYaml .Values.affinity.nats | nindent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints.nats }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.nats | nindent 8 }}
+      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}

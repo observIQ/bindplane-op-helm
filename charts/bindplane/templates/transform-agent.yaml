@@ -29,6 +29,10 @@ spec:
       affinity:
       {{- toYaml .Values.affinity.transform_agent | nindent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints.transform_agent }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.transform_agent | nindent 8 }}
+      {{- end }}
       serviceAccountName: default
       {{- with .Values.podSecurityContext }}
       securityContext:

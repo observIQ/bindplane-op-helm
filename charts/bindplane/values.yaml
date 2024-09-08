@@ -431,6 +431,22 @@ affinity:
   # The transform agent pod is a single pod deployment.
   transform_agent: {}
 
+topologySpreadConstraints:
+  # -- spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods.
+  bindplane: {}
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset
+  # pods, if NATS is enabled.
+  nats: {}
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod.
+  # The jobs pod is a single pod deployment.
+  jobs: {}
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod.
+  # The Prometheus pod is a single pod deployment.
+  prometheus: {}
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod.
+  # The transform agent pod is a single pod deployment.
+  transform_agent: {}
+
 autoscaling:
   # -- Whether or not autoscaling should be enabled. Requires an eventbus to be configured.
   enable: false

@@ -44,6 +44,10 @@ spec:
       affinity:
       {{- toYaml .Values.affinity.bindplane | nindent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints.bindplane }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.bindplane | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "bindplane.fullname" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:

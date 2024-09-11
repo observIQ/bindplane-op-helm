@@ -42,6 +42,10 @@ spec:
       affinity:
       {{- toYaml .Values.affinity.jobs | nindent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints.jobs }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
+      {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
       initContainers:
         - name: postgres-tls

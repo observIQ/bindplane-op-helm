@@ -116,6 +116,12 @@ BindPlane OP is an observability pipeline.
 | nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.memory | string | `"1000Mi"` | Memory request for the NATs server pods, when event bus type is `nats`. |
+| nodeSelector | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
+| nodeSelector.bindplane | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pods when using the bbolt backend. |
+| nodeSelector.jobs | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod. The jobs pod is a single pod deployment. |
+| nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset pods, if NATS is enabled. |
+| nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod. The Prometheus pod is a single pod deployment. |
+| nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod. The transform agent pod is a single pod deployment. |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |

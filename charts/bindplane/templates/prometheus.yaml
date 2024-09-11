@@ -37,6 +37,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.nodeSelector.prometheus }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector.prometheus | nindent 8 }}
+      {{- end }}
       {{- if .Values.affinity.prometheus }}
       affinity:
       {{- toYaml .Values.affinity.prometheus | nindent 8 }}

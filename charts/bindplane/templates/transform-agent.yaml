@@ -25,6 +25,10 @@ spec:
         app.kubernetes.io/component: transform-agent
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.nodeSelector.transform_agent }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector.transform_agent | nindent 8 }}
+      {{- end }}
       {{- if .Values.affinity.transform_agent }}
       affinity:
       {{- toYaml .Values.affinity.transform_agent | nindent 8 }}

@@ -159,4 +159,4 @@ topologySpreadConstraints:
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app.kubernetes.io/component: transform_agent
+          app.kubernetes.io/component: transform-agent

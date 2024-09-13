@@ -7,7 +7,7 @@ on:
     paths:
       - "charts/**"
     tags:
-      - "v**"
+      - "v*"
 
 jobs:
   helmlint:

@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - "charts/**"
+    tags:
+      - "v**"
 
 jobs:
   helmlint:
@@ -20,9 +22,6 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Check chart version
-        run: .github/workflows/scripts/check-new-version.sh
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0

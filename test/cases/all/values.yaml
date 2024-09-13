@@ -160,3 +160,15 @@ topologySpreadConstraints:
       labelSelector:
         matchLabels:
           app.kubernetes.io/component: transform-agent
+
+nodeSelector:
+  bindplane:
+    kubernetes.io/hostname: minikube
+  nats:
+    kubernetes.io/hostname: minikube
+  jobs:
+    kubernetes.io/hostname: minikube
+  prometheus:
+    kubernetes.io/hostname: minikube
+  transform_agent:
+    kubernetes.io/hostname: minikube

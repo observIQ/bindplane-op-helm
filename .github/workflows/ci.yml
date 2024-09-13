@@ -17,6 +17,12 @@ jobs:
           CHART_LOCATION: ./charts/bindplane
           CHART_VALUES: ./charts/bindplane/values.yaml
 
+      - name: Helm Docs
+        uses: losisin/helm-docs-github-action@v1
+
+      - name: Helm Docs Check
+        run: .github/workflows/scripts/check-helm-docs.sh
+
   integration:
     runs-on: ubuntu-20.04
     strategy:

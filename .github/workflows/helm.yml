@@ -2,8 +2,10 @@ name: Helm Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+    paths:
+      - "charts/**"
 
 jobs:
   helmlint:

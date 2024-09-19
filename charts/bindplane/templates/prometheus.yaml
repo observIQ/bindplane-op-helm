@@ -111,7 +111,7 @@ spec:
             - mountPath: /prometheus
               name: {{ include "bindplane.fullname" . }}-prometheus-data
             - mountPath: /etc/prometheus/prometheus.yml
-              subPath: promethes.yml
+              subPath: prometheus.yml
               name: config
             - mountPath: /etc/prometheus/rules.yml
               subPath: rules.yml

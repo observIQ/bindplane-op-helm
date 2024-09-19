@@ -50,7 +50,7 @@ spec:
       {{- end }}
       containers:
         - name: prometheus
-          image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}
+          image: {{ .Values.prometheus.image.name }}:{{ include "prometheus.tag" . }}
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false

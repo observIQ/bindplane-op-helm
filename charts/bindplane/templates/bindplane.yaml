@@ -567,7 +567,7 @@ spec:
         {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
         {{- if and (.Values.prometheus.enableSideCar) (eq .Values.prometheus.remote false)}}
         - name: prometheus
-          image: {{ .Values.prometheus.image.name }}:{{ include "bindplane.tag" . }}
+          image: {{ .Values.prometheus.image.name }}:{{ include "prometheus.tag" . }}
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true

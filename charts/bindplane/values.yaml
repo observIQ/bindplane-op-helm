@@ -521,18 +521,6 @@ dev:
     # to use this namespace.
     name: ""
   
-  # DEPRECATED: Use the `prometheus` top level section instead.
-  # Manages a prometheus deployment for development purposes. Production
-  # deployments should use a proper prometheus backend deployed outside
-  # of this chart.
-  prometheus:
-    # Whether or not prometheus should be deployed.
-    create: false
-    image:
-      name: prom/prometheus
-      # Generally this should match the version found
-      # here https://github.com/observIQ/bindplane-op-enterprise/blob/release/v1.38.0/PROMETHEUS_VERSION
-      tag: v2.47.2
   bindplane:
     auth:
       auth0:

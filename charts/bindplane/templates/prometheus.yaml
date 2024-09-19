@@ -81,16 +81,15 @@ spec:
       containers:
         - name: prometheus
           image: {{ .Values.prometheus.image.name }}:{{ .Values.prometheus.image.tag }}
-          command:
-            - /bin/prometheus \
-            - --config.file "/etc/prometheus/prometheus.yml"
-            - --web.config.file "/etc/prometheus/web.yml"
-            - --storage.tsdb.retention.time "2d"
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --web.config.file=/etc/prometheus/web.yml
+            - --storage.tsdb.retention.time=2d
             - --web.enable-remote-write-receiver
-            - --web.listen-address ":9090"
-            - --storage.tsdb.path "/prometheus"
-            - --web.console.templates "/etc/prometheus/consoles"
-            - --web.console.libraries "/etc/prometheus/console_libraries"
+            - --web.listen-address=:9090
+            - --storage.tsdb.path=/prometheus
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.console.libraries=/etc/prometheus/console_libraries
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false

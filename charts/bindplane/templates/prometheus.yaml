@@ -1,5 +1,35 @@
 {{- if not .Values.prometheus.remote }}
 {{- if not .Values.prometheus.enableSideCar }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bindplane.fullname" . }}-prometheus
+data:
+  prometheus.yml: |
+    scrape_configs: []
+    rule_files: [/etc/prometheus/rules.yml]
+  web.yml: |
+    # This file should be empty unless configured
+    # by the user. See the Prometheus auth and TLS
+    # docs here: https://prometheus.io/docs/prometheus/latest/configuration/https/
+  rules.yml: |
+    groups:
+    - name: configuration-rollups
+      interval: 1m
+      rules:
+      - record: bindplane_agent_measurements:rollup:rate:1m
+        expr: sum without (agent) (rate(bindplane_agent_measurements{}[1m9s999ms] offset 10s))
+    - name: 5m-configuration-rollups
+      interval: 5m
+      rules:
+      - record: bindplane_agent_measurements:rollup:rate:5m
+        expr: sum without (agent) (rate(bindplane_agent_measurements:1m{}[5m59s999ms] offset 10s))
+    - name: 1h-configuration-rollups
+      interval: 1h
+      rules:
+      - record: bindplane_agent_measurements:rollup:rate:1h
+        expr: sum without (agent) (rate(bindplane_agent_measurements:15m{}[1h14m59s999ms] offset 10s))
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -50,7 +80,17 @@ spec:
       {{- end }}
       containers:
         - name: prometheus
-          image: {{ .Values.prometheus.image.name }}:{{ include "prometheus.tag" . }}
+          image: prom/prometheus:v2.54.1
+          command:
+            - /bin/prometheus \
+            - --config.file "/etc/prometheus/prometheus.yml"
+            - --web.config.file "/etc/prometheus/web.yml"
+            - --storage.tsdb.retention.time "2d"
+            - --web.enable-remote-write-receiver
+            - --web.listen-address ":9090"
+            - --storage.tsdb.path "/prometheus"
+            - --web.console.templates "/etc/prometheus/consoles"
+            - --web.console.libraries "/etc/prometheus/console_libraries"
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -70,6 +110,19 @@ spec:
           volumeMounts:
             - mountPath: /prometheus
               name: {{ include "bindplane.fullname" . }}-prometheus-data
+            - mountPath: /etc/prometheus/prometheus.yml
+              subPath: promethes.yml
+              name: config
+            - mountPath: /etc/prometheus/rules.yml
+              subPath: rules.yml
+              name: config
+            - mountPath: /etc/prometheus/web.yml
+              subPath: web.yml
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "bindplane.fullname" . }}-prometheus 
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain

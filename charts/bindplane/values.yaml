@@ -50,10 +50,10 @@ backend:
 # This is undocumented for now, as Prometheus support has not been released.
 prometheus:
   image:
-    # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane-prometheus`. NOTE: The image tag is derived from the BindPlane server tag.
-    name: "ghcr.io/observiq/bindplane-prometheus"
-    # -- Image tag to use. Defaults to the bindplane version defined in the Chart's release. This option should be used when a specific bindplane-prometheus image is required, or if using upstream Prometheus.
-    tag: ""
+    # -- Image name to be used.
+    name: "prom/prometheus"
+    # -- Image tag to use.
+    tag: "v2.54.1"
   # -- When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use.
   remote: false
   # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.

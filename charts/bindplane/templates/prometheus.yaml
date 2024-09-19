@@ -80,7 +80,7 @@ spec:
       {{- end }}
       containers:
         - name: prometheus
-          image: prom/prometheus:v2.54.1
+          image: {{ .Values.prometheus.image.name }}:{{ .Values.prometheus.image.tag }}
           command:
             - /bin/prometheus \
             - --config.file "/etc/prometheus/prometheus.yml"
@@ -122,7 +122,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "bindplane.fullname" . }}-prometheus 
+            name: {{ include "bindplane.fullname" . }}-prometheus
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain

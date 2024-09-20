@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.17.3](https://img.shields.io/badge/Version-1.17.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.73.0](https://img.shields.io/badge/AppVersion-1.73.0-informational?style=flat-square)
+![Version: 1.18.0](https://img.shields.io/badge/Version-1.18.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.73.0](https://img.shields.io/badge/AppVersion-1.73.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -125,8 +125,8 @@ BindPlane OP is an observability pipeline.
 | prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
 | prometheus.extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode). |
 | prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
-| prometheus.image.name | string | `"ghcr.io/observiq/bindplane-prometheus"` | Image name to be used. Defaults to `ghcr.io/observiq/bindplane-prometheus`. NOTE: The image tag is derived from the BindPlane server tag. |
-| prometheus.image.tag | string | `""` | Image tag to use. Defaults to the bindplane version defined in the Chart's release. This option should be used when a specific bindplane-prometheus image is required, or if using upstream Prometheus. |
+| prometheus.image.name | string | `"prom/prometheus"` | Image name to be used. |
+| prometheus.image.tag | string | `"v2.54.1"` | Image tag to use. |
 | prometheus.port | int | `9090` | The Prometheus TCP port used for querying and writing metrics. |
 | prometheus.queryPathPrefix | string | `""` | Optional Prometheus query path prefix. Useful when overriding the query endpoints when using systems such as Mimir. |
 | prometheus.remote | bool | `false` | When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use. |

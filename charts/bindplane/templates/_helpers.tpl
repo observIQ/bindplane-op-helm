@@ -37,9 +37,6 @@ The image tags to use
 {{- define "bindplane.tag" -}}
 {{- printf "%s" (default (printf "%s" .Chart.AppVersion) .Values.image.tag) }}
 {{- end -}}
-{{- define "prometheus.tag" -}}
-{{- printf "%s" (default (printf "%s" .Chart.AppVersion) .Values.prometheus.image.tag) }}
-{{- end -}}
 
 {{/*
 The Transform Agent image to use

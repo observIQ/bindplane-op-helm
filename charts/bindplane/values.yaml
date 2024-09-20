@@ -330,6 +330,10 @@ resources:
     # cpu: 1000m
 
 nats:
+  # -- Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive.
+  # StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to
+  # using Deployments, you can use that option instead.
+  deploymentType: StatefulSet
   # -- NATs server resources request block, when event bus type is `nats`.
   resources:
     requests:

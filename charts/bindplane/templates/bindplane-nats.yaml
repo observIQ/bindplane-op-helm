@@ -1,6 +1,6 @@
 {{- if eq .Values.eventbus.type "nats" }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: {{ .Values.nats.deploymentType }}
 metadata:
   name: {{ include "bindplane.fullname" . }}-nats
   namespace: {{ .Release.Namespace }}
@@ -12,8 +12,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: 3
+  {{ if eq .Values.nats.deploymentType "StatefulSet" }}
   serviceName: {{ include "bindplane.fullname" . }}-nats-cluster-headless
   podManagementPolicy: Parallel
+  {{ end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "bindplane.name" . }}
@@ -166,7 +168,12 @@ spec:
             - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
               value: "6222"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
+              {{ if eq .Values.nats.deploymentType "StatefulSet" }}
               value: nats://{{ include "bindplane.fullname" . }}-nats-0.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-1.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-2.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
+              {{ end }}
+              {{ if eq .Values.nats.deploymentType "Deployment" }}
+              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
+              {{ end }}
             - name: BINDPLANE_NATS_CLIENT_NAME
               valueFrom:
                 fieldRef:

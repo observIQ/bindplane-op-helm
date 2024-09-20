@@ -108,6 +108,7 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.requests.cpu | string | `"1000m"` | CPU request. |
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
+| nats.deploymentType | string | `"StatefulSet"` | Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive. StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to using Deployments, you can use that option instead. |
 | nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
 | nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |

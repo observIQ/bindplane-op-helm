@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.19.2](https://img.shields.io/badge/Version-1.19.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.74.2](https://img.shields.io/badge/AppVersion-1.74.2-informational?style=flat-square)
+![Version: 1.20.0](https://img.shields.io/badge/Version-1.20.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.74.2](https://img.shields.io/badge/AppVersion-1.74.2-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -107,6 +107,9 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.limits.memory | string | `"1000Mi"` | Memory limit. |
 | jobs.resources.requests.cpu | string | `"1000m"` | CPU request. |
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
+| metrics.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port. |
+| metrics.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP metrics receiver. |
+| metrics.type | string | `""` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by BindPlane's HTTP server at `/metrics`. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | nats.deploymentType | string | `"StatefulSet"` | Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive. StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to using Deployments, you can use that option instead. |
 | nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
@@ -157,7 +160,7 @@ BindPlane OP is an observability pipeline.
 | topologySpreadConstraints.nats | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset pods, if NATS is enabled. |
 | topologySpreadConstraints.prometheus | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod. The Prometheus pod is a single pod deployment. |
 | topologySpreadConstraints.transform_agent | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod. The transform agent pod is a single pod deployment. |
-| trace.otlp.endpoint | string | `""` | Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port. |
+| trace.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC trace receiver. Should be in the form of ip:port or host:port. |
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.otlp.samplingRate | string | `"1"` | Sampling rate between 0 and 1. 1 being 100% of traces are sent. |
 | trace.type | string | `""` | Trace type to use. Valid options include `otlp`. |

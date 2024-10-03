@@ -50,3 +50,6 @@ nats:
       cpu: 100m
     limits:
       memory: 100Mi
+
+metrics:
+  type: prometheus

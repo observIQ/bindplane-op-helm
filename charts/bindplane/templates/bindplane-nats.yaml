@@ -24,6 +24,14 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        {{- if eq .Values.metrics.type "prometheus" }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3001"
+        prometheus.io/scheme: http
+        prometheus.io/job-name: bindplane-op
+        {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane
@@ -315,6 +323,20 @@ spec:
             - name: BINDPLANE_PROMETHEUS_TLS_KEY
               value: /prometheus-client.key
             {{- end }}
+            {{- end }}
+            {{- if eq .Values.metrics.type "prometheus" }}
+            - name: BINDPLANE_METRICS_TYPE
+              value: prometheus
+            - name: BINDPLANE_METRICS_PROMETHEUS_ENDPOINT
+              value: /metrics
+            {{- end }}
+            {{- if eq .Values.metrics.type "otlp" }}
+            - name: BINDPLANE_METRICS_TYPE
+              value: otlp
+            - name: BINDPLANE_METRICS_OTLP_ENDPOINT
+              value: {{ .Values.metrics.otlp.endpoint }}
+            - name: BINDPLANE_METRICS_OTLP_INSECURE
+              value: "{{ .Values.metrics.otlp.insecure }}"
             {{- end }}
             {{- if len .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}

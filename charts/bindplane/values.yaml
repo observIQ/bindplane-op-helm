@@ -410,12 +410,23 @@ trace:
   type: ""
 
   otlp:
-    # -- Endpoint of the OTLP trace receiver. Should be in the form of ip:port or host:port.
+    # -- Endpoint of the OTLP gRPC trace receiver. Should be in the form of ip:port or host:port.
     endpoint: ""
     # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver.
     insecure: false
     # -- Sampling rate between 0 and 1. 1 being 100% of traces are sent.
     samplingRate: "1"
+
+metrics:
+  # -- Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics
+  # are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus
+  # format by BindPlane's HTTP server at `/metrics`.
+  type: ""
+  otlp:
+    # -- Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port.
+    endpoint: ""
+    # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP metrics receiver.
+    insecure: false
 
 # -- Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
 replicas: 0

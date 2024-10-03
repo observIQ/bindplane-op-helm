@@ -76,6 +76,16 @@ spec:
             - containerPort: 8222
               name: nats-http
           env:
+            - name: KUBERNETES_NAMESPACE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: KUBERNETES_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: KUBERNETES_CONTAINER_NAME
+              value: "server"
             - name: BINDPLANE_MODE
               value: node
             - name: BINDPLANE_ANALYTICS_DISABLED

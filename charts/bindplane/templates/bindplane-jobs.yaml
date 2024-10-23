@@ -1,4 +1,4 @@
-{{- if eq (include "bindplane.deployment_type" .) "Deployment" }}
+{{- if ne .Values.eventbus.type "" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

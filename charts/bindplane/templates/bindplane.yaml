@@ -130,7 +130,7 @@ spec:
             - name: KUBERNETES_CONTAINER_NAME
               value: "server"
             - name: BINDPLANE_MODE
-              {{- if eq (include "bindplane.deployment_type" .) "StatefulSet" }}
+              {{- if eq .Values.eventbus.type "" }}
               value: all
               {{- else }}
               value: node

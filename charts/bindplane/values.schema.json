@@ -1,19 +1,29 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-      "nats": {
-        "type": "object",
-        "properties": {
-          "deploymentType": {
-            "type": "string",
-            "enum": ["StatefulSet", "Deployment"],
-            "description": "The type of NATS deployment, either StatefulSet or Deployment."
-          }
-        },
-        "required": ["deploymentType"],
-        "additionalProperties": true
-      }
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "nats": {
+      "type": "object",
+      "properties": {
+        "deploymentType": {
+          "type": "string",
+          "enum": ["StatefulSet", "Deployment"],
+          "description": "The type of NATS deployment, either StatefulSet or Deployment."
+        }
+      },
+      "required": ["deploymentType"],
+      "additionalProperties": true
+    },
+    "eventbus": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["", "nats", "pubsub", "kafka"],
+          "description": "The type of event bus used. Must be one of '', 'nats', 'pubsub', or 'kafka'."
+        }
+      },
+      "additionalProperties": true
     }
   }
-  
+}

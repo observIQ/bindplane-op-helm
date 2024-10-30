@@ -7,3 +7,4 @@ config:
   username: bpuser
   password: bppass
   sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  licenseUseSecret: true

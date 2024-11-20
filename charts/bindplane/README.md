@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.20.8](https://img.shields.io/badge/Version-1.20.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.82.0](https://img.shields.io/badge/AppVersion-1.82.0-informational?style=flat-square)
+![Version: 1.20.9](https://img.shields.io/badge/Version-1.20.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.82.0](https://img.shields.io/badge/AppVersion-1.82.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -19,10 +19,10 @@ BindPlane OP is an observability pipeline.
 |-----|------|---------|-------------|
 | affinity | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the affinity for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
 | affinity.bindplane | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane deployment pods. |
-| affinity.jobs | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Jobs pod. The jobs pod is a single pod deployment. |
-| affinity.nats | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset pods, if NATS is enabled. |
-| affinity.prometheus | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod. The Prometheus pod is a single pod deployment. |
-| affinity.transform_agent | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod. The transform agent pod is a single pod deployment. |
+| affinity.jobs | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Jobs pod. |
+| affinity.nats | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
+| affinity.prometheus | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod. |
+| affinity.transform_agent | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod. |
 | auth.google.clientid | string | `""` | Google OAUTH clientid |
 | auth.ldap.baseDN | string | `""` | Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`. |
 | auth.ldap.bindCredentialSecret.name | string | `""` | Kubernetes secret name that contains the bind username and password. |
@@ -117,12 +117,18 @@ BindPlane OP is an observability pipeline.
 | nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.memory | string | `"1000Mi"` | Memory request for the NATs server pods, when event bus type is `nats`. |
 | nodeSelector | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
-| nodeSelector.bindplane | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pods when using the bbolt backend. |
-| nodeSelector.jobs | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod. The jobs pod is a single pod deployment. |
-| nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset pods, if NATS is enabled. |
-| nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod. The Prometheus pod is a single pod deployment. |
-| nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod. The transform agent pod is a single pod deployment. |
+| nodeSelector.bindplane | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pod when using the bbolt backend. |
+| nodeSelector.jobs | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod. |
+| nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
+| nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod. |
+| nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod. |
 | podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
+| priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
+| priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane deployment pods. |
+| priorityClassName.jobs | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane Jobs pod. |
+| priorityClassName.nats | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
+| priorityClassName.prometheus | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane Prometheus pod. |
+| priorityClassName.transform_agent | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane transform agent pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
@@ -156,10 +162,10 @@ BindPlane OP is an observability pipeline.
 | service.annotations | object | `{}` | Custom annotations which will be added to the service object. Useful for specifying things such as `cloud.google.com/backend-config`. |
 | tolerations | object | `{}` | The Pod's tolerations |
 | topologySpreadConstraints.bindplane | list | `[]` | spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods. |
-| topologySpreadConstraints.jobs | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod. The jobs pod is a single pod deployment. |
-| topologySpreadConstraints.nats | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset pods, if NATS is enabled. |
-| topologySpreadConstraints.prometheus | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod. The Prometheus pod is a single pod deployment. |
-| topologySpreadConstraints.transform_agent | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod. The transform agent pod is a single pod deployment. |
+| topologySpreadConstraints.jobs | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod. |
+| topologySpreadConstraints.nats | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
+| topologySpreadConstraints.prometheus | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod. |
+| topologySpreadConstraints.transform_agent | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod. |
 | trace.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC trace receiver. Should be in the form of ip:port or host:port. |
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.otlp.samplingRate | string | `"1"` | Sampling rate between 0 and 1. 1 being 100% of traces are sent. |

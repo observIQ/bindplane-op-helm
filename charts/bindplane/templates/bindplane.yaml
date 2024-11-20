@@ -48,6 +48,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
     spec:
+      priorityClassName: {{ .Values.priorityClassName.bindplane }}
       {{- if and (eq .Values.backend.type "bbolt") (.Values.nodeSelector.bindplane) }}
       nodeSelector:
       {{- toYaml .Values.nodeSelector.bindplane | nindent 8 }}

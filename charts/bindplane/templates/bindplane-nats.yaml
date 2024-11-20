@@ -41,6 +41,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
     spec:
+      priorityClassName: {{ .Values.priorityClassName.nats }}
       serviceAccountName: {{ include "bindplane.fullname" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:

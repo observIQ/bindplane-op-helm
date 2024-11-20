@@ -625,7 +625,7 @@ spec:
               name: {{ include "bindplane.fullname" . }}-prometheus-data
         {{- end }}
         {{- end }}
-      terminationGracePeriodSeconds: 60
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.bindplane }}
       volumes:
         {{- if eq .Values.eventbus.type "pubsub" }}
         {{- if .Values.eventbus.pubsub.credentials.secret }}

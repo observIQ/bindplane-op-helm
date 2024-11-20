@@ -60,6 +60,7 @@ spec:
         {{- toYaml .Values.prometheus.extraPodLabels | nindent 8 }}
         {{- end }}
     spec:
+      priorityClassName: {{ .Values.priorityClassName.prometheus }}
       securityContext:
         fsGroup: 65534
       {{- with .Values.prometheus.tolerations }}

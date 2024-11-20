@@ -431,54 +431,59 @@ metrics:
 # -- Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
 replicas: 0
 
+# -- Configure the priorityClassName for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+priorityClassName:
+  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane deployment pods.
+  bindplane: ""
+  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane NATS statefulset or deployment
+  # pods, if NATS is enabled.
+  nats: ""
+  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane Jobs pod.
+  jobs: ""
+  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane Prometheus pod.
+  prometheus: ""
+  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane transform agent pod.
+  transform_agent: ""
+
 # -- Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
 nodeSelector:
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pods when using the bbolt backend.
+  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pod when using the bbolt backend.
   bindplane: {}
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset
+  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: {}
   # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod.
-  # The jobs pod is a single pod deployment.
   jobs: {}
   # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod.
-  # The Prometheus pod is a single pod deployment.
   prometheus: {}
   # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod.
-  # The transform agent pod is a single pod deployment.
   transform_agent: {}
 
 # -- Configure the affinity for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
 affinity:
   # -- This is for configuring spec.template.spec.affinity on the BindPlane deployment pods.
   bindplane: {}
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset
+  # -- This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: {}
   # -- This is for configuring spec.template.spec.affinity on the BindPlane Jobs pod.
-  # The jobs pod is a single pod deployment.
   jobs: {}
   # -- This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod.
-  # The Prometheus pod is a single pod deployment.
   prometheus: {}
   # -- This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod.
-  # The transform agent pod is a single pod deployment.
   transform_agent: {}
 
 topologySpreadConstraints:
   # -- spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods.
   bindplane: []
-  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: []
   # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod.
-  # The jobs pod is a single pod deployment.
   jobs: []
   # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod.
-  # The Prometheus pod is a single pod deployment.
   prometheus: []
   # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod.
-  # The transform agent pod is a single pod deployment.
   transform_agent: []
 
 autoscaling:

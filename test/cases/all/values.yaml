@@ -172,3 +172,10 @@ nodeSelector:
     kubernetes.io/hostname: minikube
   transform_agent:
     kubernetes.io/hostname: minikube
+
+priorityClassName:
+  bindplane: "high-priority"
+  nats: "high-priority"
+  jobs: "high-priority"
+  prometheus: "high-priority"
+  transform_agent: "high-priority"

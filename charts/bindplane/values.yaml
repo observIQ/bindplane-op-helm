@@ -578,3 +578,6 @@ extraPodLabels: {}
 
 # -- Optional arbitrary environment variables to add to the BindPlane pod(s).
 extraEnv: []
+
+# -- The container image to use for the busybox init container.
+busybox_image: busybox:latest

@@ -73,7 +73,7 @@ spec:
       initContainers:
       {{- if eq .Values.backend.type "bbolt" }}
         - name: set-data-permissions
-          image: busybox
+          image: {{ .Values.busybox_image }}
           command:
           - sh
           - -c
@@ -87,7 +87,7 @@ spec:
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls
-          image: busybox
+          image: {{ .Values.busybox_image }}
           command:
           - sh
           - -c

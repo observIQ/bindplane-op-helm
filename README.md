@@ -97,7 +97,7 @@ You should be able to issue commands: `bindplanectl get agent`
 Collectors running within the cluster can connect with the following OpAMP URI:
 
 ```
-ws://bindplane.default.svc.cluster.local:3001/v1/opamp
+ws://bindplane.default:3001/v1/opamp
 ```
 
 # Community

@@ -86,7 +86,7 @@ spec:
               mountPath: /data
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
-      {{- if eq .Values.backend.postgres.sslsecret.source "secret" }}
+      {{- if eq .Values.backend.postgres.source "secret" }}
         - name: postgres-tls
           image: busybox
           command:

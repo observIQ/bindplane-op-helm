@@ -56,6 +56,17 @@
         }
       },
       "additionalProperties": true
+    },
+    "postgres-ssl-source": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["secret", "manual"],
+          "description": "The type of source for the Postgres SSL certificate. Must be one of 'secret' or 'manual'."
+        }
+      },
+      "additionalProperties": true
     }
   },
   "required": ["nats", "eventbus", "auth"],

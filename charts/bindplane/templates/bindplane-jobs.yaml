@@ -60,6 +60,7 @@ spec:
       {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
+      {{- if eq .Values.backend.postgres.sslsecret.source "secret" }}
       initContainers:
         - name: postgres-tls
           image: busybox
@@ -86,6 +87,7 @@ spec:
               name: {{ .Values.backend.postgres.sslsecret.name }}
               subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
             {{- end }}
+      {{- end }}
       {{- end }}
       containers:
         - name: server

@@ -78,3 +78,7 @@ instead of checking 'if ldap || active-directory'.
 {{- printf "%s" .Values.auth.type }}
 {{- end -}}
 {{- end -}}
+
+{{- define "bindplane.auth_oidc_scopes" -}}
+{{- join "," .Values.auth.oidc.scopes }}
+{{- end -}}

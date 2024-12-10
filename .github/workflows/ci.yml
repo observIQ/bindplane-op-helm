@@ -36,16 +36,24 @@ jobs:
           - "volume"
           - "pubsub"
           - "nats"
+          - "oidc"
         k8s_version:
           - v1.25.0
-          - v1.27.0
           - v1.29.0
+          - v1.31.0
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Generate OIDC Test Config
+        if: matrix.case == 'oidc'
+        run: .github/workflows/scripts/generate-oidc-test-config.sh "$BINDPLANE_OIDC_OAUTH2_CLIENT_ID" "$BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET"
+        env:
+          BINDPLANE_OIDC_OAUTH2_CLIENT_ID: ${{ secrets.BINDPLANE_OIDC_OAUTH2_CLIENT_ID }}
+          BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET: ${{ secrets.BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET }}
 
       - name: Start Minikube
         uses: medyagh/setup-minikube@master

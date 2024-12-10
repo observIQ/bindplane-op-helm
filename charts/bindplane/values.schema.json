@@ -24,6 +24,40 @@
         }
       },
       "additionalProperties": true
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "oidc": {
+          "type": "object",
+          "properties": {
+            "issuer": {
+              "type": "string",
+              "description": "The URL of the OIDC provider."
+            },
+            "oauth2ClientID": {
+              "type": "string",
+              "description": "Client ID to use when authenticating with the OIDC provider."
+            },
+            "oauth2ClientSecret": {
+              "type": "string",
+              "description": "Client secret to use when authenticating with the OIDC provider."
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of requested permissions."
+            }
+          },
+          "required": ["issuer", "oauth2ClientID", "oauth2ClientSecret", "scopes"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
     }
-  }
+  },
+  "required": ["nats", "eventbus", "auth"],
+  "additionalProperties": true
 }

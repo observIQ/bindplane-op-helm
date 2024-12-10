@@ -281,7 +281,7 @@ spec:
             - name: BINDPLANE_OIDC_ISSUER
               value: "{{ .Values.auth.oidc.issuer }}"
             - name: BINDPLANE_OIDC_SCOPES
-              value: "{{ .Values.auth.scopes | join \",\" }}"
+              value: "{{ .auth_oidc_scopes }}"
             {{- end }}
             {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE

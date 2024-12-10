@@ -36,10 +36,11 @@ jobs:
           - "volume"
           - "pubsub"
           - "nats"
+          - "oidc"
         k8s_version:
           - v1.25.0
-          - v1.27.0
           - v1.29.0
+          - v1.31.0
 
     steps:
       - name: Checkout

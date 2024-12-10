@@ -389,13 +389,13 @@ spec:
             - name: BINDPLANE_AUTH_TYPE
               value: oidc
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
-              value: "{{ .Values.auth.oidc.clientid }}"
+              value: "{{ .Values.auth.oidc.oauth2ClientID }}"
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET
-              value: "{{ .Values.auth.oidc.clientsecret }}"
+              value: "{{ .Values.auth.oidc.oauth2ClientSecret }}"
             - name: BINDPLANE_OIDC_ISSUER
               value: "{{ .Values.auth.oidc.issuer }}"
             - name: BINDPLANE_OIDC_SCOPES
-              value: "{{ .auth_oidc_scopes }}"
+              value: {{ include "bindplane.auth_oidc_scopes" . }}
             {{- end }}
             {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE

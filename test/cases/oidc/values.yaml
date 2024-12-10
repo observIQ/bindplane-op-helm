@@ -55,6 +55,7 @@ metrics:
   type: prometheus
 
 auth:
+  type: oidc
   oidc:
     issuer: "issuer"
     oauth2ClientID: "client"

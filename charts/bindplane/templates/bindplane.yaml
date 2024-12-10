@@ -415,6 +415,8 @@ spec:
               value: {{ .Values.dev.auth.auth0.managementclientsecret }}
             {{- end }}
             {{- if eq .Values.auth.type "oidc" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: oidc
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
               value: "{{ .Values.auth.oidc.clientid }}"
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET

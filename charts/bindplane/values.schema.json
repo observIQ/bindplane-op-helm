@@ -55,7 +55,6 @@
           "additionalProperties": false
         }
       },
-      "required": ["oidc"],
       "additionalProperties": true
     }
   },

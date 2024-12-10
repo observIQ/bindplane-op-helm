@@ -48,6 +48,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate OIDC Test Config
+        if: matrix.case == 'oidc'
+        run: .github/workflows/scripts/generate-oidc-test-config.sh "$BINDPLANE_OIDC_OAUTH2_CLIENT_ID" "$BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET"
+        env:
+          BINDPLANE_OIDC_OAUTH2_CLIENT_ID: ${{ secrets.BINDPLANE_OIDC_OAUTH2_CLIENT_ID }}
+          BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET: ${{ secrets.BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET }}
+
       - name: Start Minikube
         uses: medyagh/setup-minikube@master
         with:

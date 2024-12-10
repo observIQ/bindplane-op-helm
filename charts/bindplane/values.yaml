@@ -183,6 +183,7 @@ auth:
   # - system (basic auth)
   # - ldap
   # - active-directory
+  # - oidc
   # 'system' will use the username and password specified
   # in config.secret or config.username / config.password.
   # -- Backend to use for authentication. Available options include `system`, `ldap`, `active-directory`, and `google`.
@@ -244,6 +245,16 @@ auth:
   google:
     # -- Google OAUTH clientid
     clientid: ""
+  # -- OpenID user authentication configuration. Available with BindPlane OP Enterprise.
+  oidc:
+    # -- The URL of the OIDC provider.
+    issuer: ""
+    # -- Client ID to use when authenticating with the OIDC provider.
+    oauth2ClientID: ""
+    # -- Client secret to use when authenticating with the OIDC provider.
+    oauth2ClientSecret: ""
+    # -- List of requested permissions.
+    scopes: []
 
 image:
   # -- Image name to be used. Defaults to `ghcr.io/observiq/bindplane-ee`.

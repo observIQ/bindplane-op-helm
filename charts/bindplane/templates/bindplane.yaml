@@ -414,6 +414,16 @@ spec:
             - name: BINDPLANE_AUTH0_MANAGEMENT_CLIENT_SECRET
               value: {{ .Values.dev.auth.auth0.managementclientsecret }}
             {{- end }}
+            {{- if eq .Values.auth.type "oidc" }}
+            - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
+              value: "{{ .Values.auth.oidc.clientid }}"
+            - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET
+              value: "{{ .Values.auth.oidc.clientsecret }}"
+            - name: BINDPLANE_OIDC_ISSUER
+              value: "{{ .Values.auth.oidc.issuer }}"
+            - name: BINDPLANE_OIDC_SCOPES
+              value: "{{ .Values.auth.scopes | join \",\" }}"
+            {{- end }}
             {{- if eq .Values.multiAccount true }}
             - name: BINDPLANE_ACCOUNTS_ENABLE
               value: "true"

@@ -24,7 +24,7 @@ backend:
     # When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the BindPlane container.
     # When "manual" is set, it is up to the user to ensure the certificates are mounted into the BindPlane container'
     # emptyDir volume at postgres-tls-dir /postgres-tls.
-    source: "secret"
+    sslSource: "secret"
     sslsecret:
       # -- Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to
       # `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane

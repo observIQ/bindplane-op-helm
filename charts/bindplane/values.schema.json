@@ -57,7 +57,7 @@
       },
       "additionalProperties": true
     },
-    "postgres-ssl-source": {
+    "postgres-sslSource": {
       "type": "object",
       "properties": {
         "type": {

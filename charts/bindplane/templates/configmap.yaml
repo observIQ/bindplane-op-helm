@@ -10,7 +10,7 @@ data:
     chmod 0750 /data
 {{ end }}
 {{- if .Values.backend.postgres.sslsecret.name }}
-{{- if eq .Values.backend.postgres.source "secret" }}
+{{- if eq .Values.backend.postgres.sslSource "secret" }}
 kind: ConfigMap
 apiVersion: v1
 metadata:

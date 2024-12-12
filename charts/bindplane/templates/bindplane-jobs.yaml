@@ -613,10 +613,12 @@ spec:
         {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls-dir
           emptyDir: {}
+        {{- if eq .Values.backend.postgres.sslSource "secret" }}
         - name: {{ .Values.backend.postgres.sslsecret.name }}
           secret:
             defaultMode: 0400
             secretName: {{ .Values.backend.postgres.sslsecret.name }}
+        {{- end }}
         - name: postgres-tls-init
           configMap:
             name: postgres-tls-init

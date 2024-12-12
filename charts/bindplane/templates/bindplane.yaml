@@ -86,7 +86,6 @@ spec:
               mountPath: /data
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
-      {{- if eq .Values.backend.postgres.sslSource "secret" }}
         - name: postgres-tls
           image: {{ .Values.busybox_image }}
           command:
@@ -99,6 +98,7 @@ spec:
               subPath: init.sh
             - mountPath: /postgres-tls
               name: postgres-tls-dir
+            {{- if eq .Values.backend.postgres.sslSource "secret" }}
             {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
             - mountPath: /ca.crt
               name: {{ .Values.backend.postgres.sslsecret.name }}
@@ -112,7 +112,7 @@ spec:
               name: {{ .Values.backend.postgres.sslsecret.name }}
               subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
             {{- end }}
-      {{- end }}
+            {{- end }}
       {{- end }}
       containers:
         - name: server
@@ -671,10 +671,12 @@ spec:
         {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls-dir
           emptyDir: {}
+        {{- if eq .Values.backend.postgres.sslSource "secret" }}
         - name: {{ .Values.backend.postgres.sslsecret.name }}
           secret:
             defaultMode: 0400
             secretName: {{ .Values.backend.postgres.sslsecret.name }}
+        {{- end }}
         - name: postgres-tls-init
           configMap:
             name: postgres-tls-init

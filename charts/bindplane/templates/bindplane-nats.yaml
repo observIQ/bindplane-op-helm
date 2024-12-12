@@ -112,7 +112,7 @@ spec:
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}
               {{- else }}
-              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3001
+              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
               {{- end }}
             {{ if eq .Values.auth.type "system" }}
             - name: BINDPLANE_USERNAME
@@ -188,10 +188,10 @@ spec:
               value: "6222"
             - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
               {{ if eq .Values.nats.deploymentType "StatefulSet" }}
-              value: nats://{{ include "bindplane.fullname" . }}-nats-0.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-1.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222,nats://{{ include "bindplane.fullname" . }}-nats-2.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-0.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222,nats://{{ include "bindplane.fullname" . }}-nats-1.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222,nats://{{ include "bindplane.fullname" . }}-nats-2.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222
               {{ end }}
               {{ if eq .Values.nats.deploymentType "Deployment" }}
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}.svc.cluster.local:6222
+              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222
               {{ end }}
             - name: BINDPLANE_NATS_CLIENT_NAME
               valueFrom:

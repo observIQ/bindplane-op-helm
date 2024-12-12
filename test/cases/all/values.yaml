@@ -179,3 +179,10 @@ priorityClassName:
   jobs: "high-priority"
   prometheus: "high-priority"
   transform_agent: "high-priority"
+
+terminationGracePeriodSeconds:
+  bindplane: 30
+  nats: 31
+  jobs: 32
+  prometheus: 33
+  transform_agent: 34

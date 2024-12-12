@@ -74,4 +74,4 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      terminationGracePeriodSeconds: 60
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.transform_agent }}

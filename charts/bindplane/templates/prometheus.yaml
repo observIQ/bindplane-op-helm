@@ -119,6 +119,7 @@ spec:
             - mountPath: /etc/prometheus/web.yml
               subPath: web.yml
               name: config
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.prometheus }}
       volumes:
         - name: config
           configMap:

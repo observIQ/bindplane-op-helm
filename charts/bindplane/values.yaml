@@ -461,6 +461,20 @@ priorityClassName:
   # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane transform agent pod.
   transform_agent: ""
 
+# -- Configure the terminationGracePeriodSeconds for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+terminationGracePeriodSeconds:
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane deployment pods.
+  bindplane: 60
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane NATS statefulset or deployment
+  # pods, if NATS is enabled.
+  nats: 60
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Jobs pod.
+  jobs: 60
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Prometheus pod.
+  prometheus: 60
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane transform agent pod.
+  transform_agent: 60
+
 # -- Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
 nodeSelector:
   # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pod when using the bbolt backend.

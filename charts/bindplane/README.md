@@ -167,6 +167,12 @@ BindPlane OP is an observability pipeline.
 | resources.requests.cpu | string | `"1000m"` | CPU request. |
 | resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | service.annotations | object | `{}` | Custom annotations which will be added to the service object. Useful for specifying things such as `cloud.google.com/backend-config`. |
+| terminationGracePeriodSeconds | object | `{"bindplane":60,"jobs":60,"nats":60,"prometheus":60,"transform_agent":60}` | Configure the terminationGracePeriodSeconds for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
+| terminationGracePeriodSeconds.bindplane | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane deployment pods. |
+| terminationGracePeriodSeconds.jobs | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Jobs pod. |
+| terminationGracePeriodSeconds.nats | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
+| terminationGracePeriodSeconds.prometheus | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Prometheus pod. |
+| terminationGracePeriodSeconds.transform_agent | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane transform agent pod. |
 | tolerations | object | `{}` | The Pod's tolerations |
 | topologySpreadConstraints.bindplane | list | `[]` | spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods. |
 | topologySpreadConstraints.jobs | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod. |

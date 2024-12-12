@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.22.1](https://img.shields.io/badge/Version-1.22.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
+![Version: 1.23.0](https://img.shields.io/badge/Version-1.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -69,6 +69,7 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.sslsecret.sslrootcertSubPath | string | `""` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
+| busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
 | config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |

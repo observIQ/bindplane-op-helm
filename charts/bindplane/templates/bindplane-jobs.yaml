@@ -63,7 +63,7 @@ spec:
       {{- if eq .Values.backend.postgres.sslSource "secret" }}
       initContainers:
         - name: postgres-tls
-          image: busybox
+          image: {{ .Values.busybox_image }}
           command:
           - sh
           - -c

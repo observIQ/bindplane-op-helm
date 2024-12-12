@@ -86,6 +86,7 @@ spec:
               mountPath: /data
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
+      {{- if eq .Values.backend.postgres.sslSource "secret" }}
         - name: postgres-tls
           image: busybox
           command:
@@ -111,6 +112,7 @@ spec:
               name: {{ .Values.backend.postgres.sslsecret.name }}
               subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
             {{- end }}
+      {{- end }}
       {{- end }}
       containers:
         - name: server

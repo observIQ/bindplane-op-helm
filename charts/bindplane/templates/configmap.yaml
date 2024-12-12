@@ -10,6 +10,7 @@ data:
     chmod 0750 /data
 {{ end }}
 {{- if .Values.backend.postgres.sslsecret.name }}
+{{- if eq .Values.backend.postgres.sslSource "secret" }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -20,4 +21,5 @@ data:
     cp /ca.crt /client.crt /client.key /postgres-tls
     chmod 0400 /postgres-tls/*
     chown -R 65534:65534 /postgres-tls
+{{ end }}
 {{ end }}

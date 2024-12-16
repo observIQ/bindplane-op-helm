@@ -84,6 +84,9 @@ spec:
               subPath: set-data-permissions.sh
             - name: {{ include "bindplane.fullname" . }}-data
               mountPath: /data
+            {{- if len .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
       {{- end }}
       {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls

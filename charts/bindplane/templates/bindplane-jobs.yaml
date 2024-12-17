@@ -59,8 +59,8 @@ spec:
       topologySpreadConstraints:
       {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
       {{- end }}
-      {{- if .Values.backend.postgres.sslsecret.name }}
       initContainers:
+        {{- if .Values.backend.postgres.sslsecret.name }}
         - name: postgres-tls
           image: {{ .Values.busybox_image }}
           command:
@@ -88,7 +88,10 @@ spec:
               subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
             {{- end }}
             {{- end }}
-      {{- end }}
+        {{- end }}
+        {{- if .Values.extraInitContainers.nats }}
+          {{- toYaml .Values.extraInitContainers.nats | nindent 8 }}
+        {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}

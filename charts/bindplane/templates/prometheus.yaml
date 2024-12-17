@@ -79,6 +79,10 @@ spec:
       topologySpreadConstraints:
       {{- toYaml .Values.topologySpreadConstraints.prometheus | nindent 8 }}
       {{- end }}
+      initContainers:
+      {{- if .Values.extraInitContainers.prometheus }}
+        {{- toYaml .Values.extraInitContainers.prometheus | nindent 8 }}
+      {{- end }}
       containers:
         - name: prometheus
           image: {{ .Values.prometheus.image.name }}:{{ .Values.prometheus.image.tag }}

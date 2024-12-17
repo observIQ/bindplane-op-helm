@@ -537,9 +537,6 @@ email:
 
 # -- The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod.
 podSecurityContext:
-  # This field supports all pod securityContext options.
-  # BindPlane uses the following container securityContext by default:
-  fsGroup: 65534
 
 # -- The Pod's tolerations
 tolerations: {}

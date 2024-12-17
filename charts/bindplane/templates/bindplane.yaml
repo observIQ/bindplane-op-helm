@@ -625,9 +625,6 @@ spec:
             secretName: {{ .Values.prometheus.tls.secret.name }}
         {{- end }}
         {{- end }}
-        - name: data-permissions-init
-          configMap:
-            name: data-permissions-init
         {{- if .Values.backend.postgres.sslsecret.name }}
         {{- if eq .Values.backend.postgres.sslSource "secret" }}
         - name: postgres-tls-dir

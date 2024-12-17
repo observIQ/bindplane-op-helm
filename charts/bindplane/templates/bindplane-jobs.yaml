@@ -89,8 +89,8 @@ spec:
             {{- end }}
             {{- end }}
         {{- end }}
-        {{- if .Values.extraInitContainers.nats }}
-          {{- toYaml .Values.extraInitContainers.nats | nindent 8 }}
+        {{- if .Values.extraInitContainers.jobs }}
+          {{- toYaml .Values.extraInitContainers.jobs | nindent 8 }}
         {{- end }}
       containers:
         - name: server

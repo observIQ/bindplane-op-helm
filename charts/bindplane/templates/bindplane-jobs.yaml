@@ -60,35 +60,6 @@ spec:
       {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
       {{- end }}
       initContainers:
-        {{- if .Values.backend.postgres.sslsecret.name }}
-        - name: postgres-tls
-          image: {{ .Values.busybox_image }}
-          command:
-          - sh
-          - -c
-          - /bin/sh /init.sh
-          volumeMounts:
-            - name: postgres-tls-init
-              mountPath: /init.sh
-              subPath: init.sh
-            - mountPath: /postgres-tls
-              name: postgres-tls-dir
-            {{- if eq .Values.backend.postgres.sslSource "secret" }}
-            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
-            - mountPath: /ca.crt
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
-            {{- end }}
-            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
-            - mountPath: /client.crt
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
-            - mountPath: /client.key
-              name: {{ .Values.backend.postgres.sslsecret.name }}
-              subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
-            {{- end }}
-            {{- end }}
-        {{- end }}
         {{- if .Values.extraInitContainers.jobs }}
           {{- toYaml .Values.extraInitContainers.jobs | nindent 8 }}
         {{- end }}
@@ -220,13 +191,13 @@ spec:
               value: {{ .Values.backend.postgres.sslmode }}
             {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
             - name: BINDPLANE_POSTGRES_SSL_ROOT_CERT
-              value: /postgres-tls/ca.crt
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
             {{- end }}
             {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
             - name: BINDPLANE_POSTGRES_SSL_CERT
-              value: /postgres-tls/client.crt
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
             - name: BINDPLANE_POSTGRES_SSL_KEY
-              value: /postgres-tls/client.key
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
             {{- end }}
             - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
               value: "{{ .Values.backend.postgres.maxConnections }}"
@@ -614,17 +585,12 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.backend.postgres.sslsecret.name }}
-        - name: postgres-tls-dir
-          emptyDir: {}
         {{- if eq .Values.backend.postgres.sslSource "secret" }}
-        - name: {{ .Values.backend.postgres.sslsecret.name }}
+        - name: postgres-tls-dir
           secret:
             defaultMode: 0400
             secretName: {{ .Values.backend.postgres.sslsecret.name }}
         {{- end }}
-        - name: postgres-tls-init
-          configMap:
-            name: postgres-tls-init
         {{- end }}
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}

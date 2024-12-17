@@ -9,17 +9,3 @@ data:
     chown -R 65534:65534 /data
     chmod 0750 /data
 {{ end }}
-{{- if .Values.backend.postgres.sslsecret.name }}
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: postgres-tls-init
-data:
-  init.sh: |
-    #!/bin/sh
-{{- if eq .Values.backend.postgres.sslSource "secret" }}
-    cp /ca.crt /client.crt /client.key /postgres-tls
-{{- end }}
-    chmod 0400 /postgres-tls/*
-    chown -R 65534:65534 /postgres-tls
-{{ end }}

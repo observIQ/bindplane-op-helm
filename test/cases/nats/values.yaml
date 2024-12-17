@@ -53,3 +53,25 @@ nats:
 
 metrics:
   type: prometheus
+
+extraInitContainers:
+  bindplane:
+    - name: busy-box-test-bindplane
+      image: busybox:latest
+      command: ['sh', '-c', 'echo hello']
+  nats:
+    - name: busy-box-test-nats
+      image: busybox:latest
+      command: ['sh', '-c', 'echo hello']
+  jobs:
+    - name: busy-box-test-jobs
+      image: busybox:latest
+      command: ['sh', '-c', 'echo hello']
+  prometheus:
+    - name: busy-box-test-prometheus
+      image: busybox:latest
+      command: ['sh', '-c', 'echo hello']
+  transform_agent:
+    - name: busy-box-test-transform-agent
+      image: busybox:latest
+      command: ['sh', '-c', 'echo hello']

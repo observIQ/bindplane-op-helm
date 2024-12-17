@@ -63,6 +63,10 @@ spec:
       topologySpreadConstraints:
       {{- toYaml .Values.topologySpreadConstraints.nats | nindent 8 }}
       {{- end }}
+      initContainers:
+      {{- if .Values.extraInitContainers.nats }}
+        {{- toYaml .Values.extraInitContainers.nats | nindent 8 }}
+      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}

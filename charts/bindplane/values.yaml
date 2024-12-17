@@ -595,3 +595,11 @@ extraEnv: []
 
 # -- The container image to use for the busybox init container.
 busybox_image: busybox:latest
+
+# -- Optional arbitrary init containers.
+extraInitContainers:
+  bindplane: []
+  nats: []
+  jobs: []
+  prometheus: []
+  transform_agent: []

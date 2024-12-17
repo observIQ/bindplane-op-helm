@@ -114,6 +114,9 @@ spec:
             {{- end }}
             {{- end }}
       {{- end }}
+      {{- if .Values.extraInitContainers.bindplane }}
+        {{- toYaml .Values.extraInitContainers.bindplane | nindent 8 }}
+      {{- end }}
       containers:
         - name: server
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}

@@ -47,6 +47,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+      {{- if .Values.extraInitContainers.transform_agent }}
+        {{- toYaml .Values.extraInitContainers.transform_agent | nindent 8 }}
+      {{- end }}
       containers:
         - name: transform-agent
           image: {{ include "bindplane.transform_agent" . }}:{{ include "bindplane.transform_agent_tag" . }}

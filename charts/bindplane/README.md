@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.23.1](https://img.shields.io/badge/Version-1.23.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
+![Version: 1.24.0](https://img.shields.io/badge/Version-1.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -97,6 +97,7 @@ BindPlane OP is an observability pipeline.
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
 | extraEnv | list | `[]` | Optional arbitrary environment variables to add to the BindPlane pod(s). |
+| extraInitContainers | object | `{"bindplane":[],"jobs":[],"nats":[],"prometheus":[],"transform_agent":[]}` | Optional arbitrary init containers. |
 | extraPodLabels | object | `{}` | Optional arbitrary labels to add to the BindPlane pod(s). |
 | extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the BindPlane pod(s). |
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |

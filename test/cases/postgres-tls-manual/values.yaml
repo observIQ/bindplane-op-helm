@@ -62,7 +62,6 @@ nats:
 extraVolumes:
   - name: postgres-tls-dir
     emptyDir: {}
-    defaultMode: 0400
 
 extraInitContainers:
   bindplane:

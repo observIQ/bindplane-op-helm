@@ -21,6 +21,7 @@ backend:
       sslrootcertSubPath: ca.crt
       sslcertSubPath: client.crt
       sslkeySubPath: client.key
+    sslSource: manual
 
 replicas: 2
 

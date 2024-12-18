@@ -1,0 +1,129 @@
+# Required options
+config:
+  username: bpuser
+  password: bppass
+  sessions_secret: 4484766F-5016-4077-B8E0-0DE1D637854B
+  licenseUseSecret: true
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    credentialSecret:
+      name: postgres-credentials
+      usernameKey: username
+      passwordKey: password
+    maxConnections: 12
+    sslmode: verify-ca
+    sslsecret:
+      name: postgres-tls
+      sslrootcertSubPath: ca.crt
+      sslcertSubPath: client.crt
+      sslkeySubPath: client.key
+    sslSource: manual
+
+replicas: 2
+
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    memory: 100Mi
+    cpu: 100m
+
+jobs:
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 100Mi
+      cpu: 100m
+
+eventbus:
+  type: nats
+
+nats:
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 100Mi
+
+# extraVolumes and extraInitContainers are combined
+# with postgres.sslSource: manual to test manual certificate
+# creation and mounting. In the real world, users would use
+# the secret without all the extra steps. However, some users
+# have systems in place for injecting certificates into the
+# emptyDir volume WITHOUT relying on a k8s secret.
+
+extraVolumes:
+  - name: postgres-tls-dir
+    emptyDir: {}
+
+extraInitContainers:
+  bindplane:
+    - name: create-ssl-certificates
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "$CA_CERT" > /postgres-tls/ca.crt
+          echo "$CLIENT_CERT" > /postgres-tls/client.crt
+          echo "$CLIENT_KEY" > /postgres-tls/client.key
+          chown -R 65534:65534 /postgres-tls
+          chmod 0400 /postgres-tls/*
+      env:
+        - name: CA_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: ca.crt
+        - name: CLIENT_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.crt
+        - name: CLIENT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.key
+      volumeMounts:
+        - name: postgres-tls-dir
+          mountPath: /postgres-tls
+  jobs:
+    - name: create-ssl-certificates
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "$CA_CERT" > /postgres-tls/ca.crt
+          echo "$CLIENT_CERT" > /postgres-tls/client.crt
+          echo "$CLIENT_KEY" > /postgres-tls/client.key
+          chown -R 65534:65534 /postgres-tls
+          chmod 0400 /postgres-tls/*
+      env:
+        - name: CA_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: ca.crt
+        - name: CLIENT_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.crt
+        - name: CLIENT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.key
+      volumeMounts:
+        - name: postgres-tls-dir
+          mountPath: /postgres-tls

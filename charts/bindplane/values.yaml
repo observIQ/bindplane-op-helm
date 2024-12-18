@@ -31,12 +31,12 @@ backend:
       # container. Requires BindPlane v1.56.0 or newer.
       name: ""
       # -- Path to the CA certificate used to verify the Postgres server's certificate.
-      sslrootcertSubPath: ""
+      sslrootcertSubPath: "ca.crt"
       # -- Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required.
-      sslcertSubPath: ""
+      sslcertSubPath: "client.crt"
       # -- Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required.
       # Required when `sslcertSubPath` is set.
-      sslkeySubPath: ""
+      sslkeySubPath: "client.key"
     # -- Username to use when connecting to Postgres.
     username: ""
     # -- Password for the username used to connect to Postgres.
@@ -539,6 +539,8 @@ email:
 podSecurityContext:
   # This field supports all pod securityContext options.
   # BindPlane uses the following container securityContext by default:
+  runAsUser: 65534
+  runAsGroup: 65534
   fsGroup: 65534
 
 # -- The Pod's tolerations

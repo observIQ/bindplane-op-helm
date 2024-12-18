@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.24.0](https://img.shields.io/badge/Version-1.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
+![Version: 1.25.0](https://img.shields.io/badge/Version-1.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -64,9 +64,9 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.sslSource | string | `"secret"` | How to read the Postgres TLS certificate(s). Supported options include "secret" and "manual". When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the BindPlane container. When "manual" is set, it is up to the user to ensure the certificates are mounted into the BindPlane container' emptyDir volume at postgres-tls-dir /postgres-tls. |
 | backend.postgres.sslmode | string | `"disable"` | SSL mode to use when connecting to Postgres over TLS. Supported options include "disable", "require", "verify-ca", "verify-full". See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for more information. |
 | backend.postgres.sslsecret.name | string | `""` | Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane container. Requires BindPlane v1.56.0 or newer. |
-| backend.postgres.sslsecret.sslcertSubPath | string | `""` | Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required. |
-| backend.postgres.sslsecret.sslkeySubPath | string | `""` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
-| backend.postgres.sslsecret.sslrootcertSubPath | string | `""` | Path to the CA certificate used to verify the Postgres server's certificate. |
+| backend.postgres.sslsecret.sslcertSubPath | string | `"client.crt"` | Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required. |
+| backend.postgres.sslsecret.sslkeySubPath | string | `"client.key"` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
+| backend.postgres.sslsecret.sslrootcertSubPath | string | `"ca.crt"` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
@@ -130,7 +130,7 @@ BindPlane OP is an observability pipeline.
 | nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
 | nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod. |
 | nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod. |
-| podSecurityContext | object | `{"fsGroup":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
+| podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
 | priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane deployment pods. |
 | priorityClassName.jobs | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane Jobs pod. |

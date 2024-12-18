@@ -37,6 +37,8 @@ jobs:
           - "pubsub"
           - "nats"
           - "oidc"
+          - "postgres"
+          - "postgres-tls-manual"
         k8s_version:
           - v1.25.0
           - v1.29.0
@@ -91,7 +93,7 @@ jobs:
             kubectl apply -f -
 
       - name: Wait For Pods
-        run: kubectl -n default wait --for=condition=ready pods --all --timeout=180s
+        run: kubectl -n default wait --for=condition=ready pods --all --timeout=300s
 
       - name: "Debug: Get status and logs"
         if: always()

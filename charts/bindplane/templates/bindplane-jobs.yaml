@@ -65,11 +65,13 @@ spec:
         {{- end }}
       containers:
         - name: server
-          {{ - if .Values.command }}
-          command: {{ .Values.command }}
+          {{- with .Values.command }}
+          command:
+          {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{ - if .Values.args }}
-          args: {{ .Values.args }}
+          {{- with .Values.args }}
+          args:
+          {{- toYaml . | nindent 12 }}
           {{- end }}
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent

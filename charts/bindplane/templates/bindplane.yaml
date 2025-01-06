@@ -76,6 +76,12 @@ spec:
       {{- end }}
       containers:
         - name: server
+          {{ - if .Values.command }}
+          command: {{ .Values.command }}
+          {{- end }}
+          {{ - if .Values.args }}
+          args: {{ .Values.args }}
+          {{- end }}
           image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
           imagePullPolicy: IfNotPresent
           ports:

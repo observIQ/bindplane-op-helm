@@ -605,3 +605,11 @@ extraInitContainers:
   jobs: []
   prometheus: []
   transform_agent: []
+
+# -- Optional command overrides for the BindPlane container in all
+# BindPlane pods.
+command: []
+
+# -- Optional arguments overrides for the BindPlane container in all
+# BindPlane pods.
+args: []

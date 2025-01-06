@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.25.0](https://img.shields.io/badge/Version-1.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.0](https://img.shields.io/badge/AppVersion-1.84.0-informational?style=flat-square)
+![Version: 1.26.0](https://img.shields.io/badge/Version-1.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.84.1](https://img.shields.io/badge/AppVersion-1.84.1-informational?style=flat-square)
 
 BindPlane OP is an observability pipeline.
 
@@ -23,6 +23,7 @@ BindPlane OP is an observability pipeline.
 | affinity.nats | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
 | affinity.prometheus | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod. |
 | affinity.transform_agent | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod. |
+| args | list | `[]` | Optional arguments overrides for the BindPlane container in all BindPlane pods. |
 | auth.google.clientid | string | `""` | Google OAUTH clientid |
 | auth.ldap.baseDN | string | `""` | Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`. |
 | auth.ldap.bindCredentialSecret.name | string | `""` | Kubernetes secret name that contains the bind username and password. |
@@ -70,6 +71,7 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
+| command | list | `[]` | Optional command overrides for the BindPlane container in all BindPlane pods. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
 | config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
 | config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |

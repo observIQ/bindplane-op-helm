@@ -186,3 +186,12 @@ terminationGracePeriodSeconds:
   jobs: 32
   prometheus: 33
   transform_agent: 34
+
+command:
+  - /bindplane
+  - serve
+
+args:
+  - --logging-level
+  - debug
+

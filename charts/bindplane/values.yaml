@@ -276,6 +276,8 @@ transform_agent:
   tag: ""
   # -- Number of replicas to use for the transform agent.
   replicas: 1
+  # -- Optional arbitrary labels to add to the Transform Agent pods.
+  extraPodLabels: {}
 
 # Bindplane configuration options:
 # https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md

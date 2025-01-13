@@ -24,6 +24,9 @@ spec:
         app.kubernetes.io/stack: bindplane
         app.kubernetes.io/component: transform-agent
         app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if len .Values.transform_agent.extraPodLabels }}
+        {{- toYaml .Values.transform_agent.extraPodLabels | nindent 8 }}
+        {{- end }}
     spec:
       priorityClassName: {{ .Values.priorityClassName.transform_agent }}
       {{- if .Values.nodeSelector.transform_agent }}

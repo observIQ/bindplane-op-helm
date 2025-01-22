@@ -439,7 +439,7 @@ metrics:
   # -- Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics
   # are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus
   # format by BindPlane's HTTP server at `/metrics`.
-  type: ""
+  type: "prometheus"
   otlp:
     # -- Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port.
     endpoint: ""

@@ -3,10 +3,10 @@ name: bindplane
 description: BindPlane OP is an observability pipeline.
 type: application
 # The chart's version
-version: 1.26.2
+version: 1.26.3
 # The BindPlane OP tagged release. If the user does not
 # set the `image.tag` values option, this version is used.
-appVersion: 1.84.2
+appVersion: 1.85.0
 keywords:
   - kubernetes
   - bindplane

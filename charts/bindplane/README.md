@@ -119,7 +119,7 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | metrics.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port. |
 | metrics.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP metrics receiver. |
-| metrics.type | string | `"prometheus"` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by BindPlane's HTTP server at `/metrics`. |
+| metrics.type | string | `""` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by BindPlane's HTTP server at `/metrics`. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | nats.deploymentType | string | `"StatefulSet"` | Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive. StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to using Deployments, you can use that option instead. |
 | nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |

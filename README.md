@@ -4,9 +4,19 @@
 
 # BindPlane OP Helm
 
-This repository contains a Helm chart for [BindPlane OP](https://github.com/observIQ/bindplane-op).
+This repository contains a Helm chart for [BindPlane OP](https://observ-iq-next-git-joesiri-92ee87-jj-observ-iqp-ixel-point-team.vercel.app/).
 
 ## Prerequisites
+
+### Postgres
+
+BindPlane supports two backend storage options. Postgres and `bbolt` (deprecated). The chart will
+use `bbolt` by default, however, Bindplane recommends using Postgres for production deployments. Additionally,
+the `bbolt` backend will be removed in BindPlane version 2. Postgres allows for better performance and
+scalability. BindPlane with High Availability requires Postgres.
+
+See the BindPlane [PostgreSQL documentation](https://bindplane.com/docs/advanced-setup/installation/postgresql)
+for more details.
 
 ### Helm
 

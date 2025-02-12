@@ -2,9 +2,10 @@
 multiAccount: false
 
 backend:
-  # -- Backend to use for persistent storage. Available options are `bbolt`, and `postgres`.
+  # -- Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`.
   type: bbolt
 
+  # bbolt is deprecated and will be removed in a future release.
   bbolt:
     # -- Persistent volume size.
     volumeSize: 10Gi

@@ -69,7 +69,7 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.sslsecret.sslkeySubPath | string | `"client.key"` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
 | backend.postgres.sslsecret.sslrootcertSubPath | string | `"ca.crt"` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
-| backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt`, and `postgres`. |
+| backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
 | command | list | `[]` | Optional command overrides for the BindPlane container in all BindPlane pods. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |

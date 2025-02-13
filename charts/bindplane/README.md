@@ -1,8 +1,8 @@
 # bindplane
 
-![Version: 1.26.5](https://img.shields.io/badge/Version-1.26.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.86.0](https://img.shields.io/badge/AppVersion-1.86.0-informational?style=flat-square)
+![Version: 1.26.6](https://img.shields.io/badge/Version-1.26.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.86.0](https://img.shields.io/badge/AppVersion-1.86.0-informational?style=flat-square)
 
-BindPlane OP is an observability pipeline.
+Bindplane is an observability pipeline.
 
 **Homepage:** <https://github.com/observIQ/bindplane-op>
 
@@ -17,13 +17,13 @@ BindPlane OP is an observability pipeline.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the affinity for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
-| affinity.bindplane | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane deployment pods. |
-| affinity.jobs | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Jobs pod. |
-| affinity.nats | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
-| affinity.prometheus | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod. |
-| affinity.transform_agent | object | `{}` | This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod. |
-| args | list | `[]` | Optional arguments overrides for the BindPlane container in all BindPlane pods. |
+| affinity | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the affinity for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
+| affinity.bindplane | object | `{}` | This is for configuring spec.template.spec.affinity on the Bindplane deployment pods. |
+| affinity.jobs | object | `{}` | This is for configuring spec.template.spec.affinity on the Bindplane Jobs pod. |
+| affinity.nats | object | `{}` | This is for configuring spec.template.spec.affinity on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
+| affinity.prometheus | object | `{}` | This is for configuring spec.template.spec.affinity on the Bindplane Prometheus pod. |
+| affinity.transform_agent | object | `{}` | This is for configuring spec.template.spec.affinity on the Bindplane transform agent pod. |
+| args | list | `[]` | Optional arguments overrides for the Bindplane container in all Bindplane pods. |
 | auth.google.clientid | string | `""` | Google OAUTH clientid |
 | auth.ldap.baseDN | string | `""` | Base DN to use when looking up users. Example: `ou=users,dc=stage,dc=net`. |
 | auth.ldap.bindCredentialSecret.name | string | `""` | Kubernetes secret name that contains the bind username and password. |
@@ -41,7 +41,7 @@ BindPlane OP is an observability pipeline.
 | auth.ldap.tls.clientKeyPair.keySubPath | string | `""` | The secret's subPath which contains the client private key. |
 | auth.ldap.tls.clientKeyPair.secret | string | `""` | Name of the Kubernetes secret which contains the ldap client keypair. This can be the same secret as `auth.ldap.ca.secret` as long as it has the client certificate and key. |
 | auth.ldap.tls.insecure | bool | `false` | Whether or not to skip verification of the ldap server's certificate. |
-| auth.oidc | object | `{"issuer":"","oauth2ClientID":"","oauth2ClientSecret":"","scopes":[]}` | OpenID user authentication configuration. Available with BindPlane OP Enterprise. |
+| auth.oidc | object | `{"issuer":"","oauth2ClientID":"","oauth2ClientSecret":"","scopes":[]}` | OpenID user authentication configuration. Available with Bindplane Enterprise. |
 | auth.oidc.issuer | string | `""` | The URL of the OIDC provider. |
 | auth.oidc.oauth2ClientID | string | `""` | Client ID to use when authenticating with the OIDC provider. |
 | auth.oidc.oauth2ClientSecret | string | `""` | Client secret to use when authenticating with the OIDC provider. |
@@ -62,25 +62,25 @@ BindPlane OP is an observability pipeline.
 | backend.postgres.maxConnections | int | `100` | Max number of connections to use when communicating with Postgres. |
 | backend.postgres.password | string | `""` | Password for the username used to connect to Postgres. |
 | backend.postgres.port | int | `5432` | TCP port used to connect to Postgres. |
-| backend.postgres.sslSource | string | `"secret"` | How to read the Postgres TLS certificate(s). Supported options include "secret" and "manual". When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the BindPlane container. When "manual" is set, it is up to the user to ensure the certificates are mounted into the BindPlane container' emptyDir volume at postgres-tls-dir /postgres-tls. |
+| backend.postgres.sslSource | string | `"secret"` | How to read the Postgres TLS certificate(s). Supported options include "secret" and "manual". When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the Bindplane container. When "manual" is set, it is up to the user to ensure the certificates are mounted into the Bindplane container' emptyDir volume at postgres-tls-dir /postgres-tls. |
 | backend.postgres.sslmode | string | `"disable"` | SSL mode to use when connecting to Postgres over TLS. Supported options include "disable", "require", "verify-ca", "verify-full". See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for more information. |
-| backend.postgres.sslsecret.name | string | `""` | Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane container. Requires BindPlane v1.56.0 or newer. |
+| backend.postgres.sslsecret.name | string | `""` | Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to `verify-ca` or `verify-full`, this secret will be used to mount certificates into the Bindplane container. Requires Bindplane v1.56.0 or newer. |
 | backend.postgres.sslsecret.sslcertSubPath | string | `"client.crt"` | Path to the client certificate used to authenticate with the Postgres server, when mutual TLS is required. |
 | backend.postgres.sslsecret.sslkeySubPath | string | `"client.key"` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
 | backend.postgres.sslsecret.sslrootcertSubPath | string | `"ca.crt"` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
-| command | list | `[]` | Optional command overrides for the BindPlane container in all BindPlane pods. |
+| command | list | `[]` | Optional command overrides for the Bindplane container in all Bindplane pods. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
 | config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
-| config.license | string | `""` | The license key to use for BindPlane OP. Overrides `config.secret`. |
+| config.license | string | `""` | The license key to use for Bindplane. Overrides `config.secret`. |
 | config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |
 | config.password | string | `""` | Password to use. Overrides `config.secret`. |
-| config.remote_url | string | `""` | URI used by agents to communicate with BindPlane using OpAMP. NOTE: This value is not used in BindPlane OP v1.15.0 and newer.  It will eventually be removed when support for older versions of BindPlane is removed from this chart. |
+| config.remote_url | string | `""` | URI used by agents to communicate with Bindplane using OpAMP. NOTE: This value is not used in Bindplane v1.15.0 and newer.  It will eventually be removed when support for older versions of Bindplane is removed from this chart. |
 | config.secret | string | `"bindplane"` | Name of the Kubernetes secret which contains the `username`, `password`, `secret_key`, `sessions_secret`, and `license` configuration options. |
 | config.secret_key | string | `""` | DEPRECATED: New deployments should leave this option unset. |
-| config.server_url | string | `""` | URI used by clients to communicate with BindPlane. |
+| config.server_url | string | `""` | URI used by clients to communicate with Bindplane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
 | containerSecurityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container. |
@@ -98,11 +98,11 @@ BindPlane OP is an observability pipeline.
 | eventbus.pubsub.projectid | string | `""` |  |
 | eventbus.pubsub.topic | string | `""` |  |
 | eventbus.type | string | `""` |  |
-| extraEnv | list | `[]` | Optional arbitrary environment variables to add to the BindPlane pod(s). |
+| extraEnv | list | `[]` | Optional arbitrary environment variables to add to the Bindplane pod(s). |
 | extraInitContainers | object | `{"bindplane":[],"jobs":[],"nats":[],"prometheus":[],"transform_agent":[]}` | Optional arbitrary init containers. |
-| extraPodLabels | object | `{}` | Optional arbitrary labels to add to the BindPlane pod(s). |
-| extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the BindPlane pod(s). |
-| extraVolumes | list | `[]` | Optional arbitrary volumes to add to the BindPlane pod(s). |
+| extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Bindplane pod(s). |
+| extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the Bindplane pod(s). |
+| extraVolumes | list | `[]` | Optional arbitrary volumes to add to the Bindplane pod(s). |
 | health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.readinessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.startupProbe | object | `{"failureThreshold":20,"httpGet":{"path":"/health","port":"http"},"initialDelaySeconds":0,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
@@ -119,30 +119,30 @@ BindPlane OP is an observability pipeline.
 | jobs.resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | metrics.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port. |
 | metrics.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP metrics receiver. |
-| metrics.type | string | `""` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by BindPlane's HTTP server at `/metrics`. |
+| metrics.type | string | `""` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by Bindplane's HTTP server at `/metrics`. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | nats.deploymentType | string | `"StatefulSet"` | Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive. StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to using Deployments, you can use that option instead. |
 | nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
 | nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.memory | string | `"1000Mi"` | Memory request for the NATs server pods, when event bus type is `nats`. |
-| nodeSelector | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
-| nodeSelector.bindplane | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pod when using the bbolt backend. |
-| nodeSelector.jobs | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod. |
-| nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
-| nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod. |
-| nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod. |
+| nodeSelector | object | `{"bindplane":{},"jobs":{},"nats":{},"prometheus":{},"transform_agent":{}}` | Configure the nodeSelector for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
+| nodeSelector.bindplane | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane deployment pod when using the bbolt backend. |
+| nodeSelector.jobs | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane Jobs pod. |
+| nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
+| nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane Prometheus pod. |
+| nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane transform agent pod. |
 | podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
-| priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
-| priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane deployment pods. |
-| priorityClassName.jobs | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane Jobs pod. |
-| priorityClassName.nats | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
-| priorityClassName.prometheus | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane Prometheus pod. |
-| priorityClassName.transform_agent | string | `""` | This is for configuring spec.template.spec.priorityClassName on the BindPlane transform agent pod. |
+| priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
+| priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane deployment pods. |
+| priorityClassName.jobs | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane Jobs pod. |
+| priorityClassName.nats | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
+| priorityClassName.prometheus | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane Prometheus pod. |
+| priorityClassName.transform_agent | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane transform agent pod. |
 | prometheus.auth.password | string | `""` | Prometheus basic authentication password. |
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
-| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset. |
+| prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when Bindplane is running as a single node statefulset. |
 | prometheus.extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode). |
 | prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
 | prometheus.image.name | string | `"prom/prometheus"` | Image name to be used. |
@@ -165,23 +165,23 @@ BindPlane OP is an observability pipeline.
 | prometheus.tls.secret.keySubPath | string | `""` | The secret's subPath which contains the client private key, required for mutual TLS. |
 | prometheus.tls.secret.name | string | `""` | Kubernetes TLS secret name that contains the Prometheus TLS certificate(s). |
 | prometheus.tolerations | object | `{}` | Tolerations for the Prometheus pod. |
-| replicas | int | `0` | Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set. |
+| replicas | int | `0` | Number of replicas to use for the Bindplane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set. |
 | resources.limits.memory | string | `"1000Mi"` | Memory limit. |
 | resources.requests.cpu | string | `"1000m"` | CPU request. |
 | resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | service.annotations | object | `{}` | Custom annotations which will be added to the service object. Useful for specifying things such as `cloud.google.com/backend-config`. |
-| terminationGracePeriodSeconds | object | `{"bindplane":60,"jobs":60,"nats":60,"prometheus":60,"transform_agent":60}` | Configure the terminationGracePeriodSeconds for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods. |
-| terminationGracePeriodSeconds.bindplane | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane deployment pods. |
-| terminationGracePeriodSeconds.jobs | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Jobs pod. |
-| terminationGracePeriodSeconds.nats | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
-| terminationGracePeriodSeconds.prometheus | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Prometheus pod. |
-| terminationGracePeriodSeconds.transform_agent | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane transform agent pod. |
+| terminationGracePeriodSeconds | object | `{"bindplane":60,"jobs":60,"nats":60,"prometheus":60,"transform_agent":60}` | Configure the terminationGracePeriodSeconds for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
+| terminationGracePeriodSeconds.bindplane | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane deployment pods. |
+| terminationGracePeriodSeconds.jobs | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane Jobs pod. |
+| terminationGracePeriodSeconds.nats | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
+| terminationGracePeriodSeconds.prometheus | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane Prometheus pod. |
+| terminationGracePeriodSeconds.transform_agent | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane transform agent pod. |
 | tolerations | object | `{}` | The Pod's tolerations |
-| topologySpreadConstraints.bindplane | list | `[]` | spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods. |
-| topologySpreadConstraints.jobs | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod. |
-| topologySpreadConstraints.nats | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset or deployment pods, if NATS is enabled. |
-| topologySpreadConstraints.prometheus | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod. |
-| topologySpreadConstraints.transform_agent | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod. |
+| topologySpreadConstraints.bindplane | list | `[]` | spec.template.spec.topologySpreadConstraints on the Bindplane deployment pods. |
+| topologySpreadConstraints.jobs | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane Jobs pod. |
+| topologySpreadConstraints.nats | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
+| topologySpreadConstraints.prometheus | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane Prometheus pod. |
+| topologySpreadConstraints.transform_agent | list | `[]` | This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane transform agent pod. |
 | trace.otlp.endpoint | string | `""` | Endpoint of the OTLP gRPC trace receiver. Should be in the form of ip:port or host:port. |
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.otlp.samplingRate | string | `"1"` | Sampling rate between 0 and 1. 1 being 100% of traces are sent. |
@@ -192,4 +192,4 @@ BindPlane OP is an observability pipeline.
 | transform_agent.tag | string | `""` | Transform Agent Image tag to use. Defaults to latest. |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
+Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)

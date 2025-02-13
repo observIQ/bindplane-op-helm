@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment:**
  - OS
- - BindPlane OP Helm Version or Commit Hash
+ - Bindplane Helm Version or Commit Hash
 
 **Additional context**
 Add any other context about the problem here.

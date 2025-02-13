@@ -1,3 +1,3 @@
-# BindPlane OP Helm Code of Conduct
+# Bindplane Helm Code of Conduct
 
-BindPlane OP Helm follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
+Bindplane Helm follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).

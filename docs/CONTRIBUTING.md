@@ -2,7 +2,7 @@
 
 When contributing to this repository, please first discuss the change you wish to make via an issue with the owners of this repository before making a change. 
 
-Please note BindPlane OP Helm follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md), please follow it in all your interactions with the project.
+Please note Bindplane Helm follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md), please follow it in all your interactions with the project.
 
 ## Issue
 

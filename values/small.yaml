@@ -1,4 +1,4 @@
-# Resources allocated to BindPlane OP Server. For more information
+# Resources allocated to Bindplane Server. For more information
 # see https://observiq.com/docs/advanced-setup/installation/prerequisites.
 resources:
   requests:
@@ -8,7 +8,7 @@ resources:
     memory: 4Gi
     cpu: 2
 
-# Single instance BindPlane operates as a StatefulSet with a
+# Single instance Bindplane operates as a StatefulSet with a
 # persistent volume.
 backend:
   type: bbolt
@@ -40,7 +40,7 @@ auth:
   type: system
 
 config:
-  # If you have a BindPlane license, set it here.
+  # If you have a Bindplane license, set it here.
   # license:
   accept_eula: true
   # kubectl -n <namesapce> create secret generic <name> \

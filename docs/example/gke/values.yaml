@@ -42,10 +42,10 @@ config:
 
 
 # Enables mutli account, allowing you to create
-# multiple Tenants within the same BindPlane instance.
+# multiple Tenants within the same Bindplane instance.
 multiAccount: true
 
-# Fixed number of pods. BindPlane CPU usage is bursty, using
+# Fixed number of pods. Bindplane CPU usage is bursty, using
 # a pod autoscaler can be tricky. Generally a fixed number
 # of pods is recommended.
 replicas: 7

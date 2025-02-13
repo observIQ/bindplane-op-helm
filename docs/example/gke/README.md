@@ -1,6 +1,6 @@
 # Google Kubernetes Engine
 
-This example deploys BindPlane to GKE, sized to support 20,000 agents.
+This example deploys Bindplane to GKE, sized to support 20,000 agents.
 
 ## Create Namespace
 
@@ -43,7 +43,7 @@ Edit the [values.yaml](./values.yaml) file in this directory.
 ### Ingress
 
 Remove the `ingress` block if you do not want to use an ingress class
-to provide access to BindPlane. This example uses Ingress NGINX with
+to provide access to Bindplane. This example uses Ingress NGINX with
 Cert Manager.
 
 ```yaml

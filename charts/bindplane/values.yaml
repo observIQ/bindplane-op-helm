@@ -22,14 +22,14 @@ backend:
     # -- SSL mode to use when connecting to Postgres over TLS. Supported options include "disable", "require", "verify-ca", "verify-full". See the [postgres ssl documentation](https://jdbc.postgresql.org/documentation/ssl/) for more information.
     sslmode: "disable"
     # -- How to read the Postgres TLS certificate(s). Supported options include "secret" and "manual".
-    # When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the BindPlane container.
-    # When "manual" is set, it is up to the user to ensure the certificates are mounted into the BindPlane container'
+    # When "secret" is set, a secret containing the Postgres TLS certificate(s) will be mounted into the Bindplane container.
+    # When "manual" is set, it is up to the user to ensure the certificates are mounted into the Bindplane container'
     # emptyDir volume at postgres-tls-dir /postgres-tls.
     sslSource: "secret"
     sslsecret:
       # -- Name of the secret that contains the Postgres TLS certificate(s). When SSL mode is set to
-      # `verify-ca` or `verify-full`, this secret will be used to mount certificates into the BindPlane
-      # container. Requires BindPlane v1.56.0 or newer.
+      # `verify-ca` or `verify-full`, this secret will be used to mount certificates into the Bindplane
+      # container. Requires Bindplane v1.56.0 or newer.
       name: ""
       # -- Path to the CA certificate used to verify the Postgres server's certificate.
       sslrootcertSubPath: "ca.crt"
@@ -62,7 +62,7 @@ prometheus:
     tag: "v2.54.1"
   # -- When true, the chart will not deploy Prometheus. Instead, the user should provide a Prometheus instance to use.
   remote: false
-  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when BindPlane is running as a single node statefulset.
+  # -- When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when Bindplane is running as a single node statefulset.
   enableSideCar: false
   # -- The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart.
   host: ""
@@ -133,7 +133,7 @@ prometheus:
 
 
 eventbus:
-  # The eventbus type to use when BindPlane is deployed with multiple pods (Deployment). Available options include `pubsub`, or `nats`. By default, this option is not required as BindPlane OP operates as a StatefulSet with one pod.
+  # The eventbus type to use when Bindplane is deployed with multiple pods (Deployment). Available options include `pubsub`, or `nats`. By default, this option is not required as Bindplane operates as a StatefulSet with one pod.
   type: ""
 
   pubsub:
@@ -251,7 +251,7 @@ auth:
   google:
     # -- Google OAUTH clientid
     clientid: ""
-  # -- OpenID user authentication configuration. Available with BindPlane OP Enterprise.
+  # -- OpenID user authentication configuration. Available with Bindplane Enterprise.
   oidc:
     # -- The URL of the OIDC provider.
     issuer: ""
@@ -294,16 +294,16 @@ config:
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (http / https), 
   # hostname, path, and port defined in your ingress rule.
-  # -- URI used by clients to communicate with BindPlane.
+  # -- URI used by clients to communicate with Bindplane.
   server_url: ""
 
   # The URI used by OpAMP clients to communicate with bindplane-op. Defaults to the
   # clusterIP service. If you wish to communicate with bindplane-op through an ingress
   # service such as ingress-nginx, replace this value with the protocol (ws / wss), 
   # hostname, path, and port defined in your ingress rule.
-  # -- URI used by agents to communicate with BindPlane using OpAMP.
-  # NOTE: This value is not used in BindPlane OP v1.15.0 and newer. 
-  # It will eventually be removed when support for older versions of BindPlane is removed from this chart.
+  # -- URI used by agents to communicate with Bindplane using OpAMP.
+  # NOTE: This value is not used in Bindplane v1.15.0 and newer. 
+  # It will eventually be removed when support for older versions of Bindplane is removed from this chart.
   remote_url: ""
 
   # kubectl -n <namesapce> create secret generic <name> \
@@ -326,7 +326,7 @@ config:
   secret_key: ""
   # -- Sessions Secret to use. Overrides `config.secret`.
   sessions_secret: ""
-  # -- The license key to use for BindPlane OP. Overrides `config.secret`.
+  # -- The license key to use for Bindplane. Overrides `config.secret`.
   license: ""
   # -- When true, the license key will be referenced from the `config.secret` secret.
   licenseUseSecret: false
@@ -439,7 +439,7 @@ trace:
 metrics:
   # -- Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics
   # are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus
-  # format by BindPlane's HTTP server at `/metrics`.
+  # format by Bindplane's HTTP server at `/metrics`.
   type: ""
   otlp:
     # -- Endpoint of the OTLP gRPC metrics receiver. Should be in the form of ip:port or host:port.
@@ -447,76 +447,76 @@ metrics:
     # -- Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP metrics receiver.
     insecure: false
 
-# -- Number of replicas to use for the BindPlane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
+# -- Number of replicas to use for the Bindplane server. Should not be set if `autoscaling.enable` is set to `true`. 0 means this option will not be set.
 replicas: 0
 
-# -- Configure the priorityClassName for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+# -- Configure the priorityClassName for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods.
 priorityClassName:
-  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane deployment pods.
+  # -- This is for configuring spec.template.spec.priorityClassName on the Bindplane deployment pods.
   bindplane: ""
-  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane NATS statefulset or deployment
+  # -- This is for configuring spec.template.spec.priorityClassName on the Bindplane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: ""
-  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane Jobs pod.
+  # -- This is for configuring spec.template.spec.priorityClassName on the Bindplane Jobs pod.
   jobs: ""
-  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane Prometheus pod.
+  # -- This is for configuring spec.template.spec.priorityClassName on the Bindplane Prometheus pod.
   prometheus: ""
-  # -- This is for configuring spec.template.spec.priorityClassName on the BindPlane transform agent pod.
+  # -- This is for configuring spec.template.spec.priorityClassName on the Bindplane transform agent pod.
   transform_agent: ""
 
-# -- Configure the terminationGracePeriodSeconds for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+# -- Configure the terminationGracePeriodSeconds for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods.
 terminationGracePeriodSeconds:
-  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane deployment pods.
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane deployment pods.
   bindplane: 60
-  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane NATS statefulset or deployment
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: 60
-  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Jobs pod.
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane Jobs pod.
   jobs: 60
-  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane Prometheus pod.
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane Prometheus pod.
   prometheus: 60
-  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the BindPlane transform agent pod.
+  # -- This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane transform agent pod.
   transform_agent: 60
 
-# -- Configure the nodeSelector for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+# -- Configure the nodeSelector for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods.
 nodeSelector:
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane deployment pod when using the bbolt backend.
+  # -- This is for configuring spec.template.spec.nodeSelector on the Bindplane deployment pod when using the bbolt backend.
   bindplane: {}
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane NATS statefulset or deployment
+  # -- This is for configuring spec.template.spec.nodeSelector on the Bindplane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: {}
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane Jobs pod.
+  # -- This is for configuring spec.template.spec.nodeSelector on the Bindplane Jobs pod.
   jobs: {}
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane Prometheus pod.
+  # -- This is for configuring spec.template.spec.nodeSelector on the Bindplane Prometheus pod.
   prometheus: {}
-  # -- This is for configuring spec.template.spec.nodeSelector on the BindPlane transform agent pod.
+  # -- This is for configuring spec.template.spec.nodeSelector on the Bindplane transform agent pod.
   transform_agent: {}
 
-# -- Configure the affinity for BindPlane, BindPlane NATS, BindPlane Jobs, and BindPlane Prometheus pods.
+# -- Configure the affinity for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods.
 affinity:
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane deployment pods.
+  # -- This is for configuring spec.template.spec.affinity on the Bindplane deployment pods.
   bindplane: {}
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane NATS statefulset or deployment
+  # -- This is for configuring spec.template.spec.affinity on the Bindplane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: {}
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane Jobs pod.
+  # -- This is for configuring spec.template.spec.affinity on the Bindplane Jobs pod.
   jobs: {}
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane Prometheus pod.
+  # -- This is for configuring spec.template.spec.affinity on the Bindplane Prometheus pod.
   prometheus: {}
-  # -- This is for configuring spec.template.spec.affinity on the BindPlane transform agent pod.
+  # -- This is for configuring spec.template.spec.affinity on the Bindplane transform agent pod.
   transform_agent: {}
 
 topologySpreadConstraints:
-  # -- spec.template.spec.topologySpreadConstraints on the BindPlane deployment pods.
+  # -- spec.template.spec.topologySpreadConstraints on the Bindplane deployment pods.
   bindplane: []
-  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane NATS statefulset or deployment
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane NATS statefulset or deployment
   # pods, if NATS is enabled.
   nats: []
-  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Jobs pod.
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane Jobs pod.
   jobs: []
-  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane Prometheus pod.
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane Prometheus pod.
   prometheus: []
-  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the BindPlane transform agent pod.
+  # -- This is for configuring spec.template.spec.topologySpreadConstraints on the Bindplane transform agent pod.
   transform_agent: []
 
 autoscaling:
@@ -541,7 +541,7 @@ email:
 # -- The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod.
 podSecurityContext:
   # This field supports all pod securityContext options.
-  # BindPlane uses the following container securityContext by default:
+  # Bindplane uses the following container securityContext by default:
   runAsUser: 65534
   runAsGroup: 65534
   fsGroup: 65534
@@ -553,7 +553,7 @@ tolerations: {}
 # -- The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container.
 containerSecurityContext:
   # This field supports all container securityContext options.
-  # BindPlane uses the following container securityContext by default:
+  # Bindplane uses the following container securityContext by default:
   runAsNonRoot: true
   runAsUser: 65534
   # Persistent data is written to a volume, the bindplane process should
@@ -586,16 +586,16 @@ dev:
         audience: ""
 
 
-# -- Optional arbitrary volumes to add to the BindPlane pod(s).
+# -- Optional arbitrary volumes to add to the Bindplane pod(s).
 extraVolumes: []
 
-# -- Optional arbitrary volume mounts to add to the BindPlane pod(s).
+# -- Optional arbitrary volume mounts to add to the Bindplane pod(s).
 extraVolumeMounts: []
 
-# -- Optional arbitrary labels to add to the BindPlane pod(s).
+# -- Optional arbitrary labels to add to the Bindplane pod(s).
 extraPodLabels: {}
 
-# -- Optional arbitrary environment variables to add to the BindPlane pod(s).
+# -- Optional arbitrary environment variables to add to the Bindplane pod(s).
 extraEnv: []
 
 # -- The container image to use for the busybox init container.
@@ -609,10 +609,10 @@ extraInitContainers:
   prometheus: []
   transform_agent: []
 
-# -- Optional command overrides for the BindPlane container in all
-# BindPlane pods.
+# -- Optional command overrides for the Bindplane container in all
+# Bindplane pods.
 command: []
 
-# -- Optional arguments overrides for the BindPlane container in all
-# BindPlane pods.
+# -- Optional arguments overrides for the Bindplane container in all
+# Bindplane pods.
 args: []

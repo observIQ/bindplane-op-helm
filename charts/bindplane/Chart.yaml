@@ -1,10 +1,10 @@
 apiVersion: v2
 name: bindplane
-description: BindPlane OP is an observability pipeline.
+description: Bindplane is an observability pipeline.
 type: application
 # The chart's version
-version: 1.26.5
-# The BindPlane OP tagged release. If the user does not
+version: 1.26.6
+# The Bindplane tagged release. If the user does not
 # set the `image.tag` values option, this version is used.
 appVersion: 1.86.0
 keywords:
@@ -18,7 +18,7 @@ home: https://github.com/observIQ/bindplane-op
 icon: https://raw.githubusercontent.com/observIQ/bindplane-op/main/docs/images/bindplaneop.png
 annotations:
   "documentation": |
-    - name: BindPlane OP Documentation
+    - name: Bindplane Documentation
       url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/install
     - name: High Availability Deployment
       url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/deployment

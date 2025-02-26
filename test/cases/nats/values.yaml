@@ -75,3 +75,7 @@ extraInitContainers:
     - name: busy-box-test-transform-agent
       image: busybox:latest
       command: ['sh', '-c', 'echo hello']
+
+serviceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: "bindplane-sa"

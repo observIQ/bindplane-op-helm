@@ -616,3 +616,7 @@ command: []
 # -- Optional arguments overrides for the Bindplane container in all
 # Bindplane pods.
 args: []
+
+serviceAccount:
+  # -- Optional annotations to add to the service account.
+  annotations: {}

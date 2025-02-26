@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.26.6](https://img.shields.io/badge/Version-1.26.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.86.0](https://img.shields.io/badge/AppVersion-1.86.0-informational?style=flat-square)
+![Version: 1.27.0](https://img.shields.io/badge/Version-1.27.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.86.0](https://img.shields.io/badge/AppVersion-1.86.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -170,6 +170,7 @@ Bindplane is an observability pipeline.
 | resources.requests.cpu | string | `"1000m"` | CPU request. |
 | resources.requests.memory | string | `"1000Mi"` | Memory request. |
 | service.annotations | object | `{}` | Custom annotations which will be added to the service object. Useful for specifying things such as `cloud.google.com/backend-config`. |
+| serviceAccount.annotations | object | `{}` | Optional annotations to add to the service account. |
 | terminationGracePeriodSeconds | object | `{"bindplane":60,"jobs":60,"nats":60,"prometheus":60,"transform_agent":60}` | Configure the terminationGracePeriodSeconds for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
 | terminationGracePeriodSeconds.bindplane | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane deployment pods. |
 | terminationGracePeriodSeconds.jobs | int | `60` | This is for configuring spec.template.spec.terminationGracePeriodSeconds on the Bindplane Jobs pod. |

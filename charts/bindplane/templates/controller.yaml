@@ -1,4 +1,3 @@
----
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -38,14 +37,70 @@ spec:
             type: object
           spec:
             description: OrganizationSpec defines the desired state of Organization
-            properties:
-              id:
-                type: string
-            required:
-            - id
             type: object
           status:
             description: OrganizationStatus defines the observed state of Organization
+            properties:
+              conditions:
+                description: Conditions represent the latest available observations
+                  of an object's state
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            required:
+            - conditions
             type: object
         type: object
     served: true
@@ -94,23 +149,95 @@ spec:
             description: ProjectSpec defines the desired state of Project
             properties:
               alternateSecretKeys:
+                description: AlternateSecretKeys is an optional list of alternative
+                  secret keys.
                 items:
                   type: string
                 type: array
-              id:
-                type: string
               organizationRef:
+                description: |-
+                  OrganizationRef is the name of the organization to which the project belongs.
+                  This is a required field as all project resources must belong to an organization.
+                minLength: 1
                 type: string
               secretKey:
+                description: SecretKey is an optional secret used for authentication.
                 type: string
             required:
-            - alternateSecretKeys
-            - id
             - organizationRef
-            - secretKey
             type: object
           status:
             description: ProjectStatus defines the observed state of Project
+            properties:
+              conditions:
+                description: Conditions represent the latest available observations
+                  of an object's state
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              id:
+                description: ID is generated by the system and cannot be set by users.
+                type: string
+              organizationID:
+                description: OrganizationID is the ID of the organization to which
+                  the project belongs.
+                type: string
+            required:
+            - conditions
+            - id
+            - organizationID
             type: object
         type: object
     served: true
@@ -284,9 +411,12 @@ spec:
           spec:
             description: UserSpec defines the desired state of User
             properties:
+              authType:
+                type: string
               id:
                 type: string
             required:
+            - authType
             - id
             type: object
           status:
@@ -298,13 +428,22 @@ spec:
     subresources:
       status: {}
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: operator
+  name: bindplane
+  namespace: default
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-leader-election-role
+  name: leader-election-role
   namespace: default
 rules:
 - apiGroups:
@@ -342,16 +481,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: operator-manager-role
+  name: manager-role
 rules:
 - apiGroups:
   - resource.bindplane.com
   resources:
   - organizations
   - projects
-  - userorganizationbindings
-  - userprojectbindings
-  - users
   verbs:
   - create
   - delete
@@ -365,9 +501,6 @@ rules:
   resources:
   - organizations/finalizers
   - projects/finalizers
-  - userorganizationbindings/finalizers
-  - userprojectbindings/finalizers
-  - users/finalizers
   verbs:
   - update
 - apiGroups:
@@ -375,9 +508,6 @@ rules:
   resources:
   - organizations/status
   - projects/status
-  - userorganizationbindings/status
-  - userprojectbindings/status
-  - users/status
   verbs:
   - get
   - patch
@@ -386,7 +516,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: operator-metrics-auth-role
+  name: metrics-auth-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -404,7 +534,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: operator-metrics-reader
+  name: metrics-reader
 rules:
 - nonResourceURLs:
   - /metrics
@@ -417,7 +547,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-organization-editor-role
+  name: organization-editor-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -444,7 +574,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-organization-viewer-role
+  name: organization-viewer-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -467,7 +597,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-project-editor-role
+  name: project-editor-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -494,7 +624,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-project-viewer-role
+  name: project-viewer-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -517,7 +647,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-user-editor-role
+  name: user-editor-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -544,7 +674,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-user-viewer-role
+  name: user-viewer-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -567,7 +697,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-userorganizationbinding-editor-role
+  name: userorganizationbinding-editor-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -594,7 +724,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-userorganizationbinding-viewer-role
+  name: userorganizationbinding-viewer-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -617,7 +747,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-userprojectbinding-editor-role
+  name: userprojectbinding-editor-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -644,7 +774,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-userprojectbinding-viewer-role
+  name: userprojectbinding-viewer-role
 rules:
 - apiGroups:
   - resource.bindplane.com
@@ -667,12 +797,12 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-leader-election-rolebinding
+  name: leader-election-rolebinding
   namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: operator-leader-election-role
+  name: leader-election-role
 subjects:
 - kind: ServiceAccount
   name: bindplane
@@ -684,11 +814,11 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: operator
-  name: operator-manager-rolebinding
+  name: manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: operator-manager-role
+  name: manager-role
 subjects:
 - kind: ServiceAccount
   name: bindplane
@@ -697,11 +827,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: operator-metrics-auth-rolebinding
+  name: metrics-auth-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: operator-metrics-auth-role
+  name: metrics-auth-role
 subjects:
 - kind: ServiceAccount
   name: bindplane

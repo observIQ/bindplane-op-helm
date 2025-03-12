@@ -3,9 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.1
-  name: organizations.resource.bindplane.com
+  name: organizations.k8s.bindplane.com
 spec:
-  group: resource.bindplane.com
+  group: k8s.bindplane.com
   names:
     kind: Organization
     listKind: OrganizationList
@@ -113,9 +113,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.1
-  name: projects.resource.bindplane.com
+  name: projects.k8s.bindplane.com
 spec:
-  group: resource.bindplane.com
+  group: k8s.bindplane.com
   names:
     kind: Project
     listKind: ProjectList
@@ -148,21 +148,59 @@ spec:
           spec:
             description: ProjectSpec defines the desired state of Project
             properties:
-              alternateSecretKeys:
-                description: AlternateSecretKeys is an optional list of alternative
-                  secret keys.
-                items:
-                  type: string
-                type: array
               organizationRef:
                 description: |-
                   OrganizationRef is the name of the organization to which the project belongs.
                   This is a required field as all project resources must belong to an organization.
-                minLength: 1
-                type: string
+                properties:
+                  kind:
+                    description: Kind is always "Organization".
+                    enum:
+                    - Organization
+                    type: string
+                  name:
+                    description: Name of the referenced Organization.
+                    minLength: 1
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
               secretKey:
-                description: SecretKey is an optional secret used for authentication.
-                type: string
+                description: SecretKey allows specifying either a raw secret or a
+                  reference to a Kubernetes Secret.
+                properties:
+                  secretRef:
+                    description: |-
+                      SecretRef references a Kubernetes Secret containing the key.
+                      Cannot be used with Value.
+                    properties:
+                      key:
+                        description: The key of the secret to select from.  Must be
+                          a valid secret key.
+                        type: string
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                      optional:
+                        description: Specify whether the Secret or its key must be
+                          defined
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  value:
+                    description: Value is the raw secret key. Cannot be used with
+                      SecretRef.
+                    type: string
+                type: object
             required:
             - organizationRef
             type: object
@@ -245,189 +283,6 @@ spec:
     subresources:
       status: {}
 ---
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.16.1
-  name: userorganizationbindings.resource.bindplane.com
-spec:
-  group: resource.bindplane.com
-  names:
-    kind: UserOrganizationBinding
-    listKind: UserOrganizationBindingList
-    plural: userorganizationbindings
-    singular: userorganizationbinding
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: UserOrganizationBinding is the Schema for the userorganizationbindings
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: UserOrganizationBindingSpec defines the desired state of
-              UserOrganizationBinding
-            properties:
-              organization:
-                type: string
-              role:
-                description: OrganizationRole represents permissions related to a
-                  specific account.
-                type: string
-              user:
-                type: string
-            required:
-            - organization
-            - role
-            - user
-            type: object
-          status:
-            description: UserOrganizationBindingStatus defines the observed state
-              of UserOrganizationBinding
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.16.1
-  name: userprojectbindings.resource.bindplane.com
-spec:
-  group: resource.bindplane.com
-  names:
-    kind: UserProjectBinding
-    listKind: UserProjectBindingList
-    plural: userprojectbindings
-    singular: userprojectbinding
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: UserProjectBinding is the Schema for the userprojectbindings
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: UserProjectBindingSpec defines the desired state of UserProjectBinding
-            properties:
-              project:
-                type: string
-              role:
-                type: string
-              user:
-                type: string
-            required:
-            - project
-            - role
-            - user
-            type: object
-          status:
-            description: UserProjectBindingStatus defines the observed state of UserProjectBinding
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.16.1
-  name: users.resource.bindplane.com
-spec:
-  group: resource.bindplane.com
-  names:
-    kind: User
-    listKind: UserList
-    plural: users
-    singular: user
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: User is the Schema for the users API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: UserSpec defines the desired state of User
-            properties:
-              authType:
-                type: string
-              id:
-                type: string
-            required:
-            - authType
-            - id
-            type: object
-          status:
-            description: UserStatus defines the observed state of User
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -484,7 +339,15 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - resource.bindplane.com
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - k8s.bindplane.com
   resources:
   - organizations
   - projects
@@ -497,14 +360,14 @@ rules:
   - update
   - watch
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations/finalizers
   - projects/finalizers
   verbs:
   - update
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations/status
   - projects/status
@@ -550,7 +413,7 @@ metadata:
   name: organization-editor-role
 rules:
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations
   verbs:
@@ -562,7 +425,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations/status
   verbs:
@@ -577,7 +440,7 @@ metadata:
   name: organization-viewer-role
 rules:
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations
   verbs:
@@ -585,7 +448,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - organizations/status
   verbs:
@@ -600,7 +463,7 @@ metadata:
   name: project-editor-role
 rules:
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - projects
   verbs:
@@ -612,7 +475,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - projects/status
   verbs:
@@ -627,7 +490,7 @@ metadata:
   name: project-viewer-role
 rules:
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - projects
   verbs:
@@ -635,159 +498,9 @@ rules:
   - list
   - watch
 - apiGroups:
-  - resource.bindplane.com
+  - k8s.bindplane.com
   resources:
   - projects/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: user-editor-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - users
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - users/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: user-viewer-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - users
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - users/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: userorganizationbinding-editor-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userorganizationbindings
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userorganizationbindings/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: userorganizationbinding-viewer-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userorganizationbindings
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userorganizationbindings/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: userprojectbinding-editor-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userprojectbindings
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userprojectbindings/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: operator
-  name: userprojectbinding-viewer-role
-rules:
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userprojectbindings
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - resource.bindplane.com
-  resources:
-  - userprojectbindings/status
   verbs:
   - get
 ---

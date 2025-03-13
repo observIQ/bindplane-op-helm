@@ -1,5 +1,6 @@
 # -- Whether or not to enable multi account (tenant).
 multiAccount: false
+
 backend:
   # -- Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`.
   type: bbolt

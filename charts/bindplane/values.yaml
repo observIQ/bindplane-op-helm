@@ -620,11 +620,7 @@ serviceAccount:
   # -- Optional annotations to add to the service account.
   annotations: {}
 
-# This feature is pre-alpha. Do not use in production.
-# If you are interested in using this feature, please
-# reach out to your Bindplane representative.
 operator:
-  # Enabling will enable the operator environment variable
-  # on the "jobs" pod. This means Bindplane must be operating
-  # in HA.
+  # -- Experimental pre-alpha feature to enable the Bindplane operator. Do not
+  # use in production.
   enabled: false

@@ -288,6 +288,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: bindplane-operator
+<<<<<<< HEAD
+=======
+  namespace: default
+>>>>>>> 68b8dcf (crd resources)
 rules:
 - apiGroups:
   - ""

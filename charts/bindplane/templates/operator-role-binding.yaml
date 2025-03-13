@@ -1,8 +1,9 @@
+{{- if .Values.operator.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "bindplane.fullname" . }}-operator-binding
-  namespace: default
+  name: {{ include "bindplane.fullname" . }}
+  namespace: {{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: {{ include "bindplane.fullname" . }}
@@ -11,3 +12,4 @@ roleRef:
   kind: Role
   name: bindplane-operator
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

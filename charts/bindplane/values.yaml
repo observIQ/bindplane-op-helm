@@ -1,6 +1,5 @@
 # -- Whether or not to enable multi account (tenant).
 multiAccount: false
-
 backend:
   # -- Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`.
   type: bbolt
@@ -620,3 +619,12 @@ args: []
 serviceAccount:
   # -- Optional annotations to add to the service account.
   annotations: {}
+
+# This feature is pre-alpha. Do not use in production.
+# If you are interested in using this feature, please
+# reach out to your Bindplane representative.
+operator:
+  # Enabling will enable the operator environment variable
+  # on the "jobs" pod. This means Bindplane must be operating
+  # in HA.
+  enabled: false

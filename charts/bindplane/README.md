@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.27.1](https://img.shields.io/badge/Version-1.27.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.88.1](https://img.shields.io/badge/AppVersion-1.88.1-informational?style=flat-square)
+![Version: 1.28.0](https://img.shields.io/badge/Version-1.28.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.88.1](https://img.shields.io/badge/AppVersion-1.88.1-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -132,6 +132,7 @@ Bindplane is an observability pipeline.
 | nodeSelector.nats | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane NATS statefulset or deployment pods, if NATS is enabled. |
 | nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane Prometheus pod. |
 | nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane transform agent pod. |
+| operator.enabled | bool | `false` |  |
 | podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
 | priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane deployment pods. |

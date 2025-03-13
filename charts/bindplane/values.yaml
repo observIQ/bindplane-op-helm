@@ -621,6 +621,7 @@ serviceAccount:
   annotations: {}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 operator:
   # -- Experimental pre-alpha feature to enable the Bindplane operator. Do not
   # use in production.
@@ -633,4 +634,9 @@ operator:
   # on the "jobs" pod. This means Bindplane must be operating
   # in HA.
 >>>>>>> 348537e (operator crd and rbac)
+=======
+operator:
+  # -- Experimental pre-alpha feature to enable the Bindplane operator. Do not
+  # use in production.
+>>>>>>> d6528a5 (doc)
   enabled: false

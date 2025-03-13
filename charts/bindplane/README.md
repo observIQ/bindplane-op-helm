@@ -133,10 +133,14 @@ Bindplane is an observability pipeline.
 | nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane Prometheus pod. |
 | nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane transform agent pod. |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | operator.enabled | bool | `false` | Experimental pre-alpha feature to enable the Bindplane operator. Do not use in production. |
 =======
 | operator.enabled | bool | `false` |  |
 >>>>>>> 348537e (operator crd and rbac)
+=======
+| operator.enabled | bool | `false` | Experimental pre-alpha feature to enable the Bindplane operator. Do not use in production. |
+>>>>>>> d6528a5 (doc)
 | podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
 | priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane deployment pods. |

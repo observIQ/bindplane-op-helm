@@ -289,9 +289,12 @@ kind: Role
 metadata:
   name: bindplane-operator
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   namespace: default
 >>>>>>> 68b8dcf (crd resources)
+=======
+>>>>>>> 348537e (operator crd and rbac)
 rules:
 - apiGroups:
   - ""

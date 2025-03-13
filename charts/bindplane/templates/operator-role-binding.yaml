@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 {{- if .Values.operator.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -12,6 +13,14 @@ metadata:
   name: {{ include "bindplane.fullname" . }}-operator-binding
   namespace: default
 >>>>>>> db0eda6 (latest crd and rbac role w/ binding)
+=======
+{{- if .Values.operator.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "bindplane.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+>>>>>>> 348537e (operator crd and rbac)
 subjects:
   - kind: ServiceAccount
     name: {{ include "bindplane.fullname" . }}
@@ -21,6 +30,10 @@ roleRef:
   name: bindplane-operator
   apiGroup: rbac.authorization.k8s.io
 <<<<<<< HEAD
+<<<<<<< HEAD
 {{- end }}
 =======
 >>>>>>> db0eda6 (latest crd and rbac role w/ binding)
+=======
+{{- end }}
+>>>>>>> 348537e (operator crd and rbac)

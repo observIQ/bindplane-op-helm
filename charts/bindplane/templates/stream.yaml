@@ -80,7 +80,7 @@ spec:
             # TODO(jsirianni): Kubernetes type w/ support for deploying
             # collectors as Deployments.
             - name: DEPLOYMENT_TYPE
-              value: "docker"
+              value: "kubernetes"
             - name: SECOPS_CUSTOMER_ID
               value: "your-secops-customer-id"
             - name: BINDPLANE_ORGANIZATION

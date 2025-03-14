@@ -61,9 +61,6 @@ spec:
         - name: gcp-credentials
           secret:
             secretName: bindplane
-            items:
-              - key: GCP_CREDENTIALS
-                path: credentials.json
 ---
 apiVersion: v1
 kind: Service

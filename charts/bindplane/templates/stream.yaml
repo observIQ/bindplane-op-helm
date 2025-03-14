@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bindplane-streams-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  # TODO(jsirianni): Is this a stateless service, does it
+  # support multiple replicas?
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bindplane-streams-api
+  template:
+    metadata:
+      labels:
+        app: bindplane-streams-api
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: bindplane-streams-api
+          image: ghcr.io/observiq/bindplane-stream-manager-api:v0.0.4
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 3001
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: API_PORT
+              value: "3001"
+            # TODO(jsirianni): Service should take individual parameters
+            - name: DATABASE_URL
+              value: "postgresql://{{ .Values.backend.postgres.username }}:{{ .Values.backend.postgres.password }}@{{ .Values.backend.postgres.host }}:{{ .Values.backend.postgres.port }}/collector_pool"
+            - name: COLLECTOR_IMAGE
+              value: "ghcr.io/observiq/bindplane-agent:1.70.0"
+            # TODO(jsirianni): This will not support remote collectors
+            # Local to the cluster only.
+            - name: OPAMP_ENDPOINT
+              value: ws://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
+            - name: BINDPLANE_API_ENDPOINT
+              value: "http://{{ include "bindplane.fullname" . }}:3001"
+            # TODO(jsirianni): Kubernetes type w/ support for deploying
+            # collectors as Deployments.
+            - name: DEPLOYMENT_TYPE
+              value: "docker"
+            - name: SECOPS_CUSTOMER_ID
+              value: "your-secops-customer-id"
+            - name: BINDPLANE_ORGANIZATION
+              value: "your-bindplane-organization"
+          volumeMounts:
+            - name: gcp-credentials
+              mountPath: /tmp/gcp
+              subPath: credentials.json
+      volumes:
+        - name: gcp-credentials
+          secret:
+            secretName: bindplane
+            items:
+              - key: GCP_CREDENTIALS
+                path: credentials.json
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bindplane-streams-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: bindplane-streams-api
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bindplane-streams-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bindplane-streams-ui
+  template:
+    metadata:
+      labels:
+        app: bindplane-streams-ui
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: bindplane-streams-ui
+          image: ghcr.io/observiq/bindplane-stream-manager-ui:v0.0.3
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: NEXT_PORT
+              value: "3000"
+            - name: NEXT_PUBLIC_API_URL
+              value: "http://bindplane-streams-api:3001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bindplane-streams-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: bindplane-streams-ui
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

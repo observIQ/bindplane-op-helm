@@ -620,3 +620,8 @@ args: []
 serviceAccount:
   # -- Optional annotations to add to the service account.
   annotations: {}
+
+operator:
+  # -- Experimental pre-alpha feature to enable the Bindplane operator. Do not
+  # use in production.
+  enabled: false

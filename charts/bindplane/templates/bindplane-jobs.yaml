@@ -460,6 +460,10 @@ spec:
             {{- if len .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
+            {{- if .Values.operator.enabled }}
+            - name: BINDPLANE_KUBERNETES_OPERATOR_ENABLED
+              value: "true"
+            {{- end }}
           {{- with .Values.jobs.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

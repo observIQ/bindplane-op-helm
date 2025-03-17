@@ -56,8 +56,8 @@ spec:
         fsGroup: 10001
       containers:
         - name: bindplane-streams-api
-          #image: ghcr.io/observiq/bindplane-stream-manager-api:v0.0.6
-          image: bmedora/api:joe.4
+          image: ghcr.io/observiq/bindplane-stream-manager-api:v0.0.7
+          #image: bmedora/api:joe.4
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -78,7 +78,7 @@ spec:
             # TODO(jsirianni): This will not support remote collectors
             # Local to the cluster only.
             - name: OPAMP_ENDPOINT
-              value: ws://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
+              value: ws://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001/v1/opamp
             - name: BINDPLANE_API_ENDPOINT
               value: "http://{{ include "bindplane.fullname" . }}:3001"
             # TODO(jsirianni): Kubernetes type w/ support for deploying

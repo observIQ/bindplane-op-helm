@@ -4,7 +4,7 @@ on:
 
 jobs:
   helm:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
         run: .github/workflows/scripts/check-helm-docs.sh
 
   integration:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       max-parallel: 5

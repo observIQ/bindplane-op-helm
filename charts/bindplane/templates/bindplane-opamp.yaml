@@ -1,0 +1,611 @@
+{{- if eq (include "bindplane.deployment_type" .) "Deployment" }}
+{{- if eq .Values.backend.type "postgres" }}
+{{- if .Values.eventbus.type }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bindplane.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "bindplane.name" . }}
+    app.kubernetes.io/stack: bindplane
+    app.kubernetes.io/component: opamp
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.opamp.replicas }}
+  minReadySeconds: {{ .Values.opamp.minReadySeconds }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bindplane.name" . }}
+      app.kubernetes.io/stack: bindplane
+      app.kubernetes.io/component: opamp
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        {{- if eq .Values.metrics.type "prometheus" }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3001"
+        prometheus.io/scheme: http
+        prometheus.io/job-name: bindplane-op
+        {{- end }}
+      labels:
+        app.kubernetes.io/name: {{ include "bindplane.name" . }}
+        app.kubernetes.io/stack: bindplane
+        app.kubernetes.io/component: opamp
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if len .Values.extraPodLabels }}
+        {{- toYaml .Values.extraPodLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      priorityClassName: {{ .Values.priorityClassName.bindplane }}
+      {{- if and (eq .Values.backend.type "bbolt") (.Values.nodeSelector.bindplane) }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector.bindplane | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity.bindplane }}
+      affinity:
+      {{- toYaml .Values.affinity.bindplane | nindent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints.bindplane }}
+      topologySpreadConstraints:
+      {{- toYaml .Values.topologySpreadConstraints.bindplane | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "bindplane.fullname" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.extraInitContainers.bindplane }}
+        {{- toYaml .Values.extraInitContainers.bindplane | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: server
+          {{- with .Values.command }}
+          command:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.args }}
+          args:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "bindplane.image" . }}:{{ include "bindplane.tag" . }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+              name: http
+          env:
+            - name: KUBERNETES_NAMESPACE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: KUBERNETES_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: KUBERNETES_CONTAINER_NAME
+              value: "server"
+            - name: BINDPLANE_MODE
+              value: node
+            - name: BINDPLANE_ANALYTICS_DISABLED
+              value: "{{ .Values.config.analytics.disable }}"
+            - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
+              value: "true"
+            - name: BINDPLANE_TRANSFORM_AGENT_REMOTE_AGENTS
+              value: "{{ include "bindplane.fullname" . }}-transform-agent:4568"
+            {{- if .Values.config.license }}
+            - name: BINDPLANE_LICENSE
+              value: {{ .Values.config.license }}
+            {{- else if .Values.config.licenseUseSecret }}
+            - name: BINDPLANE_LICENSE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: license
+                  optional: false
+            {{- end}}
+            - name: BINDPLANE_ACCEPT_EULA
+              value: "{{ .Values.config.accept_eula }}"
+            - name: BINDPLANE_REMOTE_URL
+              {{- if .Values.config.server_url }}
+              value: {{ .Values.config.server_url }}
+              {{- else }}
+              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
+              {{- end }}
+            {{ if eq .Values.auth.type "system" }}
+            - name: BINDPLANE_USERNAME
+              {{- if  .Values.config.username }}
+              value: {{ .Values.config.username }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: username
+                  optional: false
+              {{- end}}
+            - name: BINDPLANE_PASSWORD
+              {{- if  .Values.config.password }}
+              value: {{ .Values.config.password }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: password
+                  optional: false
+              {{- end}}
+            {{- end }}
+            {{- if .Values.config.secret_key }}
+            - name: BINDPLANE_SECRET_KEY
+              value: {{ .Values.config.secret_key }}
+            {{- end }}
+            - name: BINDPLANE_SESSION_SECRET
+              {{- if  .Values.config.sessions_secret }}
+              value: {{ .Values.config.sessions_secret }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.secret }}
+                  key: sessions_secret
+                  optional: true
+              {{- end }}
+            {{- if .Values.trace.type }}
+            - name: BINDPLANE_TRACING_TYPE
+              value: {{ .Values.trace.type }}
+            - name: BINDPLANE_TRACING_OTLP_ENDPOINT
+              value: {{ .Values.trace.otlp.endpoint }}
+            - name: BINDPLANE_TRACING_OTLP_INSECURE
+              value: "{{ .Values.trace.otlp.insecure }}"
+            - name: BINDPLANE_TRACING_SAMPLING_RATE
+              value: "{{ .Values.trace.otlp.samplingRate }}"
+            {{- end }}
+            - name: BINDPLANE_LOGGING_OUTPUT
+              value: stdout
+            - name: BINDPLANE_CONFIG_HOME
+              value: /data  
+            - name: BINDPLANE_STORE_TYPE
+              value: postgres
+            - name: BINDPLANE_POSTGRES_HOST
+              value: {{ .Values.backend.postgres.host }}
+            - name: BINDPLANE_POSTGRES_PORT
+              value: "{{ .Values.backend.postgres.port }}"
+            - name: BINDPLANE_POSTGRES_USERNAME
+              {{- if .Values.backend.postgres.credentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.postgres.credentialSecret.name }}
+                  key: {{ .Values.backend.postgres.credentialSecret.usernameKey }}
+                  optional: false
+              {{- else }}
+              value: {{ .Values.backend.postgres.username }}
+              {{- end }}
+            - name: BINDPLANE_POSTGRES_PASSWORD
+              {{- if .Values.backend.postgres.credentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.postgres.credentialSecret.name }}
+                  key: {{ .Values.backend.postgres.credentialSecret.passwordKey }}
+                  optional: false
+              {{- else }}
+              value: {{ .Values.backend.postgres.password }}
+              {{- end }}
+            - name: BINDPLANE_POSTGRES_DATABASE
+              value: {{ .Values.backend.postgres.database }}
+            - name: BINDPLANE_POSTGRES_SSL_MODE
+              value: {{ .Values.backend.postgres.sslmode }}
+            {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            - name: BINDPLANE_POSTGRES_SSL_ROOT_CERT
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+            {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - name: BINDPLANE_POSTGRES_SSL_CERT
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+            - name: BINDPLANE_POSTGRES_SSL_KEY
+              value: /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+            {{- end }}
+            - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
+              value: "{{ .Values.backend.postgres.maxConnections }}"
+            {{- if eq .Values.eventbus.type "pubsub" }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: googlePubSub
+            - name: BINDPLANE_GOOGLE_PUB_SUB_PROJECT_ID
+              value: {{ .Values.eventbus.pubsub.projectid }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_TOPIC
+              value: {{ .Values.eventbus.pubsub.topic }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_CREDENTIALS_FILE
+              value: /credentials.json
+            {{- end }}
+            {{- if .Values.eventbus.pubsub.endpoint }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_ENDPOINT
+              value: {{ .Values.eventbus.pubsub.endpoint }}
+            {{- end }}
+            {{- if .Values.eventbus.pubsub.insecure }}
+            - name: BINDPLANE_GOOGLE_PUB_SUB_INSECURE
+              value: "{{ .Values.eventbus.pubsub.insecure }}"
+            {{- end }}
+            {{- end }}
+            {{- if eq .Values.eventbus.type "kafka" }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: kafka
+            - name:  BINDPLANE_KAFKA_BROKERS
+              value: {{ .Values.eventbus.kafka.brokers }}
+            - name:  BINDPLANE_KAFKA_PROTOCOL_VERSION
+              value: "{{ .Values.eventbus.kafka.protocolVersion }}"
+            - name:  BINDPLANE_KAFKA_TOPIC
+              value: {{ .Values.eventbus.kafka.topic }}
+            - name:  BINDPLANE_KAFKA_AUTH_TYPE
+              value: {{ .Values.eventbus.kafka.auth.type }}
+            {{- if eq .Values.eventbus.kafka.auth.type "plainText" }}
+            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_USERNAME
+              value: {{ .Values.eventbus.kafka.auth.plain.username }}
+            - name:  BINDPLANE_KAFKA_PLAIN_TEXT_PASSWORD
+              value: {{ .Values.eventbus.kafka.auth.plain.password }}
+            {{- end }}
+            {{- if eq .Values.eventbus.kafka.auth.type "sasl" }}
+            - name:  BINDPLANE_KAFKA_SASL_USERNAME
+              value: {{ .Values.eventbus.kafka.auth.sasl.username }}
+            - name:  BINDPLANE_KAFKA_SASL_PASSWORD
+              value: {{ .Values.eventbus.kafka.auth.sasl.password }}
+            - name:  BINDPLANE_KAFKA_SASL_MECHANISM
+              value: {{ .Values.eventbus.kafka.auth.sasl.mechanism }}
+            - name:  BINDPLANE_KAFKA_SASL_VERSION
+              value: "{{ .Values.eventbus.kafka.auth.sasl.version }}"
+            {{- end }}
+            {{- if eq .Values.eventbus.kafka.tls.enable true }}
+            - name:  BINDPLANE_KAFKA_ENABLE_TLS
+              value: "true"
+            {{- if .Values.eventbus.kafka.tls.secret.name }}
+            - name:  BINDPLANE_KAFKA_TLS_CERT
+              value: /kafka.crt
+            - name:  BINDPLANE_KAFKA_TLS_KEY
+              value: /kafka.key
+            - name:  BINDPLANE_KAFKA_TLS_CA
+              value: /kafka-ca.crt
+            {{- end }}
+            {{- if eq .Values.eventbus.kafka.tls.insecure true}}
+            - name:  BINDPLANE_KAFKA_TLS_SKIP_VERIFY
+              value: "true"
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if eq .Values.eventbus.type "nats" }}
+            - name: BINDPLANE_EVENT_BUS_TYPE
+              value: nats
+            - name: BINDPLANE_NATS_CLIENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: BINDPLANE_NATS_CLIENT_ENDPOINT
+              value: nats://{{ include "bindplane.fullname" . }}-nats-headless.{{ .Release.Namespace }}:4222
+            - name: BINDPLANE_NATS_CLIENT_SUBJECT
+              value: bindplane-event-bus
+            {{- end }}
+            {{- if eq (include "bindplane.auth.type" .) "ldap" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: {{ .Values.auth.type }}
+            - name: BINDPLANE_LDAP_PROTOCOL
+              value: {{ .Values.auth.ldap.protocol }}
+            - name: BINDPLANE_LDAP_SERVER
+              value: {{ .Values.auth.ldap.server }}
+            - name: BINDPLANE_LDAP_PORT
+              {{- if eq .Values.auth.ldap.protocol "ldaps"}}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1636" ) }}"
+              {{- else }}
+              value: "{{ .Values.auth.ldap.port | default (printf "%s" "1389" ) }}"
+              {{- end }}
+            - name: BINDPLANE_LDAP_BASE_DN
+              value: {{ .Values.auth.ldap.baseDN }}
+            - name: BINDPLANE_LDAP_BIND_USER
+              {{ if .Values.auth.ldap.bindCredentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{  .Values.auth.ldap.bindCredentialSecret.name }}
+                  key: {{ .Values.auth.ldap.bindCredentialSecret.usernameKey }}
+                  optional: false
+              {{ else }}
+              value: {{ .Values.auth.ldap.bindUser }}
+              {{ end }}
+            - name: BINDPLANE_LDAP_BIND_PASSWORD
+              {{ if .Values.auth.ldap.bindCredentialSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{  .Values.auth.ldap.bindCredentialSecret.name }}
+                  key: {{ .Values.auth.ldap.bindCredentialSecret.passwordKey }}
+                  optional: false
+              {{ else }}
+              value: {{ .Values.auth.ldap.bindPassword }}
+              {{ end }}
+            - name: BINDPLANE_LDAP_SEARCH_FILTER
+              {{- if eq .Values.auth.type "active-directory"}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(|(sAMAccountName=%[1]v)(userPrincipalName=%[1]v))" ) }}
+              {{- else}}
+              value: {{ .Values.auth.ldap.searchFilter | default (printf "%s" "(uid=%s)" ) }}
+              {{- end }}
+            {{- if .Values.auth.ldap.tls.ca.secret }}
+            - name: BINDPLANE_LDAP_TLS_CA
+              value: /ldap-ca.crt
+            {{- end }}
+            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+            - name: BINDPLANE_LDAP_TLS_CERT
+              value: /ldap-client.crt
+            - name: BINDPLANE_LDAP_TLS_KEY
+              value: /ldap-client.key
+            {{- end }}
+            {{- if .Values.auth.ldap.tls.insecure }}
+            - name: BINDPLANE_LDAP_TLS_SKIP_VERIFY
+              value: "true"
+            {{- end }}
+            {{- end }}
+            {{- if eq .Values.auth.type "google" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: google
+            - name: BINDPLANE_GOOGLE_AUTH_CLIENT_ID
+              value: {{ .Values.auth.google.clientid }}
+            {{- end }}
+            {{- if eq .Values.auth.type "auth0" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: auth0
+            - name: BINDPLANE_AUTH0_CLIENT_ID
+              value: {{ .Values.dev.auth.auth0.clientid }}
+            - name: BINDPLANE_AUTH0_DOMAIN
+              value: {{ .Values.dev.auth.auth0.domain }}
+            - name: BINDPLANE_AUTH0_AUDIENCE
+              value: {{ .Values.dev.auth.auth0.audience }}
+            - name: BINDPLANE_AUTH0_MANAGEMENT_DOMAIN
+              value: {{ .Values.dev.auth.auth0.managementdomain }}
+            - name: BINDPLANE_AUTH0_MANAGEMENT_CLIENT_ID
+              value: {{ .Values.dev.auth.auth0.managementclientid }}
+            - name: BINDPLANE_AUTH0_MANAGEMENT_CLIENT_SECRET
+              value: {{ .Values.dev.auth.auth0.managementclientsecret }}
+            {{- end }}
+            {{- if eq .Values.auth.type "oidc" }}
+            - name: BINDPLANE_AUTH_TYPE
+              value: oidc
+            - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
+              value: "{{ .Values.auth.oidc.oauth2ClientID }}"
+            - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET
+              value: "{{ .Values.auth.oidc.oauth2ClientSecret }}"
+            - name: BINDPLANE_OIDC_ISSUER
+              value: "{{ .Values.auth.oidc.issuer }}"
+            - name: BINDPLANE_OIDC_SCOPES
+              value: {{ include "bindplane.auth_oidc_scopes" . }}
+            {{- end }}
+            {{- if eq .Values.multiAccount true }}
+            - name: BINDPLANE_ACCOUNTS_ENABLE
+              value: "true"
+            {{- end }}
+            {{- if and (eq .Values.email.type "sendgrid") (eq .Values.multiAccount true) (ne .Values.auth.type "system") }}
+            - name: BINDPLANE_EMAIL_TYPE
+              value: sendgrid
+            - name: BINDPLANE_SEND_GRID_API_TOKEN
+              value: {{ .Values.email.sendgrid.token }}
+            {{- end }}
+            - name: BINDPLANE_PORT
+              value: "3001"
+            - name: BINDPLANE_PROMETHEUS_ENABLE
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_HOST
+              {{- if .Values.prometheus.enableSideCar }}
+              value: localhost
+              {{- else if .Values.prometheus.remote }}
+              value: {{ .Values.prometheus.host }}
+              {{- else }}
+              value: {{ include "bindplane.fullname" . }}-prometheus
+              {{- end }}
+            - name: BINDPLANE_PROMETHEUS_PORT
+              value: "{{ .Values.prometheus.port }}"
+            {{- if .Values.prometheus.queryPathPrefix }}
+            - name: BINDPLANE_PROMETHEUS_QUERY_PATH_PREFIX
+              value: {{ .Values.prometheus.queryPathPrefix }}
+            {{- end }}
+            {{- if and (.Values.prometheus.remoteWrite.host) (.Values.prometheus.remoteWrite.port) }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_HOST
+              value: {{ .Values.prometheus.remoteWrite.host }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_PORT
+              value: "{{ .Values.prometheus.remoteWrite.port }}"
+            {{- end }}
+            - name: BINDPLANE_PROMETHEUS_REMOTE_WRITE_ENDPOINT
+              value: {{ .Values.prometheus.remoteWrite.path }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_TYPE
+              value: {{ .Values.prometheus.auth.type }}
+            {{- if eq .Values.prometheus.auth.type "basic" }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_USERNAME
+              value: {{ .Values.prometheus.auth.username }}
+            - name: BINDPLANE_PROMETHEUS_AUTH_PASSWORD
+              value: {{ .Values.prometheus.auth.password }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.enable }}
+            - name: BINDPLANE_PROMETHEUS_ENABLE_TLS
+              value: "true"
+            - name: BINDPLANE_PROMETHEUS_TLS_SKIP_VERIFY
+              value: "{{ .Values.prometheus.tls.insecure }}"
+            {{- if .Values.prometheus.tls.secret.caSubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_CA
+              value: /prometheus-ca.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.crtSubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_CERT
+              value: /prometheus-client.crt
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.keySubPath }}
+            - name: BINDPLANE_PROMETHEUS_TLS_KEY
+              value: /prometheus-client.key
+            {{- end }}
+            {{- end }}
+            {{- if eq .Values.metrics.type "prometheus" }}
+            - name: BINDPLANE_METRICS_TYPE
+              value: prometheus
+            - name: BINDPLANE_METRICS_PROMETHEUS_ENDPOINT
+              value: /metrics
+            {{- end }}
+            {{- if eq .Values.metrics.type "otlp" }}
+            - name: BINDPLANE_METRICS_TYPE
+              value: otlp
+            - name: BINDPLANE_METRICS_OTLP_ENDPOINT
+              value: {{ .Values.metrics.otlp.endpoint }}
+            - name: BINDPLANE_METRICS_OTLP_INSECURE
+              value: "{{ .Values.metrics.otlp.insecure }}"
+            {{- end }}
+            {{- if len .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.health.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.health.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.health.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if eq .Values.backend.type "bbolt" }}
+            - mountPath: /data
+              name: {{ include "bindplane.fullname" . }}-data
+            {{- end }}
+            {{- if eq .Values.eventbus.type "pubsub" }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - mountPath: /credentials.json
+              name: {{ .Values.eventbus.pubsub.credentials.secret }}
+              subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
+            {{- end }}
+            {{- end }}
+            {{- if eq (include "bindplane.auth.type" .) "ldap" }}
+            {{- if .Values.auth.ldap.tls.ca.secret }}
+            - mountPath: /ldap-ca.crt
+              name: {{ .Values.auth.ldap.tls.ca.secret }}
+              subPath: {{ .Values.auth.ldap.tls.ca.subPath }}
+            {{- end }}
+            {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+            - mountPath: /ldap-client.crt
+              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.crtSubPath }}
+            - mountPath: /ldap-client.key
+              name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+              subPath: {{ .Values.auth.ldap.tls.clientKeyPair.keySubPath }}
+            {{- end}}
+            {{- end }}
+            {{- if eq .Values.eventbus.type "kafka" }}
+            {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
+            - mountPath: /kafka-ca.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.caSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.certSubPath }}
+            - mountPath: /kafka.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.certSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.keySubPath }}
+            - mountPath: /kafka.key
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.enable }}
+            {{- if .Values.prometheus.tls.secret.caSubPath }}
+            - mountPath: /prometheus-ca.crt
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.caSubPath }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.crtSubPath }}
+            - mountPath: /prometheus-client.crt
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.crtSubPath }}
+            {{- end }}
+            {{- if .Values.prometheus.tls.secret.keySubPath }}
+            - mountPath: /prometheus-client.key
+              name: {{ .Values.prometheus.tls.secret.name }}
+              subPath: {{ .Values.prometheus.tls.secret.keySubPath }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.backend.postgres.sslsecret.name }}
+            - mountPath: /postgres-tls
+              name: postgres-tls-dir
+            {{- end }}
+            {{- if len .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 5",]
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.bindplane }}
+      volumes:
+        {{- if eq .Values.eventbus.type "pubsub" }}
+        {{- if .Values.eventbus.pubsub.credentials.secret }}
+        - name: {{ .Values.eventbus.pubsub.credentials.secret }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
+        {{- end }}
+        {{- end }}
+        {{- if eq (include "bindplane.auth.type" .) "ldap" }}
+        {{- if .Values.auth.ldap.tls.ca.secret }}
+        - name: {{ .Values.auth.ldap.tls.ca.secret }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.auth.ldap.tls.ca.secret }}
+        {{- end }}
+        {{- if .Values.auth.ldap.tls.clientKeyPair.secret }}
+        - name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}
+        {{- end }}
+        {{- end }}
+        {{- if eq .Values.eventbus.type "kafka" }}
+        {{- if .Values.eventbus.kafka.tls.secret.name }}
+        - name: {{ .Values.eventbus.kafka.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.prometheus.tls.enable }}
+        {{- if .Values.prometheus.tls.secret.name }}
+        - name: {{ .Values.prometheus.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.prometheus.tls.secret.name }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.backend.postgres.sslsecret.name }}
+        {{- if eq .Values.backend.postgres.sslSource "secret" }}
+        - name: postgres-tls-dir
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.backend.postgres.sslsecret.name }}
+        {{- end }}
+        {{- end }}
+        {{- if len .Values.extraVolumes }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

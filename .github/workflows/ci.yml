@@ -20,6 +20,9 @@ jobs:
       - name: Helm Docs
         uses: losisin/helm-docs-github-action@v1
 
+      - run: git status
+      - run: git diff
+
       - name: Helm Docs Check
         run: .github/workflows/scripts/check-helm-docs.sh
 

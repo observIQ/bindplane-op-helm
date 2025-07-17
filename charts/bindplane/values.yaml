@@ -407,6 +407,8 @@ ingress:
   # be a fully qualified hostname.
   # -- Hostname to use when ingress is enabled.
   host:
+  # -- Whether or not to use the deprecated kubernetes.io/ingress.class
+  legacy: true
   # -- Ingress class to use when ingress is enabled.
   class:
   tls:

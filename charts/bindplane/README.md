@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.29.4](https://img.shields.io/badge/Version-1.29.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
+![Version: 1.29.5](https://img.shields.io/badge/Version-1.29.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -112,6 +112,7 @@ Bindplane is an observability pipeline.
 | ingress.class | string | `nil` | Ingress class to use when ingress is enabled. |
 | ingress.enable | bool | `false` | Whether or not to enable ingress. |
 | ingress.host | string | `nil` | Hostname to use when ingress is enabled. |
+| ingress.legacy | bool | `true` | Whether or not to use the deprecated kubernetes.io/ingress.class |
 | ingress.tls.enable | bool | `false` | Whether or not to enable ingress transport layer security (TLS). |
 | ingress.tls.secret | string | `""` | Name of the Kubernetes secret which contains the TLS certificate. This secret must be created and managed outside of the Helm chart. See the [ingress TLS documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) for more details. |
 | jobs.resources.limits.memory | string | `"1000Mi"` | Memory limit. |

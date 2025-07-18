@@ -11,7 +11,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     {{- if .Values.ingress.class }}
+    {{- if .Values.ingress.legacy }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{- else }} 
+    ingressClassName: {{ .Values.ingress.class }}
+    {{- end}}
     {{- if eq .Values.ingress.class "nginx" }}
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     {{- end }}

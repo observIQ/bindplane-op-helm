@@ -110,6 +110,8 @@ spec:
             {{- end}}
             - name: BINDPLANE_ACCEPT_EULA
               value: "{{ .Values.config.accept_eula }}"
+            - name: BINDPLANE_AGENT_VERSIONS_CLIENTS
+              value: "{{ join "," .Values.config.agentVersions.clients }}"
             - name: BINDPLANE_REMOTE_URL
               {{- if .Values.config.server_url }}
               value: {{ .Values.config.server_url }}

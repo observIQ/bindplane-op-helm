@@ -11,6 +11,29 @@
         }
       }
     },
+    "config": {
+      "type": "object",
+      "properties": {
+        "agentVersions": {
+          "type": "object",
+          "properties": {
+            "clients": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["github", "bdot"],
+                "description": "Valid values are 'github' or 'bdot'"
+              },
+              "description": "The agent versions clients source to use. Must contain only 'github' and/or 'bdot' values.",
+              "minItems": 1,
+              "maxItems": 2,
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
     "nats": {
       "type": "object",
       "properties": {

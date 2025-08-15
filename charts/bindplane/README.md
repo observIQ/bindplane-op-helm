@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.29.5](https://img.shields.io/badge/Version-1.29.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
+![Version: 1.30.0](https://img.shields.io/badge/Version-1.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -73,6 +73,8 @@ Bindplane is an observability pipeline.
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
 | command | list | `[]` | Optional command overrides for the Bindplane container in all Bindplane pods. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
+| config.agentVersions | object | `{"clients":["github"]}` | The agent versions clients source to use. Defaults to ["github"]. |
+| config.agentVersions.clients | list | `["github"]` | The agent version clients to use when syncing agent agent versions. Will not take effect on Bindplane versions older than v1.94.0. |
 | config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |
 | config.license | string | `""` | The license key to use for Bindplane. Overrides `config.secret`. |
 | config.licenseUseSecret | bool | `false` | When true, the license key will be referenced from the `config.secret` secret. |

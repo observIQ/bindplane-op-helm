@@ -286,6 +286,12 @@ config:
   # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
   accept_eula: true
 
+  # -- The agent versions clients source to use. Defaults to ["github"].
+  agentVersions:
+    # -- The agent version clients to use when syncing agent agent versions. Will not take effect on Bindplane versions older than v1.94.0.
+    clients:
+      - github
+
   analytics:
     # -- Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used.
     disable: false

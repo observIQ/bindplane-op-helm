@@ -312,6 +312,12 @@ config:
   # It will eventually be removed when support for older versions of Bindplane is removed from this chart.
   remote_url: ""
 
+  # The external web URL used for user-facing features like invitation links.
+  # This is typically your ingress or load balancer URL (e.g., https://bindplane.my-corp.net).
+  # If not set, defaults to the server_url value.
+  # -- External URL used for web user invitation links and other user-facing features.
+  web_url: ""
+
   # kubectl -n <namesapce> create secret generic <name> \
   #   --from-literal=username=myuser \
   #   --from-literal=password=mypassword \

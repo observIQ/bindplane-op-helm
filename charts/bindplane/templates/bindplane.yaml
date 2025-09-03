@@ -133,6 +133,14 @@ spec:
               {{- else }}
               value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
               {{- end }}
+            - name: BINDPLANE_WEB_URL
+              {{- if .Values.config.web_url }}
+              value: {{ .Values.config.web_url }}
+              {{- else if .Values.config.server_url }}
+              value: {{ .Values.config.server_url }}
+              {{- else }}
+              value: http://{{ include "bindplane.fullname" . }}.{{ .Release.Namespace }}:3001
+              {{- end }}
             {{ if eq .Values.auth.type "system" }}
             - name: BINDPLANE_USERNAME
               {{- if  .Values.config.username }}

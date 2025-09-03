@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.30.0](https://img.shields.io/badge/Version-1.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
+![Version: 1.31.0](https://img.shields.io/badge/Version-1.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.92.0](https://img.shields.io/badge/AppVersion-1.92.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -85,6 +85,7 @@ Bindplane is an observability pipeline.
 | config.server_url | string | `""` | URI used by clients to communicate with Bindplane. |
 | config.sessions_secret | string | `""` | Sessions Secret to use. Overrides `config.secret`. |
 | config.username | string | `""` | Username to use. Overrides `config.secret`. |
+| config.web_url | string | `""` | External URL used for web user invitation links and other user-facing features. |
 | containerSecurityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | The Container's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container. |
 | dev.bindplane.auth.auth0.audience | string | `""` |  |
 | dev.bindplane.auth.auth0.clientID | string | `""` |  |

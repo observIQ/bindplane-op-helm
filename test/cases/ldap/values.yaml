@@ -6,7 +6,7 @@ config:
   licenseUseSecret: true
 
 image:
-  name: observiq/bindplane-ee
+  name: ghcr.io/observiq/bindplane-ee
   tag: 1.53.0
 
 auth:

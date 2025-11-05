@@ -3,7 +3,7 @@ name: bindplane
 description: Bindplane is an observability pipeline.
 type: application
 # The chart's version
-version: 1.31.4
+version: 1.31.5
 # The Bindplane tagged release. If the user does not
 # set the `image.tag` values option, this version is used.
 appVersion: 1.96.0

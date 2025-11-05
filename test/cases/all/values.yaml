@@ -41,7 +41,7 @@ auth:
     tls:
       insecure: true
 image:
-  name: observiq/bindplane-ee
+  name: ghcr.io/observiq/bindplane-ee
   tag: 1.44.0
 resources:
   requests:

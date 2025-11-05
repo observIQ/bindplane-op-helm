@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 The image to use
 */}}
 {{- define "bindplane.image" -}}
-{{- printf "%s" (default (printf "observiq/bindplane-ee") .Values.image.name) }}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-ee") .Values.image.name) }}
 {{- end -}}
 
 {{/*
@@ -42,7 +42,7 @@ The image tags to use
 The Transform Agent image to use
 */}}
 {{- define "bindplane.transform_agent" -}}
-{{- printf "%s" (default (printf "observiq/bindplane-transform-agent") .Values.transform_agent.name) }}
+{{- printf "%s" (default (printf "ghcr.io/observiq/bindplane-transform-agent") .Values.transform_agent.name) }}
 {{- end -}}
 
 {{/*

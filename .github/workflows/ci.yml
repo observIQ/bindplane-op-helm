@@ -88,6 +88,12 @@ jobs:
           kubectl -n default create secret generic bindplane \
             --from-literal=license=${{ secrets.BINDPLANE_LICENSE }}
 
+      - name: Create OIDC secret
+        if: matrix.case == 'oidc'
+        run: |
+          kubectl -n default create secret generic bindplane-oidc-secret \
+            --from-literal=oauth2ClientSecret=${{ secrets.BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET }}
+
       - name: Deploy
         run: |
           helm template \

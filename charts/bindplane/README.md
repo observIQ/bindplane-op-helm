@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.31.6](https://img.shields.io/badge/Version-1.31.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.96.0](https://img.shields.io/badge/AppVersion-1.96.0-informational?style=flat-square)
+![Version: 1.32.6](https://img.shields.io/badge/Version-1.32.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.96.3](https://img.shields.io/badge/AppVersion-1.96.3-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -41,10 +41,12 @@ Bindplane is an observability pipeline.
 | auth.ldap.tls.clientKeyPair.keySubPath | string | `""` | The secret's subPath which contains the client private key. |
 | auth.ldap.tls.clientKeyPair.secret | string | `""` | Name of the Kubernetes secret which contains the ldap client keypair. This can be the same secret as `auth.ldap.ca.secret` as long as it has the client certificate and key. |
 | auth.ldap.tls.insecure | bool | `false` | Whether or not to skip verification of the ldap server's certificate. |
-| auth.oidc | object | `{"issuer":"","oauth2ClientID":"","oauth2ClientSecret":"","scopes":[]}` | OpenID user authentication configuration. Available with Bindplane Enterprise. |
+| auth.oidc | object | `{"issuer":"","oauth2ClientID":"","oauth2ClientSecret":"","oauth2ClientSecretSecret":{"key":"","name":""},"scopes":[]}` | OpenID user authentication configuration. Available with Bindplane Enterprise. |
 | auth.oidc.issuer | string | `""` | The URL of the OIDC provider. |
 | auth.oidc.oauth2ClientID | string | `""` | Client ID to use when authenticating with the OIDC provider. |
 | auth.oidc.oauth2ClientSecret | string | `""` | Client secret to use when authenticating with the OIDC provider. |
+| auth.oidc.oauth2ClientSecretSecret.key | string | `""` | The secret's subPath which contains the OAuth2 client secret. |
+| auth.oidc.oauth2ClientSecretSecret.name | string | `""` | Kubernetes secret name that contains the OIDC OAuth2 client secret. |
 | auth.oidc.scopes | list | `[]` | List of requested permissions. |
 | auth.type | string | `"system"` | Backend to use for authentication. Available options include `system`, `ldap`, `active-directory`, and `google`. |
 | autoscaling.enable | bool | `false` | Whether or not autoscaling should be enabled. Requires an eventbus to be configured. |

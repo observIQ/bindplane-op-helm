@@ -75,6 +75,20 @@
               "type": "string",
               "description": "Client secret to use when authenticating with the OIDC provider."
             },
+            "oauth2ClientSecretSecret": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Kubernetes secret name that contains the OIDC OAuth2 client secret."
+                },
+                "key": {
+                  "type": "string",
+                  "description": "The secret's subPath which contains the OAuth2 client secret."
+                }
+              },
+              "additionalProperties": false
+            },
             "scopes": {
               "type": "array",
               "items": {

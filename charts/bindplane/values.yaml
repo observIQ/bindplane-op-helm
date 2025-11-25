@@ -259,6 +259,11 @@ auth:
     oauth2ClientID: ""
     # -- Client secret to use when authenticating with the OIDC provider.
     oauth2ClientSecret: ""
+    oauth2ClientSecretSecret:
+      # -- Kubernetes secret name that contains the OIDC OAuth2 client secret.
+      name: ""
+      # -- The secret's subPath which contains the OAuth2 client secret.
+      key: ""
     # -- List of requested permissions.
     scopes: []
 

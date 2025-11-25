@@ -301,7 +301,15 @@ spec:
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
               value: "{{ .Values.auth.oidc.oauth2ClientID }}"
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET
+              {{ if .Values.auth.oidc.oauth2ClientSecretSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.oidc.oauth2ClientSecretSecret.name }}
+                  key: {{ .Values.auth.oidc.oauth2ClientSecretSecret.key }}
+                  optional: false
+              {{ else }}
               value: "{{ .Values.auth.oidc.oauth2ClientSecret }}"
+              {{ end }}
             - name: BINDPLANE_OIDC_ISSUER
               value: "{{ .Values.auth.oidc.issuer }}"
             - name: BINDPLANE_OIDC_SCOPES

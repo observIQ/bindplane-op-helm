@@ -75,7 +75,7 @@
               "type": "string",
               "description": "Client secret to use when authenticating with the OIDC provider."
             },
-            "oauth2ClientSecretSecret": {
+            "oauth2ClientSecretRef": {
               "type": "object",
               "properties": {
                 "name": {

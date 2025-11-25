@@ -385,11 +385,11 @@ spec:
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_ID
               value: "{{ .Values.auth.oidc.oauth2ClientID }}"
             - name: BINDPLANE_OIDC_OAUTH2_CLIENT_SECRET
-              {{ if .Values.auth.oidc.oauth2ClientSecretSecret.name }}
+              {{ if .Values.auth.oidc.oauth2ClientSecretRef.name }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.auth.oidc.oauth2ClientSecretSecret.name }}
-                  key: {{ .Values.auth.oidc.oauth2ClientSecretSecret.key }}
+                  name: {{ .Values.auth.oidc.oauth2ClientSecretRef.name }}
+                  key: {{ .Values.auth.oidc.oauth2ClientSecretRef.key }}
                   optional: false
               {{ else }}
               value: "{{ .Values.auth.oidc.oauth2ClientSecret }}"

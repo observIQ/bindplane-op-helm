@@ -50,7 +50,9 @@ auth:
   oidc:
     issuer: "https://accounts.google.com"
     oauth2ClientID: "$client_id"
-    oauth2ClientSecret: "$client_secret"
+    oauth2ClientSecretRef:
+      name: bindplane-oidc-secret
+      key: oauth2ClientSecret
     scopes: [
       "openid",
       "profile",

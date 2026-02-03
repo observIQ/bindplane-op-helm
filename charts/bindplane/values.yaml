@@ -611,6 +611,40 @@ extraVolumes: []
 # -- Optional arbitrary volume mounts to add to the Bindplane pod(s).
 extraVolumeMounts: []
 
+# -- Optional integration with Google Secret Manager (GSM) on GKE using
+# SecretProviderClass + SecretSync. Disabled by default.
+gsm:
+  # -- Enable rendering of GSM resources (SecretProviderClass / SecretSync).
+  enabled: false
+
+  # -- Google Cloud project ID containing the secrets.
+  projectId: ""
+
+  spc:
+    # -- Name of the SecretProviderClass to create.
+    name: ""
+
+    # -- A list of secrets to fetch from Google Secret Manager.
+    # `secretName` is the name of the secret in GSM.
+    # `path` is the mount path for the secret; must match SecretSync secretObject.data.sourcePath.
+    secrets: []
+
+  secretsync:
+    # -- Enable rendering of the SecretSync resource.
+    enabled: true
+
+    # -- Name of the SecretSync resource. By default this should match `config.secret`
+    # so the synced Kubernetes Secret is named appropriately for the chart.
+    name: ""
+
+    secretObject:
+      # -- Kubernetes secret type to create.
+      type: Opaque
+
+      # -- Mapping from mounted secret files to keys in the Kubernetes Secret.
+      # Each item must have `sourcePath` and `targetKey`.
+      data: []
+
 # -- Optional arbitrary labels to add to the Bindplane pod(s).
 extraPodLabels: {}
 

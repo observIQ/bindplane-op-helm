@@ -4,7 +4,7 @@
 
 # Bindplane Helm
 
-This repository contains a Helm chart for [Bindplane](https://bindplane.com).
+This repository contains a Helm chart for [Bindplane](https://bindplane.com)
 
 ## Prerequisites
 

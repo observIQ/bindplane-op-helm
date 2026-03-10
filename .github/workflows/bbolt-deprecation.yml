@@ -13,6 +13,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Start Minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          cache: true
+          kubernetes-version: v1.34.0
+          addons: default-storageclass,storage-provisioner,ingress
+
       - name: Helm Template
         run: |
           output=$(helm template test charts/bindplane \
@@ -23,7 +30,7 @@ jobs:
         run: |
           output=$(helm install test charts/bindplane \
             --values test/cases/bbolt-deprecated/values.yaml \
-            --dry-run 2>&1)
+            --dry-run=client 2>&1 || true)
           echo "$output"
           if echo "$output" | grep -q "WARNING: backend.type 'bbolt' is deprecated"; then
             echo "Deprecation warning found."

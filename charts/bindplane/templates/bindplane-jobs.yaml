@@ -60,6 +60,9 @@ spec:
       {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
       {{- end }}
       initContainers:
+        {{- if and .Values.backend.postgres.sslsecret.name (eq .Values.backend.postgres.sslSource "secret") }}
+          {{- include "bindplane.postgres_tls_init_container" . | nindent 8 }}
+        {{- end }}
         {{- if .Values.extraInitContainers.jobs }}
           {{- toYaml .Values.extraInitContainers.jobs | nindent 8 }}
         {{- end }}
@@ -564,8 +567,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.backend.postgres.sslsecret.name }}
-            - mountPath: /postgres-tls
-              name: postgres-tls-dir
+            {{- include "bindplane.postgres_tls_volume_mounts" . | nindent 12 }}
             {{- end }}
             {{- if len .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
@@ -615,12 +617,7 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.backend.postgres.sslsecret.name }}
-        {{- if eq .Values.backend.postgres.sslSource "secret" }}
-        - name: postgres-tls-dir
-          secret:
-            defaultMode: 0400
-            secretName: {{ .Values.backend.postgres.sslsecret.name }}
-        {{- end }}
+        {{- include "bindplane.postgres_tls_volumes" . | nindent 8 }}
         {{- end }}
         {{- if len .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}

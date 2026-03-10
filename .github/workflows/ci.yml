@@ -108,16 +108,32 @@ jobs:
         if: always()
         run: |
           kubectl -n default get all
-          kubectl -n default logs sts/release-name-bindplane || kubectl -n default logs deploy/release-name-bindplane
+          kubectl -n default logs deployment.apps/release-name-bindplane || true
+
+      - name: "Debug: Get jobs status and logs"
+        if: always()
+        run: |
+          kubectl -n default get all
+          kubectl -n default logs deployment.apps/release-name-bindplane-jobs || true
 
       - name: "Debug: Get postgres status and logs"
         if: always()
         run: |
           kubectl -n postgres get all
-          kubectl -n postgres logs pod/postgres-0
+          kubectl -n postgres logs pod/postgres-0 || true
 
       - name: "Debug: Get pubsub status and logs"
         if: always()
         run: |
           kubectl -n pubsub get all
-          kubectl -n pubsub logs pod/pubsub-emulator-0
+          kubectl -n pubsub logs pod/pubsub-emulator-0 || true
+
+      - name: "Debug: Get deployment YAML"
+        if: always()
+        run: |
+          kubectl -n default get deployment release-name-bindplane -o yaml || true
+
+      - name: "Debug: Get jobs deployment YAML"
+        if: always()
+        run: |
+          kubectl -n default get deployment release-name-bindplane-jobs -o yaml || true

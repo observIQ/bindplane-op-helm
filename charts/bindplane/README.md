@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.32.6](https://img.shields.io/badge/Version-1.32.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.96.3](https://img.shields.io/badge/AppVersion-1.96.3-informational?style=flat-square)
+![Version: 1.32.7](https://img.shields.io/badge/Version-1.32.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.98.0](https://img.shields.io/badge/AppVersion-1.98.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -139,7 +139,7 @@ Bindplane is an observability pipeline.
 | nodeSelector.prometheus | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane Prometheus pod. |
 | nodeSelector.transform_agent | object | `{}` | This is for configuring spec.template.spec.nodeSelector on the Bindplane transform agent pod. |
 | operator.enabled | bool | `false` | Experimental pre-alpha feature to enable the Bindplane operator. Do not use in production. |
-| podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
+| podSecurityContext | object | `{"runAsGroup":65534,"runAsUser":65534}` | The Pod spec's securityContext: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod. |
 | priorityClassName | object | `{"bindplane":"","jobs":"","nats":"","prometheus":"","transform_agent":""}` | Configure the priorityClassName for Bindplane, Bindplane NATS, Bindplane Jobs, and Bindplane Prometheus pods. |
 | priorityClassName.bindplane | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane deployment pods. |
 | priorityClassName.jobs | string | `""` | This is for configuring spec.template.spec.priorityClassName on the Bindplane Jobs pod. |

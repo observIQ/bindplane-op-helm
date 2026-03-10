@@ -563,7 +563,8 @@ podSecurityContext:
   # Bindplane uses the following container securityContext by default:
   runAsUser: 65534
   runAsGroup: 65534
-  fsGroup: 65534
+  # Intentionally omit a default fsGroup because it can broaden mounted TLS key
+  # permissions and cause Postgres clients to reject the key file.
 
 # -- The Pod's tolerations
 tolerations: {}

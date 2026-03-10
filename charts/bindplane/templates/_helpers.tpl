@@ -82,3 +82,99 @@ instead of checking 'if ldap || active-directory'.
 {{- define "bindplane.auth_oidc_scopes" -}}
 {{- join "," .Values.auth.oidc.scopes }}
 {{- end -}}
+
+{{/*
+Render Postgres TLS volume mounts for the application container.
+
+The application always reads from /postgres-tls. For sslSource=secret an init
+container copies the secret contents into this directory so the final files are
+owned by the runtime user and can satisfy Postgres key permission checks.
+*/}}
+{{- define "bindplane.postgres_tls_volume_mounts" -}}
+{{- if .Values.backend.postgres.sslsecret.name }}
+- mountPath: /postgres-tls
+  name: postgres-tls-dir
+{{- end }}
+{{- end -}}
+
+{{/*
+Render Postgres TLS init container for sslSource=secret.
+*/}}
+{{- define "bindplane.postgres_tls_init_container" -}}
+{{- if and .Values.backend.postgres.sslsecret.name (eq .Values.backend.postgres.sslSource "secret") }}
+- name: postgres-tls-secret
+  image: {{ .Values.busybox_image }}
+  command:
+    - sh
+    - -ec
+    - |
+      {{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+      cp /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }} /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+      chmod 0644 /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+      {{- end }}
+      {{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+      cp /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }} /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+      chmod 0644 /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+      {{- end }}
+      {{- if .Values.backend.postgres.sslsecret.sslkeySubPath }}
+      cp /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }} /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+      chmod 0600 /postgres-tls/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+      {{- end }}
+      ls -la /postgres-tls
+  volumeMounts:
+    - mountPath: /postgres-tls
+      name: postgres-tls-dir
+{{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+    - mountPath: /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+      name: postgres-tls-root-cert
+      subPath: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+{{- end }}
+{{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+    - mountPath: /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+      name: postgres-tls-client-cert
+      subPath: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+{{- end }}
+{{- if .Values.backend.postgres.sslsecret.sslkeySubPath }}
+    - mountPath: /postgres-tls-secret/{{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+      name: postgres-tls-client-key
+      subPath: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Render Postgres TLS volumes for sslSource=secret.
+*/}}
+{{- define "bindplane.postgres_tls_volumes" -}}
+{{- if and .Values.backend.postgres.sslsecret.name (eq .Values.backend.postgres.sslSource "secret") }}
+- name: postgres-tls-dir
+  emptyDir: {}
+{{- if .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+- name: postgres-tls-root-cert
+  secret:
+    defaultMode: 0444
+    items:
+      - key: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+        path: {{ .Values.backend.postgres.sslsecret.sslrootcertSubPath }}
+    secretName: {{ .Values.backend.postgres.sslsecret.name }}
+{{- end }}
+{{- if .Values.backend.postgres.sslsecret.sslcertSubPath }}
+- name: postgres-tls-client-cert
+  secret:
+    defaultMode: 0444
+    items:
+      - key: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+        path: {{ .Values.backend.postgres.sslsecret.sslcertSubPath }}
+    secretName: {{ .Values.backend.postgres.sslsecret.name }}
+{{- end }}
+{{- if .Values.backend.postgres.sslsecret.sslkeySubPath }}
+- name: postgres-tls-client-key
+  secret:
+    defaultMode: 0444
+    items:
+      - key: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+        path: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
+    secretName: {{ .Values.backend.postgres.sslsecret.name }}
+{{- end }}
+{{- end }}
+{{- end -}}

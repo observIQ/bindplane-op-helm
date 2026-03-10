@@ -176,5 +176,20 @@ Render Postgres TLS volumes for sslSource=secret.
         path: {{ .Values.backend.postgres.sslsecret.sslkeySubPath }}
     secretName: {{ .Values.backend.postgres.sslsecret.name }}
 {{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate that bbolt is not used with BindPlane versions newer than v1.98.0.
+BBolt support was removed in BindPlane v1.99.0 (April 2026).
+*/}}
+{{- define "bindplane.validate_bbolt" -}}
+{{- if eq .Values.backend.type "bbolt" -}}
+{{- $tag := include "bindplane.tag" . | trimPrefix "v" -}}
+{{- if regexMatch "^[0-9]+\\.[0-9]+\\.[0-9]+" $tag -}}
+{{- if semverCompare ">1.98.0" $tag -}}
+{{- fail "backend.type 'bbolt' is not supported with BindPlane versions newer than v1.98.0. BBolt was removed in BindPlane v1.99.0 (April 2026). Please migrate to backend.type 'postgres'." -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}

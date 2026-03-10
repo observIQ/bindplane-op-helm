@@ -1,0 +1,64 @@
+name: BBolt Deprecation
+
+on:
+  pull_request:
+
+jobs:
+  bbolt-deprecated:
+    name: "bbolt: deprecated (v1.98.0)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Helm Template
+        run: |
+          output=$(helm template test charts/bindplane \
+            --values test/cases/bbolt-deprecated/values.yaml 2>&1)
+          echo "$output"
+
+      - name: Verify Deprecation Warning
+        run: |
+          output=$(helm install test charts/bindplane \
+            --values test/cases/bbolt-deprecated/values.yaml \
+            --dry-run 2>&1)
+          echo "$output"
+          if echo "$output" | grep -q "WARNING: backend.type 'bbolt' is deprecated"; then
+            echo "Deprecation warning found."
+          else
+            echo "ERROR: Expected deprecation warning not found in NOTES output."
+            exit 1
+          fi
+
+  bbolt-removed:
+    name: "bbolt: removed (v1.99.0)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Verify Template Failure
+        run: |
+          if helm template test charts/bindplane \
+            --values test/cases/bbolt-removed/values.yaml 2>&1; then
+            echo "ERROR: Expected helm template to fail for bbolt with v1.99.0, but it succeeded."
+            exit 1
+          else
+            echo "Helm template correctly rejected bbolt with v1.99.0."
+          fi
+
+      - name: Verify Error Message
+        run: |
+          output=$(helm template test charts/bindplane \
+            --values test/cases/bbolt-removed/values.yaml 2>&1 || true)
+          echo "$output"
+          if echo "$output" | grep -q "backend.type 'bbolt' is not supported with BindPlane versions newer than v1.98.0"; then
+            echo "Correct error message found."
+          else
+            echo "ERROR: Expected error message not found."
+            exit 1
+          fi

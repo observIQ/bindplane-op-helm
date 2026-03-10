@@ -76,7 +76,9 @@ extraInitContainers:
           echo "$CLIENT_CERT" > /postgres-tls/client.crt
           echo "$CLIENT_KEY" > /postgres-tls/client.key
           chown -R 65534:65534 /postgres-tls
-          chmod 0400 /postgres-tls/*
+          chmod 0600 /postgres-tls/client.key
+          chmod 0644 /postgres-tls/ca.crt /postgres-tls/client.crt
+          ls -la /postgres-tls
       env:
         - name: CA_CERT
           valueFrom:
@@ -107,7 +109,9 @@ extraInitContainers:
           echo "$CLIENT_CERT" > /postgres-tls/client.crt
           echo "$CLIENT_KEY" > /postgres-tls/client.key
           chown -R 65534:65534 /postgres-tls
-          chmod 0400 /postgres-tls/*
+          chmod 0600 /postgres-tls/client.key
+          chmod 0644 /postgres-tls/ca.crt /postgres-tls/client.crt
+          ls -la /postgres-tls
       env:
         - name: CA_CERT
           valueFrom:

@@ -79,6 +79,3 @@ extraInitContainers:
 serviceAccount:
   annotations:
     iam.gke.io/gcp-service-account: "bindplane-sa"
-
-operator:
-  enabled: true

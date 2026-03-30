@@ -1,26 +1,27 @@
-{{- if eq .Values.eventbus.type "nats" }}
+{{- if ne .Values.eventbus.type "" }}
 apiVersion: apps/v1
-kind: {{ .Values.nats.deploymentType }}
+kind: Deployment
 metadata:
-  name: {{ include "bindplane.fullname" . }}-nats
+  name: {{ include "bindplane.fullname" . }}-jobs-migrate
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "bindplane.name" . }}
     app.kubernetes.io/stack: bindplane
-    app.kubernetes.io/component: nats
+    app.kubernetes.io/component: jobs-migrate
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 3
-  {{ if eq .Values.nats.deploymentType "StatefulSet" }}
-  serviceName: {{ include "bindplane.fullname" . }}-nats-cluster-headless
-  podManagementPolicy: Parallel
-  {{ end }}
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "bindplane.name" . }}
       app.kubernetes.io/stack: bindplane
-      app.kubernetes.io/component: nats
+      app.kubernetes.io/component: jobs-migrate
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
@@ -35,13 +36,13 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane
-        app.kubernetes.io/component: nats
+        app.kubernetes.io/component: jobs-migrate
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- if len .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
     spec:
-      priorityClassName: {{ .Values.priorityClassName.nats }}
+      priorityClassName: {{ .Values.priorityClassName.jobs }}
       serviceAccountName: {{ include "bindplane.fullname" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -51,25 +52,25 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.nodeSelector.nats }}
+      {{- if .Values.affinity.jobs }}
+      {{- if .Values.nodeSelector.jobs }}
       nodeSelector:
-      {{- toYaml .Values.nodeSelector.nats | nindent 8 }}
+      {{- toYaml .Values.nodeSelector.jobs | nindent 8 }}
       {{- end }}
-      {{- if .Values.affinity.nats }}
       affinity:
-      {{- toYaml .Values.affinity.nats | nindent 8 }}
+      {{- toYaml .Values.affinity.jobs | nindent 8 }}
       {{- end }}
-      {{- if .Values.topologySpreadConstraints.nats }}
+      {{- if .Values.topologySpreadConstraints.jobs }}
       topologySpreadConstraints:
-      {{- toYaml .Values.topologySpreadConstraints.nats | nindent 8 }}
+      {{- toYaml .Values.topologySpreadConstraints.jobs | nindent 8 }}
       {{- end }}
       initContainers:
-      {{- if .Values.extraInitContainers.nats }}
-        {{- toYaml .Values.extraInitContainers.nats | nindent 8 }}
-      {{- end }}
-      {{- if and .Values.backend.postgres.sslsecret.name (eq .Values.backend.postgres.sslSource "secret") }}
-        {{- include "bindplane.postgres_tls_init_container" . | nindent 8 }}
-      {{- end }}
+        {{- if and .Values.backend.postgres.sslsecret.name (eq .Values.backend.postgres.sslSource "secret") }}
+          {{- include "bindplane.postgres_tls_init_container" . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.extraInitContainers.jobs }}
+          {{- toYaml .Values.extraInitContainers.jobs | nindent 8 }}
+        {{- end }}
       containers:
         - name: server
           {{- with .Values.command }}
@@ -84,13 +85,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001
-              name: http            
-            - containerPort: 4222
-              name: tcp
-            - containerPort: 6222
-              name: nats-cluster
-            - containerPort: 8222
-              name: nats-http
+              name: http
           env:
             - name: KUBERNETES_NAMESPACE_NAME
               valueFrom:
@@ -103,7 +98,7 @@ spec:
             - name: KUBERNETES_CONTAINER_NAME
               value: "server"
             - name: BINDPLANE_MODE
-              value: node
+              value: migrate
             - name: BINDPLANE_ANALYTICS_DISABLED
               value: "{{ .Values.config.analytics.disable }}"
             - name: BINDPLANE_TRANSFORM_AGENT_ENABLE_REMOTE
@@ -188,7 +183,8 @@ spec:
             - name: BINDPLANE_LOGGING_OUTPUT
               value: stdout
             - name: BINDPLANE_CONFIG_HOME
-              value: /data  
+              value: /data
+            {{- if eq .Values.backend.type "postgres" }}
             - name: BINDPLANE_STORE_TYPE
               value: postgres
             - name: BINDPLANE_POSTGRES_HOST
@@ -231,43 +227,14 @@ spec:
             {{- end }}
             - name: BINDPLANE_POSTGRES_MAX_CONNECTIONS
               value: "{{ .Values.backend.postgres.maxConnections }}"
+            {{- else }}
+            - name: BINDPLANE_STORE_TYPE
+              value: bbolt
+            - name: BINDPLANE_STORE_BBOLT_PATH
+              value: /data/storage
+            {{- end }}
             - name: BINDPLANE_EVENT_BUS_TYPE
-              value: nats
-            - name: BINDPLANE_NATS_SERVER_ENABLE
-              value: "true"
-            - name: BINDPLANE_NATS_SERVER_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: BINDPLANE_NATS_SERVER_CLIENT_HOST
-              value: "0.0.0.0"
-            - name: BINDPLANE_NATS_SERVER_CLIENT_PORT
-              value: "4222"
-            - name: BINDPLANE_NATS_SERVER_HTTP_HOST
-              value: "0.0.0.0"
-            - name: BINDPLANE_NATS_SERVER_HTTP_PORT
-              value: "8222"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_NAME
-              value: bindplane-{{ include "bindplane.fullname" . }}
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_HOST
-              value: "0.0.0.0"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_PORT
-              value: "6222"
-            - name: BINDPLANE_NATS_SERVER_CLUSTER_ROUTES
-              {{ if eq .Values.nats.deploymentType "StatefulSet" }}
-              value: nats://{{ include "bindplane.fullname" . }}-nats-0.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222,nats://{{ include "bindplane.fullname" . }}-nats-1.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222,nats://{{ include "bindplane.fullname" . }}-nats-2.{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222
-              {{ end }}
-              {{ if eq .Values.nats.deploymentType "Deployment" }}
-              value: nats://{{ include "bindplane.fullname" . }}-nats-cluster-headless.{{ .Release.Namespace }}:6222
-              {{ end }}
-            - name: BINDPLANE_NATS_CLIENT_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: BINDPLANE_NATS_CLIENT_ENDPOINT
-              value: nats://127.0.0.1:4222
-            - name: BINDPLANE_NATS_CLIENT_SUBJECT
-              value: bindplane-event-bus
+              value: local
             {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             - name: BINDPLANE_AUTH_TYPE
               value: {{ .Values.auth.type }}
@@ -383,7 +350,7 @@ spec:
             - name: BINDPLANE_PROMETHEUS_ENABLE_REMOTE
               value: "true"
             - name: BINDPLANE_PROMETHEUS_HOST
-              {{-  if .Values.prometheus.remote }}
+              {{- if .Values.prometheus.remote }}
               value: {{ .Values.prometheus.host }}
               {{- else }}
               value: {{ include "bindplane.fullname" . }}-prometheus
@@ -445,42 +412,38 @@ spec:
             {{- if len .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
-          {{- with .Values.nats.resources }}
+          {{- with .Values.jobs.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.health.startupProbe }}
           startupProbe:
-            httpGet:
-              path: /healthz
-              port: nats-http
-            initialDelaySeconds: 0
-            timeoutSeconds: 5
-            periodSeconds: 1
-            successThreshold: 1
-            failureThreshold: 10
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.health.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /healthz?js-server-only=true
-              port: nats-http
-            initialDelaySeconds: 0
-            timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.health.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /healthz?js-enabled-only=true
-              port: nats-http
-            initialDelaySeconds: 0
-            timeoutSeconds: 5
-            periodSeconds: 30
-            successThreshold: 1
-            failureThreshold: 3
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
+            {{- if eq .Values.backend.type "bbolt" }}
+            - mountPath: /data
+              name: {{ include "bindplane.fullname" . }}-data
+            {{- end }}
+            {{- if eq .Values.eventbus.type "pubsub" }}
+            {{- if .Values.eventbus.pubsub.credentials.secret }}
+            - mountPath: /credentials.json
+              name: {{ .Values.eventbus.pubsub.credentials.secret }}
+              subPath: {{ .Values.eventbus.pubsub.credentials.subPath }}
+            {{- end }}
+            {{- end }}
             {{- if eq (include "bindplane.auth.type" .) "ldap" }}
             {{- if .Values.auth.ldap.tls.ca.secret }}
             - mountPath: /ldap-ca.crt
@@ -495,6 +458,23 @@ spec:
               name: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}-client-keypair
               subPath: {{ .Values.auth.ldap.tls.clientKeyPair.keySubPath }}
             {{- end}}
+            {{- end }}
+            {{- if eq .Values.eventbus.type "kafka" }}
+            {{- if .Values.eventbus.kafka.tls.secret.caSubPath }}
+            - mountPath: /kafka-ca.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.caSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.certSubPath }}
+            - mountPath: /kafka.crt
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.certSubPath }}
+            {{- end }}
+            {{- if .Values.eventbus.kafka.tls.secret.keySubPath }}
+            - mountPath: /kafka.key
+              name: {{ .Values.eventbus.kafka.tls.secret.name }}
+              subPath: {{ .Values.eventbus.kafka.tls.secret.keySubPath }}
+            {{- end }}
             {{- end }}
             {{- if .Values.prometheus.tls.enable }}
             {{- if .Values.prometheus.tls.secret.caSubPath }}
@@ -523,8 +503,16 @@ spec:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 5",]
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.nats }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds.jobs }}
       volumes:
+        {{- if eq .Values.eventbus.type "pubsub" }}
+        {{- if .Values.eventbus.pubsub.credentials.secret }}
+        - name: {{ .Values.eventbus.pubsub.credentials.secret }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.pubsub.credentials.secret }}
+        {{- end }}
+        {{- end }}
         {{- if eq (include "bindplane.auth.type" .) "ldap" }}
         {{- if .Values.auth.ldap.tls.ca.secret }}
         - name: {{ .Values.auth.ldap.tls.ca.secret }}
@@ -537,6 +525,14 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ .Values.auth.ldap.tls.clientKeyPair.secret }}
+        {{- end }}
+        {{- end }}
+        {{- if eq .Values.eventbus.type "kafka" }}
+        {{- if .Values.eventbus.kafka.tls.secret.name }}
+        - name: {{ .Values.eventbus.kafka.tls.secret.name }}
+          secret:
+            defaultMode: 0400
+            secretName: {{ .Values.eventbus.kafka.tls.secret.name }}
         {{- end }}
         {{- end }}
         {{- if .Values.prometheus.tls.enable }}

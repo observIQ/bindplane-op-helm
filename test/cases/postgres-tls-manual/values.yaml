@@ -98,6 +98,39 @@ extraInitContainers:
       volumeMounts:
         - name: postgres-tls-dir
           mountPath: /postgres-tls
+  nats:
+    - name: create-ssl-certificates
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "$CA_CERT" > /postgres-tls/ca.crt
+          echo "$CLIENT_CERT" > /postgres-tls/client.crt
+          echo "$CLIENT_KEY" > /postgres-tls/client.key
+          chown -R 65534:65534 /postgres-tls
+          chmod 0600 /postgres-tls/client.key
+          chmod 0644 /postgres-tls/ca.crt /postgres-tls/client.crt
+          ls -la /postgres-tls
+      env:
+        - name: CA_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: ca.crt
+        - name: CLIENT_CERT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.crt
+        - name: CLIENT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: postgres-tls
+              key: client.key
+      volumeMounts:
+        - name: postgres-tls-dir
+          mountPath: /postgres-tls
   jobs:
     - name: create-ssl-certificates
       image: busybox

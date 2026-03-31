@@ -116,6 +116,12 @@ jobs:
           kubectl -n default get all
           kubectl -n default logs deployment.apps/release-name-bindplane-jobs || true
 
+      - name: "Debug: Get NATS status and logs"
+        if: always()
+        run: |
+          kubectl -n default get all
+          kubectl -n default logs pod/release-name-bindplane-nats-0 || true
+
       - name: "Debug: Get postgres status and logs"
         if: always()
         run: |

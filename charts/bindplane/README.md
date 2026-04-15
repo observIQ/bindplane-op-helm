@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.33.2](https://img.shields.io/badge/Version-1.33.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.98.2](https://img.shields.io/badge/AppVersion-1.98.2-informational?style=flat-square)
+![Version: 1.33.3](https://img.shields.io/badge/Version-1.33.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.99.1](https://img.shields.io/badge/AppVersion-1.99.1-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -71,7 +71,7 @@ Bindplane is an observability pipeline.
 | backend.postgres.sslsecret.sslkeySubPath | string | `"client.key"` | Path to the client private key used to authenticate with the Postgres server, when mutual TLS is required. Required when `sslcertSubPath` is set. |
 | backend.postgres.sslsecret.sslrootcertSubPath | string | `"ca.crt"` | Path to the CA certificate used to verify the Postgres server's certificate. |
 | backend.postgres.username | string | `""` | Username to use when connecting to Postgres. |
-| backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`. BBolt has been deprecated since February 2025 and was removed in BindPlane v1.99.0 (April 2026). When using `bbolt`, the image tag must be v1.98.0 or older. |
+| backend.type | string | `"postgres"` | Backend to use for persistent storage. Available options are `bbolt` (removed, only supported with image tag v1.98.0 or older), and `postgres`. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
 | command | list | `[]` | Optional command overrides for the Bindplane container in all Bindplane pods. |
 | config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |

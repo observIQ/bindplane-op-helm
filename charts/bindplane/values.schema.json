@@ -7,7 +7,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["postgres", "bbolt"]
+          "enum": ["postgres"]
         }
       }
     },

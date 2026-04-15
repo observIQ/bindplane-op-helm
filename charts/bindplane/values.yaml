@@ -2,8 +2,8 @@
 multiAccount: false
 
 backend:
-  # -- Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`. BBolt has been deprecated since February 2025 and was removed in BindPlane v1.99.0 (April 2026). When using `bbolt`, the image tag must be v1.98.0 or older.
-  type: bbolt
+  # -- Backend to use for persistent storage. Available options are `bbolt` (removed, only supported with image tag v1.98.0 or older), and `postgres`.
+  type: postgres
 
   # bbolt is deprecated since February 2025 and was removed in BindPlane v1.99.0 (April 2026). Please migrate to postgres.
   bbolt:

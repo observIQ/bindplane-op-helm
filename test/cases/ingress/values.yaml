@@ -7,6 +7,14 @@ config:
   web_url: https://bindplane.external.com
   licenseUseSecret: true
 
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password
+
 # Ingress
 ingress:
   enable: true

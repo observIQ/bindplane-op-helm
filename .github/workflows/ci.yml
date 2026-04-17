@@ -15,7 +15,7 @@ jobs:
         uses: igabaydulin/helm-check-action@0.1.4
         env:
           CHART_LOCATION: ./charts/bindplane
-          CHART_VALUES: ./charts/bindplane/values.yaml
+          CHART_VALUES: ./test/cases/default/values.yaml
 
       - name: Helm Docs
         uses: losisin/helm-docs-github-action@v1

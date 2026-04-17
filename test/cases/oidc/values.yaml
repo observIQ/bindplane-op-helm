@@ -1,1 +1,9 @@
 # Placeholder, see .github/workflows/scripts/generate-oidc-test-config.sh
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    username: postgres
+    password: password

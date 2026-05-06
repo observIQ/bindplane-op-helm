@@ -8,6 +8,36 @@ entries:
         - name: High Availability Deployment
           url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/deployment
     apiVersion: v2
+    appVersion: 1.100.0
+    created: "2026-05-06T18:54:01.811816829Z"
+    description: Bindplane is an observability pipeline.
+    digest: 13a8cb760b7868941f2cca7ab1b981968cf6484b97fdd6ba4717435f83a5dfdb
+    home: https://github.com/observIQ/bindplane-op
+    icon: https://raw.githubusercontent.com/observIQ/bindplane-op/main/docs/images/bindplaneop.png
+    keywords:
+    - kubernetes
+    - bindplane
+    - bindplane-op
+    - opentelemetry
+    - telemetry
+    - observability
+    maintainers:
+    - email: joe@observiq.com
+      name: jsirianni
+    - email: travis.malcuit@observiq.com
+      name: tbm48813
+    name: bindplane
+    type: application
+    urls:
+    - https://github.com/observIQ/bindplane-op-helm/releases/download/bindplane-1.35.0/bindplane-1.35.0.tgz
+    version: 1.35.0
+  - annotations:
+      documentation: |
+        - name: Bindplane Documentation
+          url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/install
+        - name: High Availability Deployment
+          url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/deployment
+    apiVersion: v2
     appVersion: 1.99.1
     created: "2026-04-17T20:11:56.22709486Z"
     description: Bindplane is an observability pipeline.
@@ -5047,4 +5077,4 @@ entries:
     urls:
     - https://github.com/observIQ/bindplane-op-helm/releases/download/bindplane-0.0.1/bindplane-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-17T20:11:56.22772688Z"
+generated: "2026-05-06T18:54:01.812337059Z"

@@ -15,7 +15,7 @@ use `bbolt` by default, however, Bindplane recommends using Postgres for product
 the `bbolt` backend will be removed in Bindplane version 2. Postgres allows for better performance and
 scalability. Bindplane with High Availability requires Postgres.
 
-See the Bindplane [PostgreSQL documentation](https://bindplane.com/docs/advanced-setup/installation/postgresql)
+See the Bindplane [PostgreSQL documentation](https://docs.bindplane.com/deployment/virtual-machine/bindplane/postgresql)
 for more details.
 
 ### Helm
@@ -120,4 +120,4 @@ Bindplane Helm follows the [CNCF Code of Conduct](https://github.com/cncf/founda
 
 # Other questions?
 
-Send us an [email](mailto:support@observiq.com), or open an issue with your question. We'd love to hear from you!
+Send us an [email](mailto:support@bindplane.com), or open an issue with your question. We'd love to hear from you!

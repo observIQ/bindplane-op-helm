@@ -3,27 +3,25 @@ name: bindplane
 description: Bindplane is an observability pipeline.
 type: application
 # The chart's version
-version: 1.35.1
+version: 1.35.2
 # The Bindplane tagged release. If the user does not
 # set the `image.tag` values option, this version is used.
 appVersion: 1.100.4
 keywords:
   - kubernetes
   - bindplane
-  - bindplane-op
   - opentelemetry
   - telemetry
   - observability
-home: https://github.com/observIQ/bindplane-op
-icon: https://raw.githubusercontent.com/observIQ/bindplane-op/main/docs/images/bindplaneop.png
+home: https://docs.bindplane.com
 annotations:
   "documentation": |
     - name: Bindplane Documentation
-      url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/install
+      url: https://docs.bindplane.com/deployment/kubernetes/server/installation
     - name: High Availability Deployment
-      url: https://observiq.com/docs/advanced-setup/kubernetes-installation/server/deployment
+      url: https://docs.bindplane.com/deployment/kubernetes/server/installation/high-availability
 maintainers:
   - name: jsirianni
-    email: joe@observiq.com
+    email: joe.sirianni@bindplane.com
   - name: tbm48813
-    email: travis.malcuit@observiq.com
+    email: travis.malcuit@bindplane.com

@@ -160,7 +160,7 @@ eventbus:
     insecure: false
 
   # Kafka is deprecated and will be removed in a future release, please use NATS instead.
-  # https://observiq.com/docs/advanced-setup/kubernetes-installation/server/components/eventbus
+  # https://docs.bindplane.com/deployment/kubernetes/server/components/event-bus
   # kafka:
   #   brokers: ""
   #   protocolVersion: ""
@@ -286,9 +286,9 @@ transform_agent:
   extraPodLabels: {}
 
 # Bindplane configuration options:
-# https://github.com/observIQ/bindplane-op/blob/main/docs/configuration.md
+# https://docs.bindplane.com/configuration
 config:
-  # -- Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula.
+  # -- Whether or not to accept the EULA. EULA acceptance is required. See https://bindplane.com/legal/eula.
   accept_eula: true
 
   # -- The agent versions clients source to use. Defaults to ["github"].

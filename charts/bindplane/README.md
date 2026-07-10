@@ -1,17 +1,17 @@
 # bindplane
 
-![Version: 1.35.1](https://img.shields.io/badge/Version-1.35.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.100.4](https://img.shields.io/badge/AppVersion-1.100.4-informational?style=flat-square)
+![Version: 1.35.2](https://img.shields.io/badge/Version-1.35.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.100.4](https://img.shields.io/badge/AppVersion-1.100.4-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
-**Homepage:** <https://github.com/observIQ/bindplane-op>
+**Homepage:** <https://docs.bindplane.com>
 
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| jsirianni | <joe@observiq.com> |  |
-| tbm48813 | <travis.malcuit@observiq.com> |  |
+| jsirianni | <joe.sirianni@bindplane.com> |  |
+| tbm48813 | <travis.malcuit@bindplane.com> |  |
 
 ## Values
 
@@ -74,7 +74,7 @@ Bindplane is an observability pipeline.
 | backend.type | string | `"bbolt"` | Backend to use for persistent storage. Available options are `bbolt` (deprecated), and `postgres`. BBolt has been deprecated since February 2025 and was removed in BindPlane v1.99.0 (April 2026). When using `bbolt`, the image tag must be v1.98.0 or older. |
 | busybox_image | string | `"busybox:latest"` | The container image to use for the busybox init container. |
 | command | list | `[]` | Optional command overrides for the Bindplane container in all Bindplane pods. |
-| config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://observiq.com/legal/eula. |
+| config.accept_eula | bool | `true` | Whether or not to accept the EULA. EULA acceptance is required. See https://bindplane.com/legal/eula. |
 | config.agentVersions | object | `{"clients":["github"]}` | The agent versions clients source to use. Defaults to ["github"]. |
 | config.agentVersions.clients | list | `["github"]` | The agent version clients to use when syncing agent agent versions. Will not take effect on Bindplane versions older than v1.94.0. |
 | config.analytics.disable | bool | `false` | Whether or not to disable analytics. Disabling analytics is only supported when an enterprise license is used. |

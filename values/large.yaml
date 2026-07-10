@@ -1,5 +1,5 @@
 # Resources allocated to Bindplane Server. For more information
-# see https://observiq.com/docs/advanced-setup/installation/prerequisites.
+# see https://docs.bindplane.com/deployment/virtual-machine/bindplane/prerequisites.
 resources:
   requests:
     memory: 16Gi

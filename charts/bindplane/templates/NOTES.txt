@@ -5,5 +5,5 @@ BBolt has been deprecated in BindPlane since February 2025 and was removed
 in BindPlane v1.99.0 (April 2026). Please migrate to backend.type 'postgres'
 before upgrading to BindPlane v1.99.0 or newer.
 
-See https://observiq.com/docs for migration instructions.
+See https://docs.bindplane.com for migration instructions.
 {{- end }}

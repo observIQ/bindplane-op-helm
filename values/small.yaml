@@ -13,9 +13,12 @@ resources:
 backend:
   type: postgres
   postgres:
+    # The hostname of the Postgres database. This can be a DNS name or an IP address. 
     host: {Postgres Hostname}
+    # The name of the Bindplane database. This database must already exist in the Postgres instance.
     database: {Bindplane database name}
     credentialSecret:
+      # The name of the Kubernetes secret which contains the `username` and `password` configuration options.
       name: {Kubernetes secret name}
       usernameKey: username
       passwordKey: password 

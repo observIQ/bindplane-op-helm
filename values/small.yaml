@@ -11,14 +11,16 @@ resources:
 # Single instance Bindplane operates as a StatefulSet with a
 # persistent volume.
 backend:
-  type: bbolt
+  type: postgres
+  postgres:
+    host: {Postgres Hostname}
+    database: {Bindplane database name}
+    credentialSecret:
+      name: {Kubernetes secret name}
+      usernameKey: username
+      passwordKey: password 
+    maxConnection: 20
 
-  bbolt:
-    volumeSize: 120Gi
-    # Set the storage class to use for the volume. If not set,
-    # the default storage class will be used. If possible, this
-    # should be set to an SSD backed storage class.
-    # storageClass:
 
 # Prometheus is deployed as a StatefulSet with a persistent volume.
 prometheus:

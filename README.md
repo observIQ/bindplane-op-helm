@@ -10,10 +10,7 @@ This repository contains a Helm chart for [Bindplane](https://bindplane.com).
 
 ### Postgres
 
-Bindplane supports two backend storage options. Postgres and `bbolt` (deprecated). The chart will
-use `bbolt` by default, however, Bindplane recommends using Postgres for production deployments. Additionally,
-the `bbolt` backend will be removed in Bindplane version 2. Postgres allows for better performance and
-scalability. Bindplane with High Availability requires Postgres.
+Bindplane supports Postgres as a backend storage. It is not included, and needs to be configured separately.  For an open source alternative, you could look into [CloudNativePG](https://cloudnative-pg.io/)
 
 See the Bindplane [PostgreSQL documentation](https://docs.bindplane.com/deployment/virtual-machine/bindplane/postgresql)
 for more details.

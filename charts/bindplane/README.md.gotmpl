@@ -1,0 +1,28 @@
+{{- /*
+Custom helm-docs template for this chart.
+
+We keep the default look-and-feel (via built-in helm-docs templates), but add a
+short section documenting the optional GKE Google Secret Manager (GSM)
+integration.
+*/ -}}
+{{ template "chart.header" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Google Secret Manager (GKE) (optional)
+
+This chart can optionally render `SecretProviderClass` and `SecretSync` resources to sync secrets from Google Secret Manager (GSM) into a Kubernetes Secret. This is **disabled by default** and will only render when the required CRDs are installed in the cluster.
+
+Key points:
+- Enable with `gsm.enabled=true`.
+- The SecretSync name defaults to `config.secret` so the synced Kubernetes Secret matches what the chart reads.
+- Use `serviceAccount.annotations` to configure Workload Identity for GKE.
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.valuesSection" . }}
+

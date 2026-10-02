@@ -1,6 +1,6 @@
 # bindplane
 
-![Version: 1.35.5](https://img.shields.io/badge/Version-1.35.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.103.0](https://img.shields.io/badge/AppVersion-1.103.0-informational?style=flat-square)
+![Version: 1.36.0](https://img.shields.io/badge/Version-1.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.103.0](https://img.shields.io/badge/AppVersion-1.103.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
@@ -105,6 +105,7 @@ Bindplane is an observability pipeline.
 | eventbus.type | string | `""` |  |
 | extraEnv | list | `[]` | Optional arbitrary environment variables to add to the Bindplane pod(s). |
 | extraInitContainers | object | `{"bindplane":[],"jobs":[],"nats":[],"prometheus":[],"transform_agent":[]}` | Optional arbitrary init containers. |
+| extraPodAnnotations | object | `{}` | Optional arbitrary annotations to add to the Bindplane pod(s). |
 | extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Bindplane pod(s). |
 | extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the Bindplane pod(s). |
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the Bindplane pod(s). |
@@ -128,6 +129,7 @@ Bindplane is an observability pipeline.
 | metrics.type | string | `""` | Metrics type to use. Valid options include `otlp` and `prometheus`. When `otlp` is enabled, metrics are pushed to the configured OTel receiver. When `prometheus` is enabled, metrics are exposed in Prometheus format by Bindplane's HTTP server at `/metrics`. |
 | multiAccount | bool | `false` | Whether or not to enable multi account (tenant). |
 | nats.deploymentType | string | `"StatefulSet"` | Deployment Type for NATs. Valid options include `StatefulSet` and `Deployment`, case sensitive. StatefulSet is recommended, and does not consume a volume mount. If your cluster is restricted to using Deployments, you can use that option instead. |
+| nats.extraPodAnnotations | object | `{}` | Optional arbitrary annotations to add to the NATs pods, when event bus type is `nats`. |
 | nats.resources | object | `{"limits":{"memory":"1000Mi"},"requests":{"cpu":"1000m","memory":"1000Mi"}}` | NATs server resources request block, when event bus type is `nats`. |
 | nats.resources.limits.memory | string | `"1000Mi"` | Memory limit for the NATs server pods, when event bus type is `nats`. |
 | nats.resources.requests.cpu | string | `"1000m"` | CPU request for the NATs server pods, when event bus type is `nats`. |
@@ -149,6 +151,7 @@ Bindplane is an observability pipeline.
 | prometheus.auth.type | string | `"none"` | Prometheus authentication. Supported options include `none` and `basic`. |
 | prometheus.auth.username | string | `""` | Prometheus basic authentication username. |
 | prometheus.enableSideCar | bool | `false` | When enabled, the Prometheus measurements backend will be deployed as a sidecar container. This option is only valid when Bindplane is running as a single node statefulset. |
+| prometheus.extraPodAnnotations | object | `{}` | Optional arbitrary annotations to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode). |
 | prometheus.extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Prometheus pod. This option is only used when Prometheus is running as a StatefulSet managed by the chart (The default mode). |
 | prometheus.host | string | `""` | The Prometheus hostname or IP address used for querying and writing metrics. Defaults to the service name of the Prometheus StatefulSet deployed by this chart. |
 | prometheus.image.name | string | `"prom/prometheus"` | Image name to be used. |
@@ -193,6 +196,7 @@ Bindplane is an observability pipeline.
 | trace.otlp.insecure | bool | `false` | Set to `true` to disable TLS. Set to false if TLS is in use by the OTLP trace receiver. |
 | trace.otlp.samplingRate | string | `"1"` | Sampling rate between 0 and 1. 1 being 100% of traces are sent. |
 | trace.type | string | `""` | Trace type to use. Valid options include `otlp`. |
+| transform_agent.extraPodAnnotations | object | `{}` | Optional arbitrary annotations to add to the Transform Agent pods. |
 | transform_agent.extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Transform Agent pods. |
 | transform_agent.name | string | `""` | Transform Agent Image name to be used. Defaults to `ghcr.io/observiq/bindplane-transform-agent`. |
 | transform_agent.replicas | int | `1` | Number of replicas to use for the transform agent. |

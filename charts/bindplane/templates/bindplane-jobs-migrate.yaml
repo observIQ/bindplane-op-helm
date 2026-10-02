@@ -33,6 +33,9 @@ spec:
         prometheus.io/scheme: http
         prometheus.io/job-name: bindplane-op
         {{- end }}
+        {{- if len .Values.extraPodAnnotations }}
+        {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
+        {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane

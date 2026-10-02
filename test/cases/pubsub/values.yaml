@@ -9,10 +9,20 @@ extraPodLabels:
   extraKey: extraValue
   extraKey2: extraValue2
 
+extraPodAnnotations:
+  splunk.com/index: bindplane
+  extraAnnotation: extraValue
+
 prometheus:
   extraPodLabels:
     extraKeyProm: extraValueProm
     extraKeyProm2: extraValueProm2
+  extraPodAnnotations:
+    splunk.com/index: prometheus
+
+transform_agent:
+  extraPodAnnotations:
+    splunk.com/index: transform-agent
 
 backend:
   type: postgres

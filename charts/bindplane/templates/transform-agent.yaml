@@ -19,6 +19,10 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      {{- if len .Values.transform_agent.extraPodAnnotations }}
+      annotations:
+        {{- toYaml .Values.transform_agent.extraPodAnnotations | nindent 8 }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}-transform-agent
         app.kubernetes.io/stack: bindplane

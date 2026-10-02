@@ -51,6 +51,10 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      {{- if len .Values.prometheus.extraPodAnnotations }}
+      annotations:
+        {{- toYaml .Values.prometheus.extraPodAnnotations | nindent 8 }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "bindplane.name" . }}
         app.kubernetes.io/stack: bindplane

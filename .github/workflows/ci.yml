@@ -23,6 +23,9 @@ jobs:
       - run: git status
       - run: git diff
 
+      - name: "GSM templates render (opt-in)"
+        run: .github/workflows/scripts/check-gsm-templates.sh
+
       - name: Helm Docs Check
         run: .github/workflows/scripts/check-helm-docs.sh
 

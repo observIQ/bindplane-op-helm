@@ -1,19 +1,10 @@
 # bindplane
 
-![Version: 1.36.1](https://img.shields.io/badge/Version-1.36.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.104.0](https://img.shields.io/badge/AppVersion-1.104.0-informational?style=flat-square)
+![Version: 1.37.0](https://img.shields.io/badge/Version-1.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.104.0](https://img.shields.io/badge/AppVersion-1.104.0-informational?style=flat-square)
 
 Bindplane is an observability pipeline.
 
 **Homepage:** <https://docs.bindplane.com>
-
-## Google Secret Manager (GKE) (optional)
-
-This chart can optionally render `SecretProviderClass` and `SecretSync` resources to sync secrets from Google Secret Manager (GSM) into a Kubernetes Secret. This is **disabled by default** and will only render when the required CRDs are installed in the cluster.
-
-Key points:
-- Enable with `gsm.enabled=true`.
-- The SecretSync name defaults to `config.secret` so the synced Kubernetes Secret matches what the chart reads.
-- Use `serviceAccount.annotations` to configure Workload Identity for GKE.
 
 ## Maintainers
 
@@ -118,15 +109,16 @@ Key points:
 | extraPodLabels | object | `{}` | Optional arbitrary labels to add to the Bindplane pod(s). |
 | extraVolumeMounts | list | `[]` | Optional arbitrary volume mounts to add to the Bindplane pod(s). |
 | extraVolumes | list | `[]` | Optional arbitrary volumes to add to the Bindplane pod(s). |
-| gsm | object | `{"enabled":false,"projectId":"","secretsync":{"enabled":true,"name":"","secretObject":{"data":[],"type":"Opaque"}},"spc":{"name":"","secrets":[]}}` | Optional integration with Google Secret Manager (GSM) on GKE using SecretProviderClass + SecretSync. Disabled by default. |
-| gsm.enabled | bool | `false` | Enable rendering of GSM resources (SecretProviderClass / SecretSync). |
-| gsm.projectId | string | `""` | Google Cloud project ID containing the secrets. |
-| gsm.secretsync.enabled | bool | `true` | Enable rendering of the SecretSync resource. |
-| gsm.secretsync.name | string | `""` | Name of the SecretSync resource. By default this should match `config.secret` so the synced Kubernetes Secret is named appropriately for the chart. |
-| gsm.secretsync.secretObject.data | list | `[]` | Mapping from mounted secret files to keys in the Kubernetes Secret. Each item must have `sourcePath` and `targetKey`. |
-| gsm.secretsync.secretObject.type | string | `"Opaque"` | Kubernetes secret type to create. |
-| gsm.spc.name | string | `""` | Name of the SecretProviderClass to create. |
-| gsm.spc.secrets | list | `[]` | A list of secrets to fetch from Google Secret Manager. `secretName` is the name of the secret in GSM. `path` is the mount path for the secret; must match SecretSync secretObject.data.sourcePath. |
+| gsm | object | Disabled. | Optional: sync Bindplane secrets from Google Secret Manager (GSM) into the Kubernetes Secret named by `config.secret`, using GKE Secret Sync (SecretProviderClass + SecretSync). Requires GKE 1.33+, Workload Identity Federation for GKE, `--enable-secret-sync` on the cluster, and an IAM grant for the Kubernetes ServiceAccount. See https://github.com/observIQ/bindplane-op-helm/tree/main/docs/example/gke-secret-manager. |
+| gsm.enabled | bool | `false` | Render the SecretProviderClass and SecretSync resources. The GKE Secret Sync CRDs must be installed on the cluster. |
+| gsm.projectId | string | `""` | Google Cloud project ID that contains the secrets. May differ from the GKE cluster's project. Required when `gsm.enabled` is true. |
+| gsm.secretsync.enabled | bool | `true` | Render the SecretSync resource. |
+| gsm.secretsync.name | string | `""` | Name of the SecretSync, which is also the name of the Kubernetes Secret that GKE creates. Defaults to `config.secret`. Do not create this Secret yourself; the SecretSync controller owns it. |
+| gsm.secretsync.secretObject.data | list | `[]` | Maps each `sourcePath` (a `gsm.spc.secrets[].path`) to a `targetKey` in the Kubernetes Secret. Keys the chart reads from `config.secret`: `license` (when `config.licenseUseSecret` is true), `username`, `password`, `sessions_secret`. Example: `[{sourcePath: license.txt, targetKey: license}, {sourcePath: password.txt, targetKey: password}]` |
+| gsm.secretsync.secretObject.type | string | `"Opaque"` | Kubernetes Secret type to create. |
+| gsm.secretsync.serviceAccountName | string | `""` | Kubernetes ServiceAccount the GKE Secret Sync controller uses to read from Secret Manager. Defaults to the chart's ServiceAccount. The chart does not create a custom ServiceAccount. |
+| gsm.spc.name | string | `""` | Name of the SecretProviderClass. Defaults to `<fullname>-gsm`. |
+| gsm.spc.secrets | list | `[]` | Secrets to fetch from Google Secret Manager. `secretName` is the GSM secret name (not the full resource name). `path` is the file name the secret is returned as, referenced by `gsm.secretsync.secretObject.data[].sourcePath`. `version` is optional and defaults to `latest`. Example: `[{secretName: bindplane-license, path: license.txt}, {secretName: bindplane-password, path: password.txt, version: "3"}]` |
 | health.livenessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for livenessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.readinessProbe | object | `{"httpGet":{"path":"/health","port":"http"}}` | Full configuration for readinessProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
 | health.startupProbe | object | `{"failureThreshold":20,"httpGet":{"path":"/health","port":"http"},"initialDelaySeconds":0,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1}` | Full configuration for startupProbe. Supports all options documented here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/. |
@@ -220,3 +212,5 @@ Key points:
 | transform_agent.replicas | int | `1` | Number of replicas to use for the transform agent. |
 | transform_agent.tag | string | `""` | Transform Agent Image tag to use. Defaults to latest. |
 
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

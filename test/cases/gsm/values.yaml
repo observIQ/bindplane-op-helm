@@ -1,0 +1,63 @@
+# Google Secret Manager (GSM) test case.
+#
+# Render-only in CI (.github/workflows/scripts/check-gsm-templates.sh). It is not
+# part of the minikube integration matrix because the GKE Secret Sync CRDs only
+# exist on GKE. Also used for the manual end-to-end test on GKE, see
+# docs/example/gke-secret-manager.
+
+extraEnv:
+  - name: BINDPLANE_LOGGING_LEVEL
+    value: debug
+
+config:
+  # The SecretSync controller creates this Secret from Secret Manager.
+  secret: bindplane
+  licenseUseSecret: true
+
+eventbus:
+  type: nats
+
+backend:
+  type: postgres
+  postgres:
+    host: postgres.postgres.svc.cluster.local
+    database: bindplane
+    maxConnections: 20
+    credentialSecret:
+      name: bindplane
+      usernameKey: postgres_username
+      passwordKey: postgres_password
+
+gsm:
+  enabled: true
+  projectId: example-project
+  spc:
+    secrets:
+      - secretName: bindplane-license
+        path: license.txt
+      - secretName: bindplane-username
+        path: username.txt
+      - secretName: bindplane-password
+        path: password.txt
+      - secretName: bindplane-sessions-secret
+        path: sessions_secret.txt
+      - secretName: bindplane-postgres-username
+        path: postgres_username.txt
+      - secretName: bindplane-postgres-password
+        path: postgres_password.txt
+  secretsync:
+    secretObject:
+      type: Opaque
+      data:
+        - sourcePath: license.txt
+          targetKey: license
+        - sourcePath: username.txt
+          targetKey: username
+        - sourcePath: password.txt
+          targetKey: password
+        - sourcePath: sessions_secret.txt
+          targetKey: sessions_secret
+        - sourcePath: postgres_username.txt
+          targetKey: postgres_username
+        - sourcePath: postgres_password.txt
+          targetKey: postgres_password

@@ -25,7 +25,7 @@ Helm's [documentation](https://helm.sh/docs) to get started.
 The Chart can accept a secret for configuring sensitive options. This secret should be managed outside of helm with your preferred secret management solution. Alternatively, you can specify
 these options using a values file. See the [Chart documentation](./charts/bindplane/README.md).
 
-On GKE, you can optionally sync secrets from Google Secret Manager into a Kubernetes Secret using the chart's opt-in `gsm` settings (SecretProviderClass + SecretSync). This remains disabled by default.
+On GKE, the chart can instead sync these keys from Google Secret Manager using GKE Secret Sync. See the [Google Secret Manager example](./docs/example/gke-secret-manager/README.md).
 
 The secret should have the following keys:
 - `username`: Basic auth username to use for the default admin user

@@ -618,38 +618,47 @@ extraVolumes: []
 # -- Optional arbitrary volume mounts to add to the Bindplane pod(s).
 extraVolumeMounts: []
 
-# -- Optional integration with Google Secret Manager (GSM) on GKE using
-# SecretProviderClass + SecretSync. Disabled by default.
+# -- Optional: sync Bindplane secrets from Google Secret Manager (GSM) into the Kubernetes Secret
+# named by `config.secret`, using GKE Secret Sync (SecretProviderClass + SecretSync). Requires GKE 1.33+,
+# Workload Identity Federation for GKE, `--enable-secret-sync` on the cluster, and an IAM grant for the
+# Kubernetes ServiceAccount. See https://github.com/observIQ/bindplane-op-helm/tree/main/docs/example/gke-secret-manager.
+# @default -- Disabled.
 gsm:
-  # -- Enable rendering of GSM resources (SecretProviderClass / SecretSync).
+  # -- Render the SecretProviderClass and SecretSync resources. The GKE Secret Sync CRDs must be installed on the cluster.
   enabled: false
 
-  # -- Google Cloud project ID containing the secrets.
+  # -- Google Cloud project ID that contains the secrets. May differ from the GKE cluster's project. Required when `gsm.enabled` is true.
   projectId: ""
 
   spc:
-    # -- Name of the SecretProviderClass to create.
+    # -- Name of the SecretProviderClass. Defaults to `<fullname>-gsm`.
     name: ""
 
-    # -- A list of secrets to fetch from Google Secret Manager.
-    # `secretName` is the name of the secret in GSM.
-    # `path` is the mount path for the secret; must match SecretSync secretObject.data.sourcePath.
+    # -- Secrets to fetch from Google Secret Manager. `secretName` is the GSM secret name (not the full resource name).
+    # `path` is the file name the secret is returned as, referenced by `gsm.secretsync.secretObject.data[].sourcePath`.
+    # `version` is optional and defaults to `latest`.
+    # Example: `[{secretName: bindplane-license, path: license.txt}, {secretName: bindplane-password, path: password.txt, version: "3"}]`
     secrets: []
 
   secretsync:
-    # -- Enable rendering of the SecretSync resource.
+    # -- Render the SecretSync resource.
     enabled: true
 
-    # -- Name of the SecretSync resource. By default this should match `config.secret`
-    # so the synced Kubernetes Secret is named appropriately for the chart.
+    # -- Name of the SecretSync, which is also the name of the Kubernetes Secret that GKE creates.
+    # Defaults to `config.secret`. Do not create this Secret yourself; the SecretSync controller owns it.
     name: ""
 
+    # -- Kubernetes ServiceAccount the GKE Secret Sync controller uses to read from Secret Manager.
+    # Defaults to the chart's ServiceAccount. The chart does not create a custom ServiceAccount.
+    serviceAccountName: ""
+
     secretObject:
-      # -- Kubernetes secret type to create.
+      # -- Kubernetes Secret type to create.
       type: Opaque
 
-      # -- Mapping from mounted secret files to keys in the Kubernetes Secret.
-      # Each item must have `sourcePath` and `targetKey`.
+      # -- Maps each `sourcePath` (a `gsm.spc.secrets[].path`) to a `targetKey` in the Kubernetes Secret.
+      # Keys the chart reads from `config.secret`: `license` (when `config.licenseUseSecret` is true), `username`, `password`, `sessions_secret`.
+      # Example: `[{sourcePath: license.txt, targetKey: license}, {sourcePath: password.txt, targetKey: password}]`
       data: []
 
 # -- Optional arbitrary labels to add to the Bindplane pod(s).

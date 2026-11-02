@@ -1,0 +1,67 @@
+# Bindplane on GKE with secrets synced from Google Secret Manager.
+#
+# See README.md in this directory for the cluster and IAM setup that
+# must be completed before installing.
+
+config:
+  # GKE Secret Sync creates this Kubernetes Secret from Secret Manager.
+  # Do not create it yourself.
+  secret: bindplane
+  # Read the license from the synced Secret.
+  licenseUseSecret: true
+  # Leave config.license, config.username, config.password and
+  # config.sessions_secret unset. When set, they override the synced values.
+
+  # Set to the URL agents use to reach Bindplane, such as your ingress host.
+  # server_url: https://bindplane.example.com
+
+backend:
+  type: postgres
+  postgres:
+    host: 10.0.0.10
+    port: 5432
+    database: bindplane
+    # Read the Postgres credentials from the synced Secret.
+    credentialSecret:
+      name: bindplane
+      usernameKey: postgres_username
+      passwordKey: postgres_password
+
+gsm:
+  enabled: true
+  # Project that contains the secrets.
+  projectId: my-project
+  spc:
+    # Each entry is a Secret Manager secret. `path` is referenced by
+    # gsm.secretsync.secretObject.data[].sourcePath. `version` defaults to "latest".
+    secrets:
+      - secretName: bindplane-license
+        path: license.txt
+      - secretName: bindplane-username
+        path: username.txt
+      - secretName: bindplane-password
+        path: password.txt
+      - secretName: bindplane-sessions-secret
+        path: sessions_secret.txt
+      - secretName: bindplane-postgres-username
+        path: postgres_username.txt
+      - secretName: bindplane-postgres-password
+        path: postgres_password.txt
+  secretsync:
+    secretObject:
+      type: Opaque
+      # targetKey is the key in the Kubernetes Secret. The chart reads
+      # license, username, password and sessions_secret from config.secret.
+      data:
+        - sourcePath: license.txt
+          targetKey: license
+        - sourcePath: username.txt
+          targetKey: username
+        - sourcePath: password.txt
+          targetKey: password
+        - sourcePath: sessions_secret.txt
+          targetKey: sessions_secret
+        - sourcePath: postgres_username.txt
+          targetKey: postgres_username
+        - sourcePath: postgres_password.txt
+          targetKey: postgres_password

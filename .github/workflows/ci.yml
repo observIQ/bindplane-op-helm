@@ -23,11 +23,21 @@ jobs:
       - run: git status
       - run: git diff
 
-      - name: "GSM templates render (opt-in)"
-        run: .github/workflows/scripts/check-gsm-templates.sh
-
       - name: Helm Docs Check
         run: .github/workflows/scripts/check-helm-docs.sh
+
+  gsm:
+    name: "gsm: render checks"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Helm Lint (GSM values)
+        run: helm lint charts/bindplane --values test/cases/gsm/values.yaml
+
+      - name: GSM Template Checks
+        run: .github/workflows/scripts/check-gsm-templates.sh
 
   integration:
     runs-on: ubuntu-latest

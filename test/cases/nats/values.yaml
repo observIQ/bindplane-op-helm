@@ -80,4 +80,5 @@ extraInitContainers:
 
 serviceAccount:
   annotations:
-    iam.gke.io/gcp-service-account: "bindplane-sa"
+    iam.gke.io/gcp-service-account: "bindplane-sa@example-project.iam.gserviceaccount.com"
+    example.com/owner: "bindplane"

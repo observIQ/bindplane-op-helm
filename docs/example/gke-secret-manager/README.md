@@ -22,7 +22,9 @@ for details about the feature.
 - GKE 1.33 or newer.
 - [Workload Identity Federation for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
   enabled on the cluster. It is enabled by default on Autopilot clusters.
-- Secret Sync enabled on the cluster (`--enable-secret-sync`).
+- Secret Sync enabled on the cluster (`--enable-secret-sync`). This installs both the
+  `SecretSync` and `SecretProviderClass` CRDs. The Secret Manager CSI add-on
+  (`--enable-secret-manager`) is not required.
 - The Secret Manager API enabled in the project that stores the secrets.
 
 The examples below use these variables:
@@ -87,15 +89,18 @@ printf '%s' 'postgres-password' | gcloud secrets create bindplane-postgres-passw
 GKE reads the secrets as the Kubernetes ServiceAccount named in the SecretSync.
 By default this is the chart's ServiceAccount, whose name is the chart's full name:
 
-| Release name | ServiceAccount |
-|--------------|----------------|
-| `bindplane` (or any name containing `bindplane`) | the release name, e.g. `bindplane` |
-| anything else, e.g. `prod` | `<release>-bindplane`, e.g. `prod-bindplane` |
+| Values / release name | ServiceAccount |
+|-----------------------|----------------|
 | `fullnameOverride` set | the `fullnameOverride` value |
+| release name contains `bindplane` (or `nameOverride`, when set), e.g. `bindplane` | the release name, e.g. `bindplane` |
+| anything else, e.g. `prod` | `<release>-bindplane` (or `<release>-<nameOverride>`), e.g. `prod-bindplane` |
 
-To confirm the name, render the ServiceAccount:
+To confirm the name, render the ServiceAccount from this directory:
 
 ```bash
+helm repo add bindplane https://observiq.github.io/bindplane-op-helm
+helm repo update
+
 helm template "$RELEASE" bindplane/bindplane -n "$NAMESPACE" -f values.yaml \
   -s templates/service-account.yml | grep '  name:'
 ```
@@ -118,6 +123,9 @@ for secret in bindplane-license bindplane-username bindplane-password bindplane-
 done
 ```
 
+IAM changes can take a few minutes to apply. Until then the SecretSync may report
+`ProviderError`.
+
 No ServiceAccount annotation is needed. If you already set
 `serviceAccount.annotations` with `iam.gke.io/gcp-service-account` (for example,
 for Pub/Sub), see [ServiceAccount annotations](#serviceaccount-annotations).
@@ -131,7 +139,8 @@ Edit the [values.yaml](./values.yaml) file in this directory.
 
 - `gsm.projectId` is the project that stores the secrets.
 - Each `gsm.spc.secrets[]` entry names a Secret Manager secret (`secretName`) and
-  the file name it is returned as (`path`). `version` is optional and defaults to `latest`.
+  the file name it is returned as (`path`). `version` is optional (a version number or
+  alias) and defaults to `latest`.
 - Each `gsm.secretsync.secretObject.data[]` entry copies a `path` (`sourcePath`)
   into a key of the Kubernetes Secret (`targetKey`).
 - The chart reads `license`, `username`, `password` and `sessions_secret` from
@@ -148,15 +157,14 @@ reads is not synced.
 Do not create the `bindplane` Kubernetes Secret yourself; GKE creates it.
 
 ```bash
-helm repo add bindplane https://observiq.github.io/bindplane-op-helm
-helm repo update
-
 helm upgrade --install "$RELEASE" bindplane/bindplane \
   --namespace "$NAMESPACE" --create-namespace \
   --values values.yaml
 ```
 
-The install notes print the exact IAM member for the release.
+The install notes print the grant command with the release namespace and ServiceAccount
+filled in. Replace `CLUSTER_PROJECT_NUMBER` and `CLUSTER_PROJECT_ID` with the cluster project's
+values, or use the `MEMBER` value from [Grant Access](#grant-access).
 
 ## Verify
 
@@ -185,8 +193,11 @@ kubectl -n "$NAMESPACE" rollout restart deployment,statefulset -l app.kubernetes
 ### Existing Kubernetes Secret
 
 If you are migrating from a Secret you created by hand, delete it (or choose a new
-`config.secret` name) before installing. The SecretSync controller manages the
-Secret it creates and does not take over one created by someone else.
+`config.secret` name) before installing. The SecretSync controller does not take
+over a Secret it did not create. Instead it reports
+`UserInputValidationFailed: Secret create or update failed due to SecretProviderClass or SecretSync error`
+and leaves the existing Secret unchanged. Once that Secret is deleted, the controller
+creates its own.
 
 ```bash
 kubectl -n "$NAMESPACE" delete secret bindplane
@@ -201,20 +212,32 @@ Secret. That includes `helm uninstall`, setting `gsm.enabled: false`, and renami
 ### ServiceAccount annotations
 
 If the ServiceAccount used by the SecretSync has the
-`iam.gke.io/gcp-service-account` annotation, Secret Manager may be accessed as that
-Google service account instead of the principal above. Either:
+`iam.gke.io/gcp-service-account` annotation, GKE impersonates that Google service
+account to read Secret Manager, and the principal binding above is not used. Either:
 
-- grant that Google service account `roles/secretmanager.secretAccessor` on each
-  secret, and grant the Kubernetes ServiceAccount `roles/iam.workloadIdentityUser`
-  on it, or
-- set `gsm.secretsync.serviceAccountName` to a separate ServiceAccount without the annotation.
+- set `gsm.secretsync.serviceAccountName` to a separate ServiceAccount without the
+  annotation and grant that ServiceAccount access as described in [Grant Access](#grant-access), or
+- grant the Google service account access and allow the Kubernetes ServiceAccount to impersonate it:
+
+  ```bash
+  GSA=my-gsa@my-project.iam.gserviceaccount.com
+  gcloud iam service-accounts add-iam-policy-binding "$GSA" \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:${CLUSTER_PROJECT_ID}.svc.id.goog[${NAMESPACE}/${KSA}]"
+  for secret in bindplane-license bindplane-username bindplane-password bindplane-sessions-secret \
+                bindplane-postgres-username bindplane-postgres-password; do
+    gcloud secrets add-iam-policy-binding "$secret" --project "$SECRET_PROJECT_ID" \
+      --role roles/secretmanager.secretAccessor --member "serviceAccount:${GSA}"
+  done
+  ```
 
 ## Troubleshooting
 
-`kubectl describe secretsync` reporting
-`Secret creation failed due to provider error` means GKE could not read one of the
-secrets from Secret Manager. The status does not include the underlying error.
-Check, in order:
+`kubectl describe secretsync` reporting `ProviderError`
+(`Secret creation failed due to provider error, check the logs or the events for more information.`)
+means GKE could not read at least one of the secrets from Secret Manager. The status
+does not include the underlying error and no events are recorded. If the Secret was
+synced before, it keeps its last synced values. Check, in order:
 
 1. Every secret in `gsm.spc.secrets` has a `roles/secretmanager.secretAccessor`
    binding for the exact principal: the cluster's project number and workload pool,
@@ -224,8 +247,11 @@ Check, in order:
 3. `gsm.projectId`, each `secretName` and each `version` exist, and the version is enabled:
    `gcloud secrets versions describe latest --secret bindplane-license --project "$SECRET_PROJECT_ID"`.
 4. The cluster has a workload pool:
-   `gcloud container clusters describe "$CLUSTER" --location "$LOCATION" --format='value(workloadIdentityConfig.workloadPool)'`.
+   `gcloud container clusters describe "$CLUSTER" --project "$CLUSTER_PROJECT_ID" --location "$LOCATION" --format='value(workloadIdentityConfig.workloadPool)'`.
 5. No VPC Service Controls perimeter blocks Secret Manager for the cluster.
 
-GKE retries failed syncs. After fixing IAM, wait for the next attempt or the
-rotation interval.
+`UserInputValidationFailed` usually means a Secret named `config.secret` already
+exists and was not created by the SecretSync. See [Existing Kubernetes Secret](#existing-kubernetes-secret).
+
+After fixing IAM, allow a few minutes for the change to apply. With rotation enabled,
+GKE retries at every rotation interval.

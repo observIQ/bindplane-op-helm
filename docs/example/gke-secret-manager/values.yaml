@@ -33,7 +33,8 @@ gsm:
   projectId: my-project
   spc:
     # Each entry is a Secret Manager secret. `path` is referenced by
-    # gsm.secretsync.secretObject.data[].sourcePath. `version` defaults to "latest".
+    # gsm.secretsync.secretObject.data[].sourcePath. `version` (a number or
+    # alias) defaults to "latest".
     secrets:
       - secretName: bindplane-license
         path: license.txt

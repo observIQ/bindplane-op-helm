@@ -31,7 +31,7 @@ Validate gsm.* values when gsm.enabled is true. Mistakes fail at render time
 "provider error" or as pods stuck in CreateContainerConfigError.
 */}}
 {{- define "bindplane.gsm.validate" -}}
-{{- if .Values.gsm.enabled -}}
+{{- if (.Values.gsm).enabled -}}
 {{- if not .Values.gsm.projectId -}}
 {{- fail "gsm.projectId is required when gsm.enabled is true" -}}
 {{- end -}}

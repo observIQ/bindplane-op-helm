@@ -120,7 +120,9 @@
           "properties": {
             "name": {
               "type": "string",
-              "description": "Name of the SecretProviderClass. Defaults to <fullname>-gsm."
+              "description": "Name of the SecretProviderClass. Defaults to <fullname>-gsm.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
             },
             "secrets": {
               "type": "array",
@@ -142,8 +144,8 @@
                   },
                   "version": {
                     "type": ["string", "integer"],
-                    "description": "Secret version. Defaults to latest.",
-                    "pattern": "^(latest|[1-9][0-9]*)$",
+                    "description": "Secret version number, alias, or latest. Defaults to latest.",
+                    "pattern": "^([1-9][0-9]*|[A-Za-z][A-Za-z0-9_-]{0,62})$",
                     "minimum": 1
                   }
                 },
@@ -163,11 +165,15 @@
             },
             "name": {
               "type": "string",
-              "description": "Name of the SecretSync and of the Kubernetes Secret it creates. Defaults to config.secret."
+              "description": "Name of the SecretSync and of the Kubernetes Secret it creates. Defaults to config.secret.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
             },
             "serviceAccountName": {
               "type": "string",
-              "description": "Kubernetes ServiceAccount used by the Secret Sync controller. Defaults to the chart's ServiceAccount."
+              "description": "Kubernetes ServiceAccount used by the Secret Sync controller. Defaults to the chart's ServiceAccount.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
             },
             "secretObject": {
               "type": "object",

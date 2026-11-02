@@ -7,7 +7,7 @@ before upgrading to BindPlane v1.99.0 or newer.
 
 See https://docs.bindplane.com for migration instructions.
 {{- end }}
-{{- if .Values.gsm.enabled }}
+{{- if (.Values.gsm).enabled }}
 {{- $ksa := include "bindplane.gsm.serviceAccountName" . }}
 
 Google Secret Manager (GSM) sync is enabled.
@@ -29,8 +29,8 @@ Check the sync status:
   kubectl -n {{ .Release.Namespace }} describe secretsync {{ include "bindplane.gsm.syncName" . }}
 {{- if and (not .Values.gsm.secretsync.serviceAccountName) (hasKey (.Values.serviceAccount.annotations | default dict) "iam.gke.io/gcp-service-account") }}
 
-WARNING: serviceAccount.annotations sets iam.gke.io/gcp-service-account. Secret Manager access may then use
-that Google service account instead of the principal above. Either grant that service account
+WARNING: serviceAccount.annotations sets iam.gke.io/gcp-service-account, so GKE impersonates that Google
+service account to read Secret Manager and the principal above is not used. Either grant that service account
 roles/secretmanager.secretAccessor on each secret and grant "{{ $ksa }}" roles/iam.workloadIdentityUser on it,
 or set gsm.secretsync.serviceAccountName to a separate ServiceAccount without that annotation.
 {{- end }}

@@ -82,6 +82,12 @@ R2="$TMP/overrides-render.yaml"
 render "$R2" --values "$GSM" --values "$TMP/overrides.yaml" --set-json 'gsm.spc.secrets[0].version=3'
 assert_eq "numeric version renders" "projects/example-project/secrets/bindplane-license/versions/3" \
   "$(yq ea 'select(.kind == "SecretProviderClass") | .spec.parameters.secrets | from_yaml | .[0].resourceName' "$R2")"
+R3="$TMP/large-version.yaml"
+render "$R3" --values "$GSM" --set-json 'gsm.spc.secrets[0].version=1000000' --set-string 'gsm.spc.secrets[1].version=prod'
+assert_eq "large numeric version renders as an integer" "projects/example-project/secrets/bindplane-license/versions/1000000" \
+  "$(yq ea 'select(.kind == "SecretProviderClass") | .spec.parameters.secrets | from_yaml | .[0].resourceName' "$R3")"
+assert_eq "version alias renders" "projects/example-project/secrets/bindplane-username/versions/prod" \
+  "$(yq ea 'select(.kind == "SecretProviderClass") | .spec.parameters.secrets | from_yaml | .[1].resourceName' "$R3")"
 assert_eq "custom SecretProviderClass name" "custom-spc" "$(yq ea 'select(.kind == "SecretSync") | .spec.secretProviderClassName' "$R2")"
 assert_eq "custom SecretSync ServiceAccount" "gsm-sync" "$(yq ea 'select(.kind == "SecretSync") | .spec.serviceAccountName' "$R2")"
 
@@ -103,8 +109,9 @@ expect_fail "postgres credential key not synced" "backend.postgres.credentialSec
   --set backend.postgres.credentialSecret.passwordKey=missing
 expect_fail "issue-style fileName key is rejected" "fileName" --values "$GSM" \
   --set 'gsm.spc.secrets[0].secretName=s' --set 'gsm.spc.secrets[0].fileName=s.txt'
-expect_fail "targetKey that the SecretSync CRD rejects" "targetKey" --values "$GSM" \
-  --set 'gsm.secretsync.secretObject.data[0].targetKey=-bad'
+expect_fail "targetKey that the SecretSync CRD rejects" "match pattern" --values "$GSM" \
+  --set 'gsm.secretsync.secretObject.data[6].sourcePath=license.txt' --set 'gsm.secretsync.secretObject.data[6].targetKey=-bad'
+expect_fail "invalid ServiceAccount name" "match pattern" --values "$GSM" --set gsm.secretsync.serviceAccountName=Bad_SA
 
 if (( failures > 0 )); then
   echo "$failures GSM template check(s) failed" >&2

@@ -102,6 +102,117 @@
         }
       },
       "additionalProperties": true
+    },
+    "gsm": {
+      "type": "object",
+      "description": "Google Secret Manager (GSM) integration using GKE Secret Sync.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Render the SecretProviderClass and SecretSync resources."
+        },
+        "projectId": {
+          "type": "string",
+          "description": "Google Cloud project ID that contains the secrets. Required when gsm.enabled is true."
+        },
+        "spc": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the SecretProviderClass. Defaults to <fullname>-gsm.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
+            },
+            "secrets": {
+              "type": "array",
+              "description": "Secrets to fetch from Google Secret Manager.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "secretName": {
+                    "type": "string",
+                    "description": "Secret Manager secret name (not the full resource name).",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "File name the secret is returned as. Referenced by gsm.secretsync.secretObject.data[].sourcePath.",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": ["string", "integer"],
+                    "description": "Secret version number, alias, or latest. Defaults to latest.",
+                    "pattern": "^([1-9][0-9]*|[A-Za-z][A-Za-z0-9_-]{0,62})$",
+                    "minimum": 1
+                  }
+                },
+                "required": ["secretName", "path"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "secretsync": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Render the SecretSync resource."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the SecretSync and of the Kubernetes Secret it creates. Defaults to config.secret.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
+            },
+            "serviceAccountName": {
+              "type": "string",
+              "description": "Kubernetes ServiceAccount used by the Secret Sync controller. Defaults to the chart's ServiceAccount.",
+              "maxLength": 253,
+              "pattern": "^(|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$"
+            },
+            "secretObject": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourcePath": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 253,
+                        "pattern": "^[A-Za-z0-9.]([-A-Za-z0-9]+([-._a-zA-Z0-9]?[A-Za-z0-9])*)?(\\/([0-9]+))*$"
+                      },
+                      "targetKey": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 253,
+                        "pattern": "^[A-Za-z0-9.]([-A-Za-z0-9]+([-._a-zA-Z0-9]?[A-Za-z0-9])*)?(\\/([0-9]+))*$"
+                      }
+                    },
+                    "required": ["sourcePath", "targetKey"],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": ["type", "data"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   },
   "required": ["nats", "eventbus", "auth"],

@@ -7,3 +7,34 @@ before upgrading to BindPlane v1.99.0 or newer.
 
 See https://docs.bindplane.com for migration instructions.
 {{- end }}
+{{- if (.Values.gsm).enabled }}
+{{- $ksa := include "bindplane.gsm.serviceAccountName" . }}
+
+Google Secret Manager (GSM) sync is enabled.
+{{- if .Values.gsm.secretsync.enabled }}
+
+SecretSync "{{ include "bindplane.gsm.syncName" . }}" in namespace "{{ .Release.Namespace }}" creates the Kubernetes Secret
+"{{ include "bindplane.gsm.syncName" . }}" and authenticates to Secret Manager as Kubernetes ServiceAccount "{{ $ksa }}".
+Grant that ServiceAccount access to EVERY secret in gsm.spc.secrets (a single missing grant fails the whole sync):
+
+  gcloud secrets add-iam-policy-binding SECRET_NAME \
+    --project {{ .Values.gsm.projectId }} \
+    --role roles/secretmanager.secretAccessor \
+    --member "principal://iam.googleapis.com/projects/CLUSTER_PROJECT_NUMBER/locations/global/workloadIdentityPools/CLUSTER_PROJECT_ID.svc.id.goog/subject/ns/{{ .Release.Namespace }}/sa/{{ $ksa }}"
+
+CLUSTER_PROJECT_NUMBER and CLUSTER_PROJECT_ID belong to the GKE cluster's project, which may differ from gsm.projectId.
+
+Check the sync status:
+
+  kubectl -n {{ .Release.Namespace }} describe secretsync {{ include "bindplane.gsm.syncName" . }}
+{{- if and (not .Values.gsm.secretsync.serviceAccountName) (hasKey (.Values.serviceAccount.annotations | default dict) "iam.gke.io/gcp-service-account") }}
+
+WARNING: serviceAccount.annotations sets iam.gke.io/gcp-service-account, so GKE impersonates that Google
+service account to read Secret Manager and the principal above is not used. Either grant that service account
+roles/secretmanager.secretAccessor on each secret and grant "{{ $ksa }}" roles/iam.workloadIdentityUser on it,
+or set gsm.secretsync.serviceAccountName to a separate ServiceAccount without that annotation.
+{{- end }}
+{{- end }}
+
+See https://github.com/observIQ/bindplane-op-helm/tree/main/docs/example/gke-secret-manager
+{{- end }}
